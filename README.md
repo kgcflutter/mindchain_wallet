@@ -1,6 +1,6 @@
 # mindchain_wallet
 
-this is a crypto mindchain wallet
+this is a crypto mind chain wallet
 
 ## Getting Started
 
