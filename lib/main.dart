@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/screens/welcome_screen.dart';
 
 void main() {
-  runApp(const MindWallet());
+  runApp(const MindWallet(),);
 }
 
 class MindWallet extends StatelessWidget {
