@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/conts/strings.dart';
+import 'package:mindchain_wallet/presentation/screens/save_the_seed_phrase_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
@@ -29,9 +30,19 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 55,
               ),
-              GredientBackgroundBtn(
-                child: const Text("Create A New Wallet",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SaveTheSeedPhraseScreen(),
+                    )),
+                child: GredientBackgroundBtn(
+                  child: const Text(
+                    "Create A New Wallet",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
