@@ -3,16 +3,19 @@ import 'package:ed25519_hd_key/ed25519_hd_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hex/hex.dart';
+import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
 
 class CreateWalletProvider extends ChangeNotifier {
+  TextEditingController checkPhraseController = TextEditingController();
   List<String> mnemonicList = [];
   String copyText = '';
   String mindBalance = '';
   final Web3Client ethClient;
+  String errorMessage = '';
 
   CreateWalletProvider()
       : ethClient =
@@ -57,7 +60,6 @@ class CreateWalletProvider extends ChangeNotifier {
     return address;
   }
 
-
   void checkBalance(String myPrivateKey) async {
     Credentials credentials = await getCredentials(myPrivateKey);
     EtherAmount balance = await ethClient.getBalance(credentials.address);
@@ -71,13 +73,32 @@ class CreateWalletProvider extends ChangeNotifier {
       return EthPrivateKey.fromHex(privateKey);
     } else {
       throw Exception('Invalid private key.');
-    } }
+    }
+  }
 
   void mnemonicListCopyText(BuildContext context) {
     Clipboard.setData(ClipboardData(text: copyText));
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Text copied to clipboard'),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Text copied to clipboard'),
+      ),
+    );
+  }
+
+  checkPhraseBottom(BuildContext context) {
+    if (copyText == checkPhraseController.text) {
+      print("object");
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DashboardScreen(),
+          ),
+          (route) => false);
+    } else {
+      print("folse");
+      errorMessage = "No Match Data";
+    }
+    notifyListeners();
   }
 
   String _convertToEth(BigInt wei) {

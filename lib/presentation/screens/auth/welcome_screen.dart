@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/conts/strings.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/save_the_seed_phrase_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
@@ -35,12 +37,14 @@ class WelcomeScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Provider.of<CreateWalletProvider>(context,listen: false).createWallet();
+                  Provider.of<CreateWalletProvider>(context, listen: false)
+                      .createWallet();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SaveTheSeedPhraseScreen(),
-                    ),);
+                    ),
+                  );
                 },
                 child: GredientBackgroundBtn(
                   child: const Text(
@@ -52,10 +56,17 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              GredientBackgroundBtn(
-                child: const Text("Sign In With Seed Phrase",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    )),
+                child: GredientBackgroundBtn(
+                  child: const Text("Sign In With Seed Phrase",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
               ),
             ],
           ),

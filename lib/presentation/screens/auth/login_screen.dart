@@ -5,8 +5,8 @@ import 'package:mindchain_wallet/presentation/utils/text_style.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
-class CheckPhraseScreen extends StatelessWidget {
-  const CheckPhraseScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
