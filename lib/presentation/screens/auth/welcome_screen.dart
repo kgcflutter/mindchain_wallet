@@ -35,16 +35,15 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 55,
               ),
-              GestureDetector(
+               GestureDetector(
                 onTap: () {
-                  Provider.of<CreateWalletProvider>(context, listen: false)
-                      .createWallet();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SaveTheSeedPhraseScreen(),
                     ),
                   );
+                  Provider.of<CreateWalletProvider>(context, listen: false).createWallet();
                 },
                 child: GredientBackgroundBtn(
                   child: const Text(
@@ -61,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoginScreen(),
-                    )),
+                    ),),
                 child: GredientBackgroundBtn(
                   child: const Text("Sign In With Seed Phrase",
                       style:

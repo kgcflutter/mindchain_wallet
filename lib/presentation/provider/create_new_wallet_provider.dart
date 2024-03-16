@@ -18,26 +18,27 @@ class CreateWalletProvider extends ChangeNotifier {
   String errorMessage = '';
 
   CreateWalletProvider()
-      : ethClient =
-            Web3Client('https://seednode.mindchain.info/', http.Client());
+      : ethClient = Web3Client(
+          'https://seednode.mindchain.info/',
+          http.Client(),
+        );
 
-  Future<void> createWallet() async {
-    try {
-      mnemonicList.clear();
-      copyText = '';
-      final mnemonic = bip39.generateMnemonic();
-      final privateKey = await getPrivateKey(mnemonic);
-      final address = await getPublicKey(privateKey!);
-      copyText = mnemonic;
-      mnemonicList.addAll(mnemonic.split(" "));
-      print('Your new private key: $privateKey');
-      print('Your new address: ${address.hex}');
-      print('Your mnemonic: $mnemonic');
-      print(
-          'Please make sure to securely store your private key, address, and mnemonic.');
-    } catch (e) {
-      print('Error occurred while creating wallet: $e');
-    }
+  createWallet() async {
+    mnemonicList.clear();
+    copyText = '';
+    errorMessage = '';
+    checkPhraseController.text = '';
+    final mnemonic = bip39.generateMnemonic();
+    //final privateKey = await getPrivateKey(mnemonic);
+    //final address = await getPublicKey(privateKey!);
+    copyText = mnemonic;
+    //myPrivateKey = privateKey;
+    //   = address.hex;
+    //mindBalance = await checkBalance(privateKey);
+    mnemonicList.addAll(mnemonic.split(" "));
+    //print('Your new private key: $privateKey');
+    //print('Your new address: ${address.hex}');
+    print('Your mnemonic: $mnemonic');
     notifyListeners();
   }
 
@@ -50,7 +51,7 @@ class CreateWalletProvider extends ChangeNotifier {
       return privateKey;
     } catch (e) {
       print('Error occurred while deriving private key: $e');
-      return null; // Handle the error according to your app's logic
+      return null;
     }
   }
 
@@ -60,11 +61,12 @@ class CreateWalletProvider extends ChangeNotifier {
     return address;
   }
 
-  void checkBalance(String myPrivateKey) async {
-    Credentials credentials = await getCredentials(myPrivateKey);
+  Future<String> checkBalance(String privateKey) async {
+    Credentials credentials = await getCredentials(privateKey);
     EtherAmount balance = await ethClient.getBalance(credentials.address);
     print('Wallet balance: ${balance.getValueInUnit(EtherUnit.ether)} MIND');
-    print(_convertToEth(balance.getInWei));
+    print(convertToEth(balance.getInWei));
+    return convertToEth(balance.getInWei).toString();
   }
 
   Future<Credentials> getCredentials(String privateKey) async {
@@ -76,35 +78,33 @@ class CreateWalletProvider extends ChangeNotifier {
     }
   }
 
-  void mnemonicListCopyText(BuildContext context) {
-    Clipboard.setData(ClipboardData(text: copyText));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Text copied to clipboard'),
-      ),
-    );
-  }
-
-  checkPhraseBottom(BuildContext context) {
-    if (copyText == checkPhraseController.text) {
-      print("object");
-      Navigator.pushAndRemoveUntil(
+  checkPhraseBottom(BuildContext context) async {
+    if (checkPhraseController.text.length > 20) {
+      final pKey = await getPrivateKey(checkPhraseController.text.trim());
+      final address = await getPublicKey(pKey!);
+      final publicKey = address.hex;
+      final bal = await checkBalance(pKey!);
+      print(publicKey);
+      if (context.mounted) {
+        Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const DashboardScreen(),
+            builder: (context) => DashboardScreen(
+                balance: bal, address: publicKey, privateKey: pKey),
           ),
-          (route) => false);
+        );
+      }
+      notifyListeners();
     } else {
-      print("folse");
-      errorMessage = "No Match Data";
+      errorMessage = "Give Valid Data";
     }
     notifyListeners();
   }
 
-  String _convertToEth(BigInt wei) {
-    final eth = (wei / BigInt.from(1 * pow(10, 18))).toStringAsFixed(20);
+  String convertToEth(BigInt wei) {
+    final eth = (wei / BigInt.from(1 * pow(10, 18))).toStringAsFixed(4);
     mindBalance = eth.toString();
     notifyListeners();
-    return '$eth ETH';
+    return '$eth MIND';
   }
 }

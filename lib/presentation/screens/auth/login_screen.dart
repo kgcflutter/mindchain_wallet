@@ -18,25 +18,28 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Check Phrase",
+                  "Login With Phrase",
                   style: TextStyler().textHeadingStyle,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 const Text(AllStrings.saveTheParseDes),
                 const SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                value.errorMessage !=null?  Text(value.errorMessage) : const Text(''),
                 TextField(
+                  controller: value.checkPhraseController,
                   maxLines: 3,
                   decoration: const InputDecoration(
                     hintText: 'Post Your Phrase',
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.deepPurple)),
                   ),
-                  controller: value.checkPhraseController,
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 40,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -52,8 +55,8 @@ class LoginScreen extends StatelessWidget {
                       value.checkPhraseBottom(context);
                     },
                     child: const Text(
-                      "Check",
-                      style: TextStyle(color: Colors.black),
+                      "Login",
+                      style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                     ),
                   ),
                 )

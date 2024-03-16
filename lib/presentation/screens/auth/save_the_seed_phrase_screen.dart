@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mindchain_wallet/conts/strings.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/auth/check_phrase_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widget/gredient_background_bottom.dart';
 import '../../../widget/seed_phrase_background.dart';
+import '../../utils/copysystem.dart';
 
 class SaveTheSeedPhraseScreen extends StatelessWidget {
   const SaveTheSeedPhraseScreen({super.key});
@@ -43,8 +43,8 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
               SeedPhraseBackground(
                 child: Consumer<CreateWalletProvider>(
                   builder: (context, value, child) => SizedBox(
-                    width: 200,
-                    child: Column(
+                    width: 220,
+                    child: value.mnemonicList.isEmpty ? const CircularProgressIndicator() : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       // Align text to the left
                       children: [
@@ -54,10 +54,11 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
                         for (int i = 0; i < 12; i += 2)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text("${i + 1}. ${value.mnemonicList[i]}",
                                   style: const TextStyle(color: Colors.white)),
-                              if (i + 1 < 12) const SizedBox(width: 30),
+                              if (i + 1 < 12) const SizedBox(width: 20,height: 24,),
                               // Add SizedBox only if there's a next element
                               Text("${i + 2}. ${value.mnemonicList[i + 1]}",
                                   style: const TextStyle(color: Colors.white)),
@@ -73,7 +74,7 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
               ),
               Consumer<CreateWalletProvider>(
                 builder: (context, value, child) => GestureDetector(
-                  onTap: () => value.mnemonicListCopyText(context),
+                  onTap: () => mnemonicListCopyText(context,value.copyText),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -95,7 +96,7 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CheckPhraseScreen(),
+                        builder: (context) => const LoginScreen(),
                       )),
                   child: GredientBackgroundBtn(
                     child: const Text(
