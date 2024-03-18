@@ -6,4 +6,5 @@ class AssetsPath {
   static String grediantColorImage = '$_imageBasePath/grediantColorImage.png';
   static String lottieBorderJson = '$_imageBasePath/lottie_border.json';
   static String  seedPhrasePng = '$_imageBasePath/SeedPhrase.png';
+  static String  walletBG = '$_imageBasePath/walletbg.png';
 }

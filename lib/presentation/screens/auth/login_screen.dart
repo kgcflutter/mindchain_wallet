@@ -6,62 +6,69 @@ import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen ({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final bool isSmallScreen = screenSize.width < 600; // Adjust this threshold as needed
+
     return Scaffold(
       body: Center(
         child: BackgroundWidget(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Consumer<CreateWalletProvider>(builder: (context, value, child) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Login With Phrase",
-                  style: TextStyler().textHeadingStyle,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(AllStrings.saveTheParseDes),
-                const SizedBox(
-                  height: 10,
-                ),
-               value.errorMessage !=null?  Text(value.errorMessage) : const Text(''),
-                TextField(
-                  controller: value.checkPhraseController,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    hintText: 'Post Your Phrase',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple)),
+            padding: EdgeInsets.symmetric(
+              horizontal: isSmallScreen ? 12.0 : 24.0, // Adjust padding based on screen size
+            ),
+            child: Consumer<CreateWalletProvider>(
+              builder: (context, value, child) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Login With Phrase",
+                    style: TextStyler().textHeadingStyle,
                   ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.transparent,
-                      side: const BorderSide(color: Colors.white),
-                      maximumSize: const Size(double.infinity, 45),
-                      backgroundColor: const Color(0xffF5F5F5),
-                    ),
-                    onPressed: () {
-                      value.checkPhraseBottom(context);
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                  SizedBox(height: isSmallScreen ? 12 : 20), // Adjust spacing based on screen size
+                  Text(AllStrings.saveTheParseDes),
+                  SizedBox(height: isSmallScreen ? 8 : 10),
+                  if (value.errorMessage != null) Text(value.errorMessage),
+                  SizedBox(height: isSmallScreen ? 16 : 20),
+                  TextField(
+                    controller: value.checkPhraseController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Post Your Phrase',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                      ),
                     ),
                   ),
-                )
-              ],
-            ),),
+                  SizedBox(height: isSmallScreen ? 32 : 40),
+                  SizedBox(
+                    width: double.infinity,
+                    height: isSmallScreen ? 45 : 55,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Colors.transparent,
+                        side: const BorderSide(color: Colors.white),
+                        maximumSize: const Size(double.infinity, 45),
+                        backgroundColor: const Color(0xffF5F5F5),
+                      ),
+                      onPressed: () {
+                        value.checkPhraseBottom(context);
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 
 class DashboardCard extends StatelessWidget {
-  Widget child;
-   DashboardCard({super.key,required this.child});
+  final Widget child;
+
+  const DashboardCard({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return                 Container(
+    double cardHeight = MediaQuery.of(context).size.height * 0.2;
+
+    return Container(
       width: double.infinity,
-      height: 246,
+      height: cardHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Colors.white,
           width: 2,
         ),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.orange, // Start color (top left)
-            Colors.deepPurple, // End color (bottom right)
-          ],
+        image:  DecorationImage(
+          image: AssetImage(AssetsPath.walletBG),
+          fit: BoxFit.cover,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: child,
-      ),
+      child: child,
     );
   }
 }
