@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import '../presentation/utils/assets_path.dart';
 
 class GredientBackgroundBtn extends StatelessWidget {

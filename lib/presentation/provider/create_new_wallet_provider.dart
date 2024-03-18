@@ -1,10 +1,9 @@
 import 'dart:math';
 import 'package:ed25519_hd_key/ed25519_hd_key.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hex/hex.dart';
+import 'package:mindchain_wallet/presentation/local_database.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
-import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
@@ -64,8 +63,8 @@ class CreateWalletProvider extends ChangeNotifier {
   Future<String> checkBalance(String privateKey) async {
     Credentials credentials = await getCredentials(privateKey);
     EtherAmount balance = await ethClient.getBalance(credentials.address);
-    print('Wallet balance: ${balance.getValueInUnit(EtherUnit.ether)} MIND');
-    print(convertToEth(balance.getInWei));
+    mindBalance = convertToEth(balance.getInWei).toString();
+    notifyListeners();
     return convertToEth(balance.getInWei).toString();
   }
 
@@ -84,21 +83,22 @@ class CreateWalletProvider extends ChangeNotifier {
       final address = await getPublicKey(pKey!);
       final publicKey = address.hex;
       final bal = await checkBalance(pKey!);
-      print(publicKey);
-      if (context.mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DashboardScreen(
-                balance: bal, address: publicKey, privateKey: pKey),
-          ),
-        );
-      }
       notifyListeners();
     } else {
       errorMessage = "Give Valid Data";
     }
     notifyListeners();
+  }
+
+  loadBalance() async {
+    mindBalance = '';
+    final _privateKey = await getPrivateKey(checkPhraseController.text.trim());
+    checkBalance(_privateKey!);
+    savePrivateKey(_privateKey);
+  }
+
+  savePrivateKey(String privateKey) async {
+    LocalDataBase.saveData("pkey", privateKey);
   }
 
   String convertToEth(BigInt wei) {

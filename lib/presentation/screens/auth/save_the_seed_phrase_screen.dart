@@ -20,7 +20,7 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(
@@ -33,48 +33,48 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(AllStrings.saveTheParseDes),
-              ),
+              const Text(AllStrings.saveTheParseDes),
               const SizedBox(
                 height: 35,
               ),
               SeedPhraseBackground(
                 child: Consumer<CreateWalletProvider>(
                   builder: (context, value, child) => SizedBox(
-                    width: 220,
-                    child: value.mnemonicList.isEmpty ? const CircularProgressIndicator() : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      // Align text to the left
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        for (int i = 0; i < 12; i += 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text("${i + 1}. ${value.mnemonicList[i]}",
-                                  style: const TextStyle(color: Colors.white)),
-                              if (i + 1 < 12) const SizedBox(width: 20,height: 24,),
-                              // Add SizedBox only if there's a next element
-                              Text("${i + 2}. ${value.mnemonicList[i + 1]}",
-                                  style: const TextStyle(color: Colors.white)),
-                            ],
+                    width: 250,
+                    child: value.mnemonicList.isEmpty
+                        ? const CircularProgressIndicator()
+                        : SizedBox(
+                          height: 210,
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: value.mnemonicList.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        _calculateCrossAxisCount(context),
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5,
+                                    mainAxisExtent: 27),
+                            itemBuilder: (context, index) => Container(
+                              alignment: Alignment.centerLeft,
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              child: Text(
+                                '${index + 1}. ${value.mnemonicList[index]}',
+                                style:
+                                    const TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
-                      ],
-                    ),
+                        ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 35,
-              ),
               Consumer<CreateWalletProvider>(
                 builder: (context, value, child) => GestureDetector(
-                  onTap: () => mnemonicListCopyText(context,value.copyText),
+                  onTap: () => mnemonicListCopyText(context, value.copyText),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -87,16 +87,14 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 35,
-              ),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: GestureDetector(
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  LoginScreen(),
+                        builder: (context) => const LoginScreen(),
                       )),
                   child: GredientBackgroundBtn(
                     child: const Text(
@@ -118,10 +116,19 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
               ),
+              const SizedBox(height: 45,),
             ],
           ),
         ),
       ),
     );
+  }
+
+  int _calculateCrossAxisCount(BuildContext context) {
+    // Calculate the number of items that can fit horizontally
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount =
+        (screenWidth / 150).floor(); // Adjust 150 according to your item size
+    return crossAxisCount > 2 ? crossAxisCount : 2; // Minimum of 2 columns
   }
 }

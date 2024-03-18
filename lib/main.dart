@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => CreateWalletProvider(),)
+    ChangeNotifierProvider(create: (context) => CreateWalletProvider(),),
+    ChangeNotifierProvider(create: (context) => SendTokenProvider(),),
   ],child: const MindWallet(),),);
 }
 

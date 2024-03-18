@@ -42,6 +42,7 @@ dependencies:
   lottie: ^3.1.0
   ed25519_hd_key: ^2.2.0
   hex: ^0.2.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

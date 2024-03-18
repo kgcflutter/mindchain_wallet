@@ -8,17 +8,19 @@ class  SeedPhraseBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Image.asset(
-          AssetsPath.seedPhrasePng,
-          height: 210,
-        ),
-        SafeArea(child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: child,
-        ),),
-      ],
+    return Center(
+      child: Stack(
+        children: [
+          Image.asset(
+            AssetsPath.seedPhrasePng,
+            height: 210,
+          ),
+          SafeArea(child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: child,
+          ),),
+        ],
+      ),
     );
   }
 }
