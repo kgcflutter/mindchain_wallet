@@ -94,11 +94,11 @@ class CreateWalletProvider extends ChangeNotifier {
     mindBalance = '';
     final _privateKey = await getPrivateKey(checkPhraseController.text.trim());
     checkBalance(_privateKey!);
-    savePrivateKey(_privateKey);
+   await savePrivateKey(_privateKey);
   }
 
   savePrivateKey(String privateKey) async {
-    LocalDataBase.saveData("pkey", privateKey);
+    LocalDataBase.saveData("pkey",  privateKey);
   }
 
   String convertToEth(BigInt wei) {

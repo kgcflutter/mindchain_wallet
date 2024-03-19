@@ -70,7 +70,8 @@ class SendTokenProvider extends ChangeNotifier {
   }
 
   Future<Credentials> _getCredentials() async {
-    String? privateKey = await LocalDataBase.getData("peky");
+    String? privateKey = await LocalDataBase.getData("pkey");
+    print("pkey $privateKey");
     String? privateKeys = privateKey;
     if (privateKeys != null) {
       return EthPrivateKey.fromHex(privateKey!);

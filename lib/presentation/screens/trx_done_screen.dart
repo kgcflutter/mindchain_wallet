@@ -9,19 +9,24 @@ class TrxDoneScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(Icons.done,color: Colors.green,),
-            const Text("congratulations",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),),
-            const SizedBox(
-              height: 10,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(Icons.done,color: Colors.green,),
+                const Text("congratulations",style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold),),
+                const SizedBox(
+                  height: 10,
+                ),
+                Consumer<SendTokenProvider>(
+                  builder: (context, value, child) => Text(value.trxResult),
+                )
+              ],
             ),
-            Consumer<SendTokenProvider>(
-              builder: (context, value, child) => Text(value.trxResult),
-            )
-          ],
+          ),
         ),
       ),
     );
