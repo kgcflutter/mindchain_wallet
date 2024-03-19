@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
-
 import '../local_database.dart';
 
 class SendTokenProvider extends ChangeNotifier {
 
   TextEditingController addressTEC = TextEditingController();
   TextEditingController amountTEC = TextEditingController();
+  TextEditingController gesPriceTEC = TextEditingController();
+  TextEditingController gesLimitTEC = TextEditingController();
 
   final Web3Client ethClient;
   String trxResult = '';
@@ -19,17 +20,20 @@ class SendTokenProvider extends ChangeNotifier {
         );
 
   Future<void> sendEth() async {
-    //print('Enter the recipient address:');
     String? recipientAddress = addressTEC.text;
     print('Enter the amount to send:');
     String? amount = amountTEC.text;
     if (recipientAddress != null && amount != null) {
       print(amount);
       try {
-        // Convert the amount to Ether and adjust precision
-        BigInt parsedAmount = BigInt.parse(amount);
-        EtherAmount ethAmount =
-            EtherAmount.fromBigInt(EtherUnit.ether, parsedAmount);
+        // Parse the amount as double
+        double parsedAmount = double.parse(amount);
+
+        // Convert the amount to wei (the smallest unit of Ether) by multiplying it with 10^18
+        BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
+
+        // Convert the wei amount to EtherAmount
+        EtherAmount ethAmount = EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmount);
 
         // Sending transaction
         await _sendTransaction(ethClient, recipientAddress, ethAmount);
@@ -41,6 +45,7 @@ class SendTokenProvider extends ChangeNotifier {
     }
   }
 
+
   Future<void> _sendTransaction(
       Web3Client ethClient, String receiver, EtherAmount txValue) async {
     var chainId = await ethClient.getChainId();
@@ -49,11 +54,10 @@ class SendTokenProvider extends ChangeNotifier {
     notifyListeners();
     Credentials credentials = await _getCredentials();
     EtherAmount gasPrice = await ethClient.getGasPrice();
-
     Transaction transaction = Transaction(
       to: EthereumAddress.fromHex(receiver),
       gasPrice: gasPrice,
-      maxGas: 100000, // You can adjust gas limit as needed
+      maxGas: int.parse(gesLimitTEC.text), // You can adjust gas limit as needed
       value: txValue,
     );
 
@@ -78,5 +82,14 @@ class SendTokenProvider extends ChangeNotifier {
     } else {
       throw Exception('Invalid private key.');
     }
+  }
+
+  loadGesPrice() async {
+    EtherAmount gasPrice = await ethClient.getGasPrice();
+    gesPriceTEC.text = '';
+    gesLimitTEC.text = '';
+    gesPriceTEC.text = gasPrice.getInWei.toString();
+    gesLimitTEC.text = "21000";
+    notifyListeners();
   }
 }

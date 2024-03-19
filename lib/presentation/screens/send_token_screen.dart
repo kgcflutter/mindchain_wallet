@@ -7,8 +7,19 @@ import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 
-class SendToken extends StatelessWidget {
+class SendToken extends StatefulWidget {
   const SendToken({super.key});
+
+  @override
+  State<SendToken> createState() => _SendTokenState();
+}
+
+class _SendTokenState extends State<SendToken> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<SendTokenProvider>(context, listen: false).loadGesPrice();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,76 +33,122 @@ class SendToken extends StatelessWidget {
               shadowColor: Colors.transparent,
               color: const Color(0x35d2d2d2),
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Consumer<SendTokenProvider>(builder: (context, provider, child) => Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: const EdgeInsets.all(18.0),
+                  child: Consumer<SendTokenProvider>(
+                    builder: (context, provider, child) => Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Send Your Funds",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 21),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Send Your Funds",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 21),
+                            ),
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                            )
+                          ],
                         ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
-                            Icons.cancel, color: Colors.red,),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    InputDesign(
-                      hintText: "Amount:",
-                      inputType: TextInputType.number, controller: provider.amountTEC,
-                    ),
-                    const SizedBox(
-                      height: 05,
-                    ),
-                    Consumer<CreateWalletProvider>(
-                      builder: (context, value, child) =>
-                          Text(" Your Balance ${value.mindBalance} MIND"),),
-                    const SizedBox(
-                      height: 05,
-                    ),
-                    InputDesign(
-                      hintText: "Receiver Address...",
-                      inputType: TextInputType.text, controller: provider.addressTEC,
-                    ),
-                    const SizedBox(
-                      height: 05,
-                    ),
-                    InputDesign(
-                      hintText: "Comment",
-                      inputType: TextInputType.text, controller: provider.addressTEC,
-                    ),
-                    const Spacer(),
-                    Consumer<SendTokenProvider>(
-                      builder: (context, value, child) =>
-                          GestureDetector(
+                        const SizedBox(
+                          height: 60,
+                        ),
+                        InputDesign(
+                          hintText: "Amount:",
+                          inputType: TextInputType.number,
+                          controller: provider.amountTEC,
+                        ),
+                        const SizedBox(
+                          height: 05,
+                        ),
+                        Consumer<CreateWalletProvider>(
+                          builder: (context, value, child) => Text(
+                            " Your Balance ${value.mindBalance} MIND",
+                            style: const TextStyle(
+                                color: Color(0xffFF8A00),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 05,
+                        ),
+                        InputDesign(
+                          hintText: "Receiver Address...",
+                          inputType: TextInputType.text,
+                          controller: provider.addressTEC,
+                        ),
+                        const SizedBox(
+                          height: 05,
+                        ),
+                        const Row(
+                          children: [
+                            Text("Gas Price (GWEI)"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.info,
+                              size: 18,
+                            )
+                          ],
+                        ),
+                        InputDesign(
+                          hintText: "10.9999999999",
+                          inputType: TextInputType.text,
+                          controller: provider.gesPriceTEC,
+                        ),
+                        const SizedBox(
+                          height: 05,
+                        ),
+                        const Row(
+                          children: [
+                            Text("Gas Limit"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.info,
+                              size: 18,
+                            )
+                          ],
+                        ),
+                        InputDesign(
+                          hintText: "10.9999999999",
+                          inputType: TextInputType.text,
+                          controller: provider.gesLimitTEC,
+                        ),
+                        const Spacer(),
+                        Consumer<SendTokenProvider>(
+                          builder: (context, value, child) => GestureDetector(
                             onTap: () {
                               value.sendEth();
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => const TrxDoneScreen(),),);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const TrxDoneScreen(),
+                                ),
+                              );
                             },
                             child: GredientBackgroundBtn(
                               child: const Text(
                                 "Next",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),),
-                          ),),
-                    const SizedBox(
-                      height: 25,
-                    )
-                  ],
-                ),)
-              ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        )
+                      ],
+                    ),
+                  )),
             ),
           ),
         ),
@@ -106,7 +163,10 @@ class InputDesign extends StatelessWidget {
   TextEditingController controller;
 
   InputDesign(
-      {super.key, required this.hintText, required this.inputType, required this.controller});
+      {super.key,
+      required this.hintText,
+      required this.inputType,
+      required this.controller});
 
   @override
   Widget build(BuildContext context) {
