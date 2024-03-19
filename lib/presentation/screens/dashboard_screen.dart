@@ -1,6 +1,14 @@
+import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
+import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
+import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
+import 'package:mindchain_wallet/widget/custom_popup.dart';
+import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/widget/dashboard_card.dart';
@@ -21,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     loadBal();
   }
+
   loadBal() async {
     Future.delayed(
       const Duration(seconds: 1),
@@ -49,10 +58,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -60,9 +69,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 fontSize: 22,
                               ),
                             ),
-                            Icon(
-                              Icons.more_horiz,
-                              color: Colors.white,
+                            GestureDetector(
+                              onTap: () => customPopUp(
+                                context,
+                                "Account Info",
+                                SizedBox(
+                                  height: 140,
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const AccountDetailsScreen(),
+                                                ));
+                                          },
+                                          child: const Text("Account Details")),
+                                      const Divider(),
+                                      const Text("View On Explorer"),
+                                      const Divider(),
+                                      const Text("Support"),
+                                      const Divider(),
+                                      const Text("Log Out"),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.more_vert,
+                                size: 25,
+                                color: Colors.white,
+                              ),
                             )
                           ],
                         ),
@@ -85,24 +125,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           height: 20,
                         ),
                         Consumer<CreateWalletProvider>(
-                          builder: (context, value, child) =>  value.mindBalance.isEmpty
-                              ? const CircularProgressIndicator(color: Colors.white) : Row(
-                            children: [
-                              Text(value.mindBalance,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19,
-                                      ),
+                          builder: (context, value, child) =>
+                              value.mindBalance.isEmpty
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : Row(
+                                      children: [
+                                        Text(
+                                          value.mindBalance,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19,
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () => value.loadBalance(),
+                                          child: const Icon(
+                                            Icons.refresh,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                              const InkWell(
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
                         )
                       ],
                     ),
@@ -130,10 +175,100 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 builder: (context) => const SendToken(),
                               )),
                           child: const IconsBackground(
-                              iconData: Icons.arrow_forward, text: "Send"),
+                              iconData: Icons.arrow_upward, text: "Send"),
                         ),
-                        const IconsBackground(
-                            iconData: Icons.arrow_upward, text: "Receive"),
+                        Consumer<AccountDetailsProvider>(
+                          builder: (context, value, child) => InkWell(
+                            onTap: () {
+                              showBottomSheet(
+                                backgroundColor: Colors.white,
+                                context: context,
+                                builder: (context) => SizedBox(
+                                  height: 500,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          "Your Address To Receive  Funds ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 21),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 200,
+                                              child: PrettyQrView.data(
+                                                data: value.myAddress,
+                                                decoration:
+                                                     PrettyQrDecoration(
+                                                  image:
+                                                      PrettyQrDecorationImage(
+                                                    image: AssetImage(
+                                                        AssetsPath.mindLogoPng),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 20,
+                                            ),
+                                            // Use Expanded widget to allow the text to take remaining space
+                                            Expanded(
+                                              child: Text(
+                                                value.myAddress,
+                                                // Set text alignment to center if needed
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 35,
+                                        ),
+                                        InkWell(
+                                            onTap: () => mnemonicListCopyText(
+                                                context, value.myAddress),
+                                            child: const GredientBackgroundBtn(
+                                              child: Text(
+                                                "Copy Address",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        InkWell(
+                                            onTap: () => Share.text('This my Mindchain Wallet Address', value.myAddress, ''),
+                                            child: const GredientBackgroundBtn(
+                                              child: Text(
+                                                "Share",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const IconsBackground(
+                                iconData: Icons.arrow_downward,
+                                text: "Receive"),
+                          ),
+                        ),
                         const IconsBackground(
                             iconData: Icons.stacked_bar_chart, text: "Stack"),
                       ],

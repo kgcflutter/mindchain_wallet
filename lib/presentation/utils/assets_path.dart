@@ -7,4 +7,5 @@ class AssetsPath {
   static String lottieBorderJson = '$_imageBasePath/lottie_border.json';
   static String  seedPhrasePng = '$_imageBasePath/SeedPhrase.png';
   static String  walletBG = '$_imageBasePath/walletbg.png';
+  static String  mindLogoPng = '$_imageBasePath/mindlogo.png';
 }

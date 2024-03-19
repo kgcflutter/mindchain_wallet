@@ -4,7 +4,7 @@ import '../presentation/utils/assets_path.dart';
 class GredientBackgroundBtn extends StatelessWidget {
   final Widget child;
 
-  GredientBackgroundBtn({Key? key, required this.child}) : super(key: key);
+  const GredientBackgroundBtn({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

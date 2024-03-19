@@ -60,11 +60,12 @@ class LoginScreen extends StatelessWidget {
                         backgroundColor: const Color(0xffF5F5F5),
                       ),
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const DashboardScreen(),
-                            ));
+                            ),
+                            (route) => false);
                       },
                       child: const Text(
                         "Login",

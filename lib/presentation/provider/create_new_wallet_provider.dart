@@ -3,7 +3,6 @@ import 'package:ed25519_hd_key/ed25519_hd_key.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:mindchain_wallet/presentation/local_database.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
@@ -91,14 +90,24 @@ class CreateWalletProvider extends ChangeNotifier {
   }
 
   loadBalance() async {
-    mindBalance = '';
-    final _privateKey = await getPrivateKey(checkPhraseController.text.trim());
-    checkBalance(_privateKey!);
-   await savePrivateKey(_privateKey);
+    String? myKey = await LocalDataBase.getData("pkey");
+    if (myKey != null && myKey.isNotEmpty) {
+      mindBalance = '';
+      print("right");
+      checkBalance(myKey);
+    } else {
+      final _privateKey =
+          await getPrivateKey(checkPhraseController.text.trim(),);
+      final address = await getPublicKey(_privateKey!);
+      savePrivateKey(_privateKey!, address.hex);
+      checkBalance(_privateKey!);
+    }
+    notifyListeners();
   }
 
-  savePrivateKey(String privateKey) async {
-    LocalDataBase.saveData("pkey",  privateKey);
+  savePrivateKey(String privateKey, address) async {
+    LocalDataBase.saveData("pkey", privateKey);
+    LocalDataBase.saveData("address", address);
   }
 
   String convertToEth(BigInt wei) {
