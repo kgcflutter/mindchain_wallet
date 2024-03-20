@@ -8,4 +8,5 @@ class AssetsPath {
   static String  seedPhrasePng = '$_imageBasePath/SeedPhrase.png';
   static String  walletBG = '$_imageBasePath/walletbg.png';
   static String  mindLogoPng = '$_imageBasePath/mindlogo.png';
+  static String  qrJpg = '$_imageBasePath/qr.jpg';
 }

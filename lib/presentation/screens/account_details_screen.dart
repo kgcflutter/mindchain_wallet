@@ -9,8 +9,8 @@ class AccountDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AccountDetailsProvider>(context).loadPrivateKeyAddress();
     final Size screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       body: BackgroundWidget(
         child: Padding(
@@ -62,7 +62,7 @@ class AccountDetailsScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            ) : Text(""),
+                            ) : const Text(""),
                           ),
                            SizedBox(
                             height: 0.03 * screenSize.height,

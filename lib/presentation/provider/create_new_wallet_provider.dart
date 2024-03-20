@@ -15,6 +15,7 @@ class CreateWalletProvider extends ChangeNotifier {
   final Web3Client ethClient;
   String errorMessage = '';
 
+
   CreateWalletProvider()
       : ethClient = Web3Client(
           'https://seednode.mindchain.info/',
@@ -59,12 +60,14 @@ class CreateWalletProvider extends ChangeNotifier {
     return address;
   }
 
-  Future<String> checkBalance(String privateKey) async {
+  checkBalance(String privateKey) async {
+    mindBalance = '';
+    notifyListeners();
     Credentials credentials = await getCredentials(privateKey);
     EtherAmount balance = await ethClient.getBalance(credentials.address);
     mindBalance = convertToEth(balance.getInWei).toString();
+    convertToEth(balance.getInWei).toString();
     notifyListeners();
-    return convertToEth(balance.getInWei).toString();
   }
 
   Future<Credentials> getCredentials(String privateKey) async {
@@ -76,23 +79,22 @@ class CreateWalletProvider extends ChangeNotifier {
     }
   }
 
-  checkPhraseBottom(BuildContext context) async {
-    if (checkPhraseController.text.length > 20) {
-      final pKey = await getPrivateKey(checkPhraseController.text.trim());
-      final address = await getPublicKey(pKey!);
-      final publicKey = address.hex;
-      final bal = await checkBalance(pKey!);
-      notifyListeners();
-    } else {
-      errorMessage = "Give Valid Data";
-    }
-    notifyListeners();
-  }
+  // checkPhraseBottom(BuildContext context) async {
+  //   if (checkPhraseController.text.length > 20) {
+  //     final pKey = await getPrivateKey(checkPhraseController.text.trim());
+  //     final address = await getPublicKey(pKey!);
+  //     final publicKey = address.hex;
+  //     final bal = await checkBalance(pKey!);
+  //     notifyListeners();
+  //   } else {
+  //     errorMessage = "Give Valid Data";
+  //   }
+  //   notifyListeners();
+  // }
 
   loadBalance() async {
     String? myKey = await LocalDataBase.getData("pkey");
     if (myKey != null && myKey.isNotEmpty) {
-      mindBalance = '';
       print("right");
       checkBalance(myKey);
     } else {
@@ -102,7 +104,6 @@ class CreateWalletProvider extends ChangeNotifier {
       savePrivateKey(_privateKey!, address.hex);
       checkBalance(_privateKey!);
     }
-    notifyListeners();
   }
 
   savePrivateKey(String privateKey, address) async {

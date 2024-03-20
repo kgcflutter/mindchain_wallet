@@ -1,18 +1,22 @@
 import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/local_database.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/widget/dashboard_card.dart';
 import 'package:mindchain_wallet/widget/icon_background.dart';
+import 'package:qr_bar_code/code/src/code_generate.dart';
+import 'package:qr_bar_code/code/src/code_type.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
@@ -70,34 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => customPopUp(
-                                context,
-                                "Account Info",
-                                SizedBox(
-                                  height: 140,
-                                  child: Column(
-                                    children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const AccountDetailsScreen(),
-                                                ));
-                                          },
-                                          child: const Text("Account Details")),
-                                      const Divider(),
-                                      const Text("View On Explorer"),
-                                      const Divider(),
-                                      const Text("Support"),
-                                      const Divider(),
-                                      const Text("Log Out"),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              onTap: () => myCustomPopUp(context),
                               child: const Icon(
                                 Icons.more_vert,
                                 size: 25,
@@ -180,88 +157,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Consumer<AccountDetailsProvider>(
                           builder: (context, value, child) => InkWell(
                             onTap: () {
+                              value.loadPrivateKeyAddress();
                               showBottomSheet(
                                 backgroundColor: Colors.white,
                                 context: context,
-                                builder: (context) => SizedBox(
-                                  height: 500,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(30.0),
-                                    child: Column(
-                                      children: [
-                                        const Text(
-                                          "Your Address To Receive  Funds ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 21),
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: 200,
-                                              child: PrettyQrView.data(
-                                                data: value.myAddress,
-                                                decoration:
-                                                     PrettyQrDecoration(
-                                                  image:
-                                                      PrettyQrDecorationImage(
-                                                    image: AssetImage(
-                                                        AssetsPath.mindLogoPng),
-                                                  ),
+                                builder: (context) {
+                                  return
+                                  SizedBox(
+                                    height: 700,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(30.0),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            "Your Address To Receive  Funds ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 21),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          SizedBox(
+
+                                            child: Code(data: value.myAddress, codeType: CodeType.qrCode()),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          // Use Expanded widget to allow the text to take remaining space
+                                          Expanded(
+                                            child: Text(
+                                              value.myAddress,
+                                              // Set text alignment to center if needed
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 35,
+                                          ),
+                                          InkWell(
+                                              onTap: () => mnemonicListCopyText(
+                                                  context, value.myAddress),
+                                              child: const GredientBackgroundBtn(
+                                                child: Text(
+                                                  "Copy Address",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold),
                                                 ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            // Use Expanded widget to allow the text to take remaining space
-                                            Expanded(
-                                              child: Text(
-                                                value.myAddress,
-                                                // Set text alignment to center if needed
-                                                textAlign: TextAlign.left,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 35,
-                                        ),
-                                        InkWell(
-                                            onTap: () => mnemonicListCopyText(
-                                                context, value.myAddress),
-                                            child: const GredientBackgroundBtn(
-                                              child: Text(
-                                                "Copy Address",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            )),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        InkWell(
-                                            onTap: () => Share.text('This my Mindchain Wallet Address', value.myAddress, ''),
-                                            child: const GredientBackgroundBtn(
-                                              child: Text(
-                                                "Share",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            )),
-                                      ],
+                                              )),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          InkWell(
+                                              onTap: () => Share.text(
+                                                  'This my Mindchain Wallet Address',
+                                                  value.myAddress,
+                                                  ''),
+                                              child: const GredientBackgroundBtn(
+                                                child: Text(
+                                                  "Share",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold),
+                                                ),
+                                              ),),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               );
                             },
                             child: const IconsBackground(
@@ -281,5 +247,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  myCustomPopUp(BuildContext context) {
+    customPopUp(
+                              context,
+                              "Account Info",
+                              SizedBox(
+                                height: 140,
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AccountDetailsScreen(),
+                                              ));
+                                        },
+                                        child: const Text("Account Details")),
+                                    const Divider(),
+                                    const Text("View On Explorer"),
+                                    const Divider(),
+                                    const Text("Support"),
+                                    const Divider(),
+                                    GestureDetector(
+                                        onTap: () {
+                                          LocalDataBase.removeData();
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WelcomeScreen(),
+                                              ),
+                                              (route) => false);
+                                        },
+                                        child: const Text("Log Out")),
+                                  ],
+                                ),
+                              ),
+                            );
   }
 }
