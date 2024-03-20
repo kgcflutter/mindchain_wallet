@@ -1,22 +1,12 @@
-import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/local_database.dart';
-import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
-import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
-import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
-import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
-import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
-import 'package:mindchain_wallet/widget/custom_popup.dart';
-import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/widget/dashboard_card.dart';
-import 'package:mindchain_wallet/widget/icon_background.dart';
-import 'package:qr_bar_code/code/src/code_generate.dart';
-import 'package:qr_bar_code/code/src/code_type.dart';
+import 'package:mindchain_wallet/widget/dashboard/dashboard_card.dart';
+import '../../widget/dashboard/assets_and_trx_tapbar.dart';
+import '../../widget/dashboard/send_receive_assets_row.dart';
+import '../../widget/dashboard/wallet_balance_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
@@ -36,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   loadBal() async {
     Future.delayed(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 1000),
       () => Provider.of<CreateWalletProvider>(context, listen: false)
           .loadBalance(),
     );
@@ -59,188 +49,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 DashboardCard(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 22,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => myCustomPopUp(context),
-                              child: const Icon(
-                                Icons.more_vert,
-                                size: 25,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                        const Text(
-                          "Mind Chain Wallet",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 22,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          "Type Mind Chain Wallet",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Consumer<CreateWalletProvider>(
-                          builder: (context, value, child) =>
-                              value.mindBalance.isEmpty
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white)
-                                  : Row(
-                                      children: [
-                                        Text(
-                                          value.mindBalance,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 19,
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () => value.loadBalance(),
-                                          child: const Icon(
-                                            Icons.refresh,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                        )
-                      ],
-                    ),
+                    child: walletCard(context),
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SizedBox(
-                    height: screenWidth * 0.2, // Adjust height as per your need
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const IconsBackground(
-                            iconData: Icons.add, text: "Add Assets"),
-                        const IconsBackground(
-                            iconData: Icons.wallet, text: "Buy MIND"),
-                        InkWell(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SendToken(),
-                              )),
-                          child: const IconsBackground(
-                              iconData: Icons.arrow_upward, text: "Send"),
-                        ),
-                        Consumer<AccountDetailsProvider>(
-                          builder: (context, value, child) => InkWell(
-                            onTap: () {
-                              value.loadPrivateKeyAddress();
-                              showBottomSheet(
-                                backgroundColor: Colors.white,
-                                context: context,
-                                builder: (context) {
-                                  return
-                                  SizedBox(
-                                    height: 700,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(30.0),
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                            "Your Address To Receive  Funds ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 21),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          SizedBox(
-
-                                            child: Code(data: value.myAddress, codeType: CodeType.qrCode()),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          // Use Expanded widget to allow the text to take remaining space
-                                          Expanded(
-                                            child: Text(
-                                              value.myAddress,
-                                              // Set text alignment to center if needed
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 35,
-                                          ),
-                                          InkWell(
-                                              onTap: () => mnemonicListCopyText(
-                                                  context, value.myAddress),
-                                              child: const GredientBackgroundBtn(
-                                                child: Text(
-                                                  "Copy Address",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                      FontWeight.bold),
-                                                ),
-                                              )),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          InkWell(
-                                              onTap: () => Share.text(
-                                                  'This my Mindchain Wallet Address',
-                                                  value.myAddress,
-                                                  ''),
-                                              child: const GredientBackgroundBtn(
-                                                child: Text(
-                                                  "Share",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                      FontWeight.bold),
-                                                ),
-                                              ),),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: const IconsBackground(
-                                iconData: Icons.arrow_downward,
-                                text: "Receive"),
-                          ),
-                        ),
-                        const IconsBackground(
-                            iconData: Icons.stacked_bar_chart, text: "Stack"),
-                      ],
-                    ),
-                  ),
-                ),
+                SendReceiveAssetsRow(screenWidth: screenWidth),
+                const SizedBox(height: 5,),
+                const AssetsAndTrxTapbar(),
+                const SizedBox(height: 30,)
               ],
             ),
           ),
@@ -248,46 +66,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
-  myCustomPopUp(BuildContext context) {
-    customPopUp(
-                              context,
-                              "Account Info",
-                              SizedBox(
-                                height: 140,
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const AccountDetailsScreen(),
-                                              ));
-                                        },
-                                        child: const Text("Account Details")),
-                                    const Divider(),
-                                    const Text("View On Explorer"),
-                                    const Divider(),
-                                    const Text("Support"),
-                                    const Divider(),
-                                    GestureDetector(
-                                        onTap: () {
-                                          LocalDataBase.removeData();
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const WelcomeScreen(),
-                                              ),
-                                              (route) => false);
-                                        },
-                                        child: const Text("Log Out")),
-                                  ],
-                                ),
-                              ),
-                            );
-  }
 }
+
+

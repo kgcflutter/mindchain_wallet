@@ -92,6 +92,7 @@ class CreateWalletProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+
   loadBalance() async {
     String? myKey = await LocalDataBase.getData("pkey");
     if (myKey != null && myKey.isNotEmpty) {

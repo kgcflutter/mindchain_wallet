@@ -7,7 +7,7 @@ import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widget/gredient_background_bottom.dart';
-import '../../../widget/seed_phrase_background.dart';
+import '../../../widget/auth/seed_phrase_background.dart';
 import '../../utils/copysystem.dart';
 
 class SaveTheSeedPhraseScreen extends StatelessWidget {
