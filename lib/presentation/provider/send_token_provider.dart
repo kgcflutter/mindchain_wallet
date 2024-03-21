@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
-import '../local_database.dart';
+import '../utils/local_database.dart';
 
 class SendTokenProvider extends ChangeNotifier {
   TextEditingController addressTEC = TextEditingController();

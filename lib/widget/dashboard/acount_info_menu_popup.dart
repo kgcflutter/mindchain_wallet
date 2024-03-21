@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../presentation/local_database.dart';
+import '../../presentation/utils/local_database.dart';
 import '../../presentation/screens/account_details_screen.dart';
 import '../../presentation/screens/auth/welcome_screen.dart';
 import '../custom_popup.dart';

@@ -1,13 +1,12 @@
-import 'dart:math';
 import 'package:ed25519_hd_key/ed25519_hd_key.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
-import 'package:mindchain_wallet/presentation/local_database.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
 
 import '../utils/convert_to_eth.dart';
+import '../utils/local_database.dart';
 
 class CreateWalletProvider extends ChangeNotifier {
   TextEditingController checkPhraseController = TextEditingController();
@@ -20,9 +19,9 @@ class CreateWalletProvider extends ChangeNotifier {
 
   CreateWalletProvider()
       : ethClient = Web3Client(
-          'https://seednode.mindchain.info/',
-          http.Client(),
-        );
+    'https://seednode.mindchain.info/',
+    http.Client(),
+  );
 
   createWallet() async {
     mnemonicList.clear();
@@ -102,7 +101,7 @@ class CreateWalletProvider extends ChangeNotifier {
       checkBalance(myKey);
     } else {
       final _privateKey =
-          await getPrivateKey(checkPhraseController.text.trim(),);
+      await getPrivateKey(checkPhraseController.text.trim(),);
       final address = await getPublicKey(_privateKey!);
       savePrivateKey(_privateKey!, address.hex);
       checkBalance(_privateKey!);
@@ -113,6 +112,4 @@ class CreateWalletProvider extends ChangeNotifier {
     LocalDataBase.saveData("pkey", privateKey);
     LocalDataBase.saveData("address", address);
   }
-
-
 }

@@ -26,8 +26,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   loadBal() async {
-    Provider.of<AccountDetailsProvider>(context, listen: false)
-        .fetchUserTransaction();
     Future.delayed(
       const Duration(milliseconds: 1000),
       () => Provider.of<CreateWalletProvider>(context, listen: false)
@@ -37,8 +35,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AccountDetailsProvider>(context, listen: false)
-        .fetchUserTransaction();
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: BackgroundWidget(

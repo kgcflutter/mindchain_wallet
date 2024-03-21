@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
+import 'package:mindchain_wallet/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
@@ -26,9 +27,15 @@ class AssetsAndTrxTapbar extends StatelessWidget {
               length: 2, // Number of tabs
               child: Column(
                 children: <Widget>[
-                  const TabBar(
-                    indicatorColor: Color(0xffFF8A00),
-                    tabs: [
+                  TabBar(
+                    onTap: (index) {
+                      if (index == 1) {
+                        Provider.of<AccountDetailsProvider>(context,listen: false)
+                            .fetchUserTransactionData();
+                      }
+                    },
+                    indicatorColor: const Color(0xffFF8A00),
+                    tabs: const [
                       Tab(text: 'Assets'),
                       Tab(text: 'Transactions'),
                     ],
@@ -67,85 +74,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Consumer<AccountDetailsProvider>(
-                          builder: (context, value, child) => value.trxResult !=
-                                  null
-                              ? ListView.separated(
-                                  itemCount: value.transactionFulldata.length,
-                                  itemBuilder: (context, index) => Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: ListTile(
-                                      title: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Spacer(),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                value.myAddress.toLowerCase() ==
-                                                        value
-                                                            .transactionFulldata[
-                                                                index]['from']
-                                                                ['hash']
-                                                            .toString()
-                                                            .toLowerCase()
-                                                    ? "Send"
-                                                    : "Received",
-                                                style: TextStyle(fontSize: 11),
-                                              ),
-                                              Text(
-                                                "20.2.2023",
-                                                style: TextStyle(fontSize: 11),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      trailing: Icon(
-                                        value.myAddress.toLowerCase() ==
-                                            value
-                                                .transactionFulldata[
-                                            index]['from']
-                                            ['hash']
-                                                .toString()
-                                                .toLowerCase() ?
-                                        Icons.arrow_upward : Icons.arrow_downward,
-                                        size: 19,
-                                      ),
-                                      leading: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            publicConvertToEth(
-                                              BigInt.parse(
-                                                value.transactionFulldata[index]
-                                                    ['value'],
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          const Text("\$42.251")
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(),
-                                )
-                              : Text(value.trxResult),
-                        )
+                        const TransactionListView()
                       ],
                     ),
                   ),

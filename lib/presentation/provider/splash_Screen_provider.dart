@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/local_database.dart';
+import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 

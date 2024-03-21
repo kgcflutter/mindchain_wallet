@@ -7,7 +7,6 @@ import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class SendToken extends StatefulWidget {
   const SendToken({Key? key}) : super(key: key);
