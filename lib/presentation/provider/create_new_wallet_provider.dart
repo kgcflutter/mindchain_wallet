@@ -7,6 +7,8 @@ import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
 
+import '../utils/convert_to_eth.dart';
+
 class CreateWalletProvider extends ChangeNotifier {
   TextEditingController checkPhraseController = TextEditingController();
   List<String> mnemonicList = [];
@@ -112,10 +114,5 @@ class CreateWalletProvider extends ChangeNotifier {
     LocalDataBase.saveData("address", address);
   }
 
-  String convertToEth(BigInt wei) {
-    final eth = (wei / BigInt.from(1 * pow(10, 18))).toStringAsFixed(4);
-    mindBalance = eth.toString();
-    notifyListeners();
-    return '$eth MIND';
-  }
+
 }

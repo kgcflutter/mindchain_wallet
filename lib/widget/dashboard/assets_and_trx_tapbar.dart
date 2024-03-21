@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
+import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
+import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
   const AssetsAndTrxTapbar({
@@ -64,51 +67,85 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                             ),
                           ),
                         ),
-                        ListView.separated(
-                          itemCount: 5,
-                          itemBuilder: (context, index) => const Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: ListTile(
-                              title: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Spacer(),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Send",
-                                        style: TextStyle(fontSize: 11),
+                        Consumer<AccountDetailsProvider>(
+                          builder: (context, value, child) => value.trxResult !=
+                                  null
+                              ? ListView.separated(
+                                  itemCount: value.transactionFulldata.length,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: ListTile(
+                                      title: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Spacer(),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                value.myAddress.toLowerCase() ==
+                                                        value
+                                                            .transactionFulldata[
+                                                                index]['from']
+                                                                ['hash']
+                                                            .toString()
+                                                            .toLowerCase()
+                                                    ? "Send"
+                                                    : "Received",
+                                                style: TextStyle(fontSize: 11),
+                                              ),
+                                              Text(
+                                                "20.2.2023",
+                                                style: TextStyle(fontSize: 11),
+                                              )
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                      Text(
-                                        "20.2.2023",
-                                        style: TextStyle(fontSize: 11),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                              trailing: Icon(
-                                Icons.arrow_downward_rounded,
-                                size: 19,
-                              ),
-                              leading: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("234 BNB"),
-                                  SizedBox(
-                                    height: 5,
+                                      trailing: Icon(
+                                        value.myAddress.toLowerCase() ==
+                                            value
+                                                .transactionFulldata[
+                                            index]['from']
+                                            ['hash']
+                                                .toString()
+                                                .toLowerCase() ?
+                                        Icons.arrow_upward : Icons.arrow_downward,
+                                        size: 19,
+                                      ),
+                                      leading: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            publicConvertToEth(
+                                              BigInt.parse(
+                                                value.transactionFulldata[index]
+                                                    ['value'],
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          const Text("\$42.251")
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  Text("\$42.251")
-                                ],
-                              ),
-                            ),
-                          ),
-                          separatorBuilder: (context, index) => const Divider(),
-                        ),
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(),
+                                )
+                              : Text(value.trxResult),
+                        )
                       ],
                     ),
                   ),

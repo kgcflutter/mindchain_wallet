@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
@@ -25,6 +26,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   loadBal() async {
+    Provider.of<AccountDetailsProvider>(context, listen: false)
+        .fetchUserTransaction();
     Future.delayed(
       const Duration(milliseconds: 1000),
       () => Provider.of<CreateWalletProvider>(context, listen: false)
@@ -34,6 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AccountDetailsProvider>(context, listen: false)
+        .fetchUserTransaction();
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: BackgroundWidget(
