@@ -103,7 +103,7 @@ class TransactionListView extends StatelessWidget {
                                                   .toString()
                                                   .toLowerCase()
                                           ? Colors.green.shade200
-                                          : Colors.red.shade200,
+                                          : Colors.green.shade200,
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Text(
                                     "Success",
@@ -115,7 +115,7 @@ class TransactionListView extends StatelessWidget {
                                                     .toString()
                                                     .toLowerCase()
                                             ? Colors.green
-                                            : Colors.red),
+                                            : Colors.green),
                                   ))
                               : const Text("Field")
                         ],

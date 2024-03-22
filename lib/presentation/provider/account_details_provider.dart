@@ -48,6 +48,7 @@ class AccountDetailsProvider extends ChangeNotifier {
         trxLoading = false;
         notifyListeners();
       } else {
+
         List<dynamic> myData = body['items'];
         for (var element in myData) {
           transactionFulldata.add(Transaction.fromJson(element));

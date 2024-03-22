@@ -139,8 +139,8 @@ class _SendTokenState extends State<SendToken> {
                       Consumer<SendTokenProvider>(
                         builder: (context, value, child) => GestureDetector(
                           onTap: () {
-                            if (value.addressTEC.text != null &&
-                                value.amountTEC.text != null) {
+                            if (value.addressTEC.text.length > 40 &&
+                                value.amountTEC.text != null && value.gesLimitTEC.text !=null) {
                               value.sendEth();
                               Navigator.pushAndRemoveUntil(
                                   context,
@@ -149,7 +149,7 @@ class _SendTokenState extends State<SendToken> {
                                   ),
                                   (route) => false);
                             }else{
-                              customPopUp(context, "Erorr", const Text("Fill all input"));
+                              customPopUp(context, "Error", const Text("Fill all input"),);
                             }
                           },
                           child: const GredientBackgroundBtn(
