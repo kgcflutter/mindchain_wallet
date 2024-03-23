@@ -1,10 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:ed25519_hd_key/ed25519_hd_key.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:http/http.dart' as http;
-
 import '../utils/convert_to_eth.dart';
 import '../utils/local_database.dart';
 
@@ -15,13 +16,13 @@ class CreateWalletProvider extends ChangeNotifier {
   String mindBalance = '';
   final Web3Client ethClient;
   String errorMessage = '';
-
+  String url = "wss://seednode.mindchain.info/ws";
 
   CreateWalletProvider()
       : ethClient = Web3Client(
-    'https://seednode.mindchain.info/',
-    http.Client(),
-  );
+          'https://seednode.mindchain.info/',
+          http.Client(),
+        );
 
   createWallet() async {
     mnemonicList.clear();
@@ -61,14 +62,57 @@ class CreateWalletProvider extends ChangeNotifier {
     return address;
   }
 
-  checkBalance(String privateKey) async {
-    mindBalance = '';
-    notifyListeners();
-    Credentials credentials = await getCredentials(privateKey);
-    EtherAmount balance = await ethClient.getBalance(credentials.address);
-    mindBalance = convertToEth(balance.getInWei).toString();
-    convertToEth(balance.getInWei).toString();
-    notifyListeners();
+  // checkBalance(String privateKey) async {
+  //   mindBalance = '';
+  //   notifyListeners();
+  //   Credentials credentials = await getCredentials(privateKey);
+  //   EtherAmount balance = await ethClient.getBalance(credentials.address);
+  //   mindBalance = convertToEth(balance.getInWei).toString();
+  //   convertToEth(balance.getInWei).toString();
+  //   notifyListeners();
+  // }
+
+  Future<void> connectWebSocket(String url, String address) async {
+    try {
+      final socket = await WebSocket.connect(url);
+      print('Connected to WebSocket server');
+
+      socket.done.then((_) async {
+        // WebSocket connection is closed, attempt to reconnect after a delay
+        await Future.delayed(const Duration(seconds: 5));
+        await connectWebSocket(url, address); // Reconnect
+      });
+
+      Stream.periodic(const Duration(seconds: 1)).listen((_) {
+        final balanceSubscribePayload = json.encode({
+          'id': 1,
+          'method': 'eth_getBalance',
+          'params': [address, 'latest'],
+        });
+
+        socket.add(balanceSubscribePayload);
+      });
+
+      socket.listen(
+        (message) {
+          final data = json.decode(message);
+          if (data['id'] == 1 && data['result'] != null) {
+            final balanceHex = data['result'];
+            final balanceInWei =
+                BigInt.parse(balanceHex.substring(2), radix: 16);
+            final balanceinMIND = balanceInWei / BigInt.from(10).pow(18);
+            mindBalance = convertToEth(balanceInWei);
+            notifyListeners();
+          }
+        },
+        onError: (_) {},
+        cancelOnError: true,
+      );
+    } catch (_) {
+      // Error occurred while connecting, attempt to reconnect after a delay
+      await Future.delayed(const Duration(seconds: 5));
+      await connectWebSocket(url, address); // Reconnect
+    }
   }
 
   Future<Credentials> getCredentials(String privateKey) async {
@@ -93,18 +137,20 @@ class CreateWalletProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-
   loadBalance() async {
     String? myKey = await LocalDataBase.getData("pkey");
+    String? myAddressKey = await LocalDataBase.getData("address");
     if (myKey != null && myKey.isNotEmpty) {
       print("right");
-      checkBalance(myKey);
+      connectWebSocket(url, myAddressKey!);
     } else {
-      final _privateKey =
-      await getPrivateKey(checkPhraseController.text.trim(),);
+      final _privateKey = await getPrivateKey(
+        checkPhraseController.text.trim(),
+      );
+      await getPublicKey(_privateKey!);
       final address = await getPublicKey(_privateKey!);
       savePrivateKey(_privateKey!, address.hex);
-      checkBalance(_privateKey!);
+      connectWebSocket(url, address.hex!);
     }
   }
 

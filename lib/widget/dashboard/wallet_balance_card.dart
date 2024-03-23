@@ -13,11 +13,6 @@ Column walletCard(BuildContext context) {
         children: [
           const Text(
             "",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 22,
-            ),
           ),
           GestureDetector(
             onTap: () => myCustomPopUp(context),
@@ -26,7 +21,7 @@ Column walletCard(BuildContext context) {
               size: 25,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       const Text(
@@ -48,30 +43,17 @@ Column walletCard(BuildContext context) {
         height: 20,
       ),
       Consumer<CreateWalletProvider>(
-        builder: (context, value, child) =>
-        value.mindBalance.isEmpty
-            ? const CircularProgressIndicator(
-                color: Colors.white)
-            : Row(
-          children: [
-            Text(
-              value.mindBalance,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 19,
+        builder: (context, value, child) => value.mindBalance.isEmpty
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(
+                value.mindBalance,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 19,
+                ),
               ),
-            ),
-            InkWell(
-              onTap: () => value.loadBalance(),
-              child: const Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      )
+      ),
     ],
   );
 }

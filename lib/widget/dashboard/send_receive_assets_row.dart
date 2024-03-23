@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
 import 'package:mindchain_wallet/widget/dashboard/received_widget.dart';
 import 'package:provider/provider.dart';
-
 import '../../presentation/provider/account_details_provider.dart';
 import '../../presentation/screens/send_token_screen.dart';
 import 'icon_background.dart';
@@ -29,9 +29,12 @@ class SendReceiveAssetsRow extends StatelessWidget {
               iconData: Icons.add,
               text: "Add Assets",
             ),
-            const IconsBackground(
-              iconData: Icons.wallet,
-              text: "Buy MIND",
+            InkWell(
+              onTap: () => launchWeb("https://my.mindchainwallet.com/register"),
+              child: const IconsBackground(
+                iconData: Icons.wallet,
+                text: "Buy MIND",
+              ),
             ),
             GestureDetector(
               onTap: () => Navigator.push(

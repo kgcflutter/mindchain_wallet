@@ -62,10 +62,62 @@ class _SendTokenState extends State<SendToken> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      InputDesign(
-                        hintText: "Amount:",
-                        inputType: TextInputType.number,
+                      TextField(
+                        onChanged: (value) {
+                          provider.hideOpenInput(value);
+                          print(value);
+                        },
                         controller: provider.amountTEC,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          suffix: InkWell(
+                              onTap: () {
+                                provider.amountTEC.text = '';
+                                provider.amountTEC.text =
+                                    '${double.parse(Provider.of<CreateWalletProvider>(context,
+                                        listen: false)
+                                        .mindBalance.split('MIND')[0].trim()) - 0.03}';
+                                provider.hideOpenInput("00");
+                              },
+
+
+                              child: const Text("max")),
+                          hintStyle: const TextStyle(fontSize: 13),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff959595),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff959595),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          disabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff959595),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.all(14),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            borderSide: BorderSide(color: Color(0xff959595)),
+                          ),
+                          hintText: "Amount",
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Consumer<CreateWalletProvider>(
@@ -80,11 +132,15 @@ class _SendTokenState extends State<SendToken> {
                       const SizedBox(height: 5),
                       TextField(
                         controller: provider.addressTEC,
-                        decoration:    InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Receiver Address...",
                           hintStyle: const TextStyle(fontSize: 12),
                           suffixIcon: InkWell(
-                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => QrCodeScanScreen(),)),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => QrCodeScanScreen(),
+                                  )),
                               child: const Icon(Icons.qr_code_2)),
                           enabledBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -104,57 +160,69 @@ class _SendTokenState extends State<SendToken> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      const Row(
-                        children: [
-                          Text("Gas Price (GWEI)"),
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.info,
-                            size: 18,
-                          ),
-                        ],
-                      ),
-                      InputDesign(
-                        hintText: "10.9999999999",
-                        inputType: TextInputType.text,
-                        controller: provider.gesPriceTEC,
-                      ),
-                      const SizedBox(height: 5),
-                      const Row(
-                        children: [
-                          Text("Gas Limit"),
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.info,
-                            size: 18,
-                          )
-                        ],
-                      ),
-                      InputDesign(
-                        hintText: "10.9999999999",
-                        inputType: TextInputType.text,
-                        controller: provider.gesLimitTEC,
-                      ),
+                      provider.hideOpen == true
+                          ? Column(
+                              children: [
+                                const Row(
+                                  children: [
+                                    Text("Gas Price (GWEI)"),
+                                    SizedBox(width: 5),
+                                    Icon(
+                                      Icons.info,
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                                InputDesign(
+                                  hintText: "10.9999999999",
+                                  inputType: TextInputType.text,
+                                  controller: provider.gesPriceTEC,
+                                ),
+                                const SizedBox(height: 5),
+                                const Row(
+                                  children: [
+                                    Text("Gas Limit"),
+                                    SizedBox(width: 5),
+                                    Icon(
+                                      Icons.info,
+                                      size: 18,
+                                    )
+                                  ],
+                                ),
+                                InputDesign(
+                                  hintText: "10.9999999999",
+                                  inputType: TextInputType.text,
+                                  controller: provider.gesLimitTEC,
+                                ),
+                              ],
+                            )
+                          : const Text(""),
                       const SizedBox(height: 20),
                       Consumer<SendTokenProvider>(
                         builder: (context, value, child) => GestureDetector(
                           onTap: () {
                             if (value.addressTEC.text.length > 40 &&
-                                value.amountTEC.text != null && value.gesLimitTEC.text !=null) {
+                                value.amountTEC.text != null &&
+                                value.gesLimitTEC.text != null) {
                               value.sendEth();
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const DashboardScreen(),
+                                    builder: (context) =>
+                                        const DashboardScreen(),
                                   ),
                                   (route) => false);
-                            }else{
-                              customPopUp(context, "Error", const Text("Fill all input"),);
+                            } else {
+                              customPopUp(
+                                context,
+                                "Error",
+                                const Text("Fill all input"),
+                              );
                             }
                           },
                           child: const GredientBackgroundBtn(
                             child: Text(
-                              "Send",
+                              "Next",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),

@@ -12,6 +12,7 @@ class SendTokenProvider extends ChangeNotifier {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
+  bool hideOpen = false;
 
   final Web3Client ethClient;
   String trxResult = '';
@@ -93,11 +94,12 @@ class SendTokenProvider extends ChangeNotifier {
   }
 
   loadGesPrice() async {
-    EtherAmount gasPrice = await ethClient.getGasPrice();
-    gesPriceTEC.text = '';
-    gesLimitTEC.text = '21000';
-    gesPriceTEC.text = gasPrice.getInWei.toString();
-    notifyListeners();
+
+      EtherAmount gasPrice = await ethClient.getGasPrice();
+      gesPriceTEC.text = '';
+      gesLimitTEC.text = '21000';
+      gesPriceTEC.text = (gasPrice.getInWei / BigInt.from(1000000000)).toString();
+      notifyListeners();
   }
 
 
@@ -113,5 +115,17 @@ class SendTokenProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  hideOpenInput(String value){
+    if(value != null && value.isNotEmpty){
+      hideOpen = true;
+      print(hideOpen);
+      notifyListeners();
+    }else{
+      hideOpen = false;
+      print(hideOpen);
+      notifyListeners();
+    }
   }
 }
