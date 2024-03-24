@@ -22,13 +22,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    loadBal();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      loadBal(context);
+    });
   }
 
-  loadBal() async {
+  loadBal(BuildContext context) async {
     Future.delayed(
       const Duration(milliseconds: 1000),
-      () => Provider.of<CreateWalletProvider>(context, listen: false)
+          () => Provider.of<CreateWalletProvider>(context, listen: false)
           .loadBalance(),
     );
   }
@@ -39,10 +41,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: BackgroundWidget(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(
                   height: 40,
@@ -60,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 5,),
                 const AssetsAndTrxTapbar(),
                 const SizedBox(height: 30,)
-              ],
+              ].map((child) => Flexible(child: child)).toList(),
             ),
           ),
         ),
@@ -68,5 +70,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-
-

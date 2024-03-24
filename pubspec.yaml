@@ -47,6 +47,7 @@ dependencies:
   esys_flutter_share_plus: ^2.2.0
   qr_code_scanner: ^1.0.1
   url_launcher: ^6.2.5
+  device_preview: ^1.1.0
 
 dev_dependencies:
   flutter_test:

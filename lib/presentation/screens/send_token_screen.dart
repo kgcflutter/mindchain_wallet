@@ -3,6 +3,7 @@ import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provide
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/Qr_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
@@ -74,13 +75,9 @@ class _SendTokenState extends State<SendToken> {
                               onTap: () {
                                 provider.amountTEC.text = '';
                                 provider.amountTEC.text =
-                                    '${double.parse(Provider.of<CreateWalletProvider>(context,
-                                        listen: false)
-                                        .mindBalance.split('MIND')[0].trim()) - 0.03}';
+                                    '${double.parse(Provider.of<CreateWalletProvider>(context, listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
                                 provider.hideOpenInput("00");
                               },
-
-
                               child: const Text("max")),
                           hintStyle: const TextStyle(fontSize: 13),
                           enabledBorder: const OutlineInputBorder(
@@ -204,14 +201,20 @@ class _SendTokenState extends State<SendToken> {
                             if (value.addressTEC.text.length > 40 &&
                                 value.amountTEC.text != null &&
                                 value.gesLimitTEC.text != null) {
-                              value.sendEth();
-                              Navigator.pushAndRemoveUntil(
+                              // value.sendEth();
+                              // Navigator.pushAndRemoveUntil(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) =>
+                              //           const DashboardScreen(),
+                              //     ),
+                              //     (route) => false);
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const DashboardScreen(),
-                                  ),
-                                  (route) => false);
+                                        const TokenSendConfirmScreen(),
+                                  ));
                             } else {
                               customPopUp(
                                 context,
