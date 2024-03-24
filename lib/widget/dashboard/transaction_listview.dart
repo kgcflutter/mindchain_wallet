@@ -87,7 +87,7 @@ class TransactionListView extends StatelessWidget {
                   publicConvertToEth(
                     BigInt.parse(
                       value.transactionFulldata[index].value,
-                    ),
+                    ), "MIND"
                   ),
                 ),
                 const SizedBox(

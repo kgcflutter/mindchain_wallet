@@ -5,9 +5,9 @@ String convertToEth(BigInt wei) {
   return '$eth MIND';
 }
 
-String publicConvertToEth(BigInt wei) {
+String publicConvertToEth(BigInt wei, String name) {
   final eth = (wei / BigInt.from(1 * pow(10, 18),)).toStringAsFixed(2);
-  return '$eth MIND';
+  return '$eth $name';
 }
 
 String totalPublicConvertToEth(BigInt wei) {

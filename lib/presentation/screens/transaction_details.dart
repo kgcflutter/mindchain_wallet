@@ -130,7 +130,7 @@ class TransactionDetails extends StatelessWidget {
                             height: 10,
                           ),
                           rowData("Amount", publicConvertToEth(
-                            BigInt.parse(value.transactionFulldata[index].value),
+                            BigInt.parse(value.transactionFulldata[index].value), "MIND",
                           )),
                           const SizedBox(
                             height: 10,

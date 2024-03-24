@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
+import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:mindchain_wallet/widget/dashboard/received_widget.dart';
 import 'package:provider/provider.dart';
 import '../../presentation/provider/account_details_provider.dart';
@@ -64,9 +65,12 @@ class SendReceiveAssetsRow extends StatelessWidget {
                 ),
               ),
             ),
-            const IconsBackground(
-              iconData: Icons.stacked_bar_chart,
-              text: "Stack",
+            InkWell(
+              onTap: () => customPopUp(context, "Wait", const Text("Coming Soon")),
+              child: const IconsBackground(
+                iconData: Icons.stacked_bar_chart,
+                text: "Stack",
+              ),
             ),
           ],
         ),

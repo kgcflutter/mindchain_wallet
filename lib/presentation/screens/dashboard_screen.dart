@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
@@ -27,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   loadBal() async {
     Future.delayed(
-      const Duration(milliseconds: 1000),
+      const Duration(milliseconds: 100),
       () => Provider.of<CreateWalletProvider>(context, listen: false)
           .loadBalance(),
     );
@@ -38,29 +37,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: BackgroundWidget(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                DashboardCard(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: walletCard(context),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Provider.of<AccountDetailsProvider>(context, listen: false).fetchUserToken();
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 40,
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SendReceiveAssetsRow(screenWidth: screenWidth),
-                const SizedBox(height: 5,),
-                const AssetsAndTrxTapbar(),
-                const SizedBox(height: 30,)
-              ],
+                  DashboardCard(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: walletCard(context),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  SendReceiveAssetsRow(screenWidth: screenWidth),
+                  const SizedBox(height: 5,),
+                  const AssetsAndTrxTapbar(),
+                  const SizedBox(height: 30,)
+                ],
+              ),
             ),
           ),
         ),

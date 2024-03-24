@@ -41,11 +41,11 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     child: TabBarView(
                       children: [
-                        ListView.builder(
-                          itemCount: 5,
+                        Consumer<AccountDetailsProvider>(builder: (context, value, child) => ListView.builder(
+                          itemCount: value.assetsTokenLIst.length,
                           itemBuilder: (context, index) => Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
@@ -55,25 +55,25 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                                   color: const Color(0XffBABABA),
                                 ),
                               ),
-                              child: const ListTile(
+                              child:  ListTile(
                                 trailing: Text(
-                                  "\$42.251",
-                                  style: TextStyle(
+                                  publicConvertToEth(BigInt.parse(value.assetsTokenLIst[index].value), value.assetsTokenLIst[index].token.symbol),
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
                                 title: Text(
-                                  "234 BNB",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  value.assetsTokenLIst[index].token.name,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                leading: Icon(
-                                  Icons.paid_rounded,
+                                leading: const Icon(
+                                  Icons.token,
                                   color: Colors.red,
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        ),),
                         const TransactionListView()
                       ],
                     ),

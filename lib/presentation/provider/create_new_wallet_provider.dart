@@ -100,7 +100,6 @@ class CreateWalletProvider extends ChangeNotifier {
             final balanceHex = data['result'];
             final balanceInWei =
                 BigInt.parse(balanceHex.substring(2), radix: 16);
-            final balanceinMIND = balanceInWei / BigInt.from(10).pow(18);
             mindBalance = convertToEth(balanceInWei);
             notifyListeners();
           }

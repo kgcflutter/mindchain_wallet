@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/model/asset_token_model.dart';
 import 'package:mindchain_wallet/model/transaction_model.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 class AccountDetailsProvider extends ChangeNotifier {
   AccountDetailsProvider() {
     loadPrivateKeyAddress();
+    fetchUserToken();
   }
 
   String myPrivateKey = '';
@@ -15,6 +17,7 @@ class AccountDetailsProvider extends ChangeNotifier {
   List<Transaction> transactionFulldata = []; // Specifying type for the list
   String trxResult = '';
   bool trxLoading = false;
+  List<AssetsTokenModel> assetsTokenLIst = [];
 
   loadPrivateKeyAddress() async {
     String? myP = await LocalDataBase.getData("pkey");
@@ -62,4 +65,28 @@ class AccountDetailsProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  fetchUserToken() async {
+    String? hexAddress = '';
+    if(hexAddress.isEmpty){hexAddress = await LocalDataBase.getData("address");
+      notifyListeners();
+    }
+  Future.delayed(const Duration(seconds: 1),() async {
+
+    String urls = 'https://mainnet.mindscan.info/api/v2/addresses/${await LocalDataBase.getData("address")}/tokens?type=ERC-20';
+    try{
+      http.Response response = await http.get(Uri.parse(urls),);
+      var body = jsonDecode(response.body);
+      List responseList = body['items'];
+
+      for (var element in responseList) {
+        assetsTokenLIst.add(AssetsTokenModel.fromJson(element));
+      }
+      notifyListeners();
+    }catch(e){
+      fetchUserToken();
+    }
+  },);
+  }
+
 }

@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-List<Temperatures> temperaturesFromJson(String str) => List<Temperatures>.from(json.decode(str).map((x) => Temperatures.fromJson(x)));
+List<AssetsTokenModel> temperaturesFromJson(String str) => List<AssetsTokenModel>.from(json.decode(str).map((x) => AssetsTokenModel.fromJson(x)));
 
-String temperaturesToJson(List<Temperatures> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String temperaturesToJson(List<AssetsTokenModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Temperatures {
+class AssetsTokenModel {
   Token token;
   dynamic tokenId;
   dynamic tokenInstance;
   String value;
 
-  Temperatures({
+  AssetsTokenModel({
     required this.token,
     required this.tokenId,
     required this.tokenInstance,
     required this.value,
   });
 
-  factory Temperatures.fromJson(Map<String, dynamic> json) => Temperatures(
+  factory AssetsTokenModel.fromJson(Map<String, dynamic> json) => AssetsTokenModel(
     token: Token.fromJson(json["token"]),
     tokenId: json["token_id"],
     tokenInstance: json["token_instance"],
