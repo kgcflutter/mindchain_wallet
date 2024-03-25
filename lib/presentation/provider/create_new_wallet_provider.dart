@@ -114,14 +114,7 @@ class CreateWalletProvider extends ChangeNotifier {
     }
   }
 
-  Future<Credentials> getCredentials(String privateKey) async {
-    String? privateKeys = privateKey;
-    if (privateKeys != null) {
-      return EthPrivateKey.fromHex(privateKey);
-    } else {
-      throw Exception('Invalid private key.');
-    }
-  }
+
 
   // checkPhraseBottom(BuildContext context) async {
   //   if (checkPhraseController.text.length > 20) {

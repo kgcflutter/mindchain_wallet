@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/screens/new_assets_add_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
 import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:mindchain_wallet/widget/dashboard/received_widget.dart';
@@ -26,9 +28,16 @@ class SendReceiveAssetsRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const IconsBackground(
-              iconData: Icons.add,
-              text: "Add Assets",
+            GestureDetector(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NewAssetsAddScreen(),
+                  )),
+              child: const IconsBackground(
+                iconData: Icons.add,
+                text: "Add Assets",
+              ),
             ),
             InkWell(
               onTap: () => launchWeb("https://my.mindchainwallet.com/register"),
@@ -66,7 +75,8 @@ class SendReceiveAssetsRow extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () => customPopUp(context, "Wait", const Text("Coming Soon")),
+              onTap: () =>
+                  customPopUp(context, "Wait", const Text("Coming Soon")),
               child: const IconsBackground(
                 iconData: Icons.stacked_bar_chart,
                 text: "Stack",

@@ -11,6 +11,7 @@ class AccountDetailsProvider extends ChangeNotifier {
     fetchUserToken();
   }
 
+
   String myPrivateKey = '';
   String myAddress = '';
   bool showKey = false;

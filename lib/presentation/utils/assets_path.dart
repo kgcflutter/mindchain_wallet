@@ -7,4 +7,6 @@ class AssetsPath {
   static String  walletBG = '$_imageBasePath/walletbg.png';
   static String  sendLoading = '$_imageBasePath/sendLoading.json';
   static String  mindLogoPng = '$_imageBasePath/mindlogo.png';
+  static String  transactionJson = '$_imageBasePath/trxsuccess.json';
+  static String  donePng = '$_imageBasePath/trxsuccess.png';
 }

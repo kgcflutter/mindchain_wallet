@@ -22,6 +22,7 @@ class _SendTokenState extends State<SendToken> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<SendTokenProvider>(context, listen: false).loadGesPrice();
+      Provider.of<SendTokenProvider>(context, listen: false).loadMyAddress();
     });
   }
 
@@ -119,7 +120,7 @@ class _SendTokenState extends State<SendToken> {
                       const SizedBox(height: 5),
                       Consumer<CreateWalletProvider>(
                         builder: (context, value, child) => Text(
-                          " Your Balance ${value.mindBalance} MIND",
+                          " Your Balance ${value.mindBalance}",
                           style: const TextStyle(
                             color: Color(0xffFF8A00),
                             fontWeight: FontWeight.bold,
@@ -213,7 +214,7 @@ class _SendTokenState extends State<SendToken> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                    const TokenSendConfirmScreen(),
+                                     TokenSendConfirmScreen(tokenName: 'MIND',),
                                   ));
                             } else {
                               customPopUp(

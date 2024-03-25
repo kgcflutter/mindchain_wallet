@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
+import '../../authenticator/privatekeyAuth.dart';
 import '../utils/local_database.dart';
 
 class SendTokenProvider extends ChangeNotifier {
@@ -13,6 +14,8 @@ class SendTokenProvider extends ChangeNotifier {
   Barcode? result;
   QRViewController? controller;
   bool hideOpen = false;
+  String address = '';
+  String trxError = '';
 
   final Web3Client ethClient;
   String trxResult = '';
@@ -24,8 +27,14 @@ class SendTokenProvider extends ChangeNotifier {
     http.Client(),
   );
 
+  loadMyAddress()async{
+   address = (await LocalDataBase.getData("address"))!;
+   notifyListeners();
+  }
+
   Future<void> sendEth() async {
     trxResult = '';
+    trxError = '';
     btnLoading = true;
     notifyListeners();
     String? recipientAddress = addressTEC.text;
@@ -39,9 +48,13 @@ class SendTokenProvider extends ChangeNotifier {
         EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmount);
         await _sendTransaction(ethClient, recipientAddress, ethAmount);
       } catch (e) {
+        trxError = "Something Error Please Try again";
+        notifyListeners();
         print('Invalid amount entered. Please enter a valid number.');
       }
     } else {
+      trxError = 'Invalid recipient address or amount.';
+      notifyListeners();
       print('Invalid recipient address or amount.');
     }
   }
@@ -49,9 +62,9 @@ class SendTokenProvider extends ChangeNotifier {
   Future<void> _sendTransaction(Web3Client ethClient, String receiver,
       EtherAmount txValue) async {
     var chainId = await ethClient.getChainId();
-    trxResult = 'Sending transaction...';
+    print('Sending transaction...');
     notifyListeners();
-    Credentials credentials = await _getCredentials();
+    Credentials credentials = await getCredentials();
     EtherAmount gasPrice = await ethClient.getGasPrice();
     BigInt gasEstimate = await ethClient.estimateGas(
       sender: credentials.address,
@@ -70,7 +83,8 @@ class SendTokenProvider extends ChangeNotifier {
 
     if (response != null) {
       print('Transaction sent! Hash: $response');
-      trxResult = 'Transaction sent! Hash: $response';
+      trxResult =  response;
+      notifyListeners();
       if (response != null) {
         loadGesPrice();
         addressTEC.text = '';
@@ -83,15 +97,6 @@ class SendTokenProvider extends ChangeNotifier {
     }
   }
 
-  Future<Credentials> _getCredentials() async {
-    String? privateKey = await LocalDataBase.getData("pkey");
-    String? privateKeys = privateKey;
-    if (privateKeys != null) {
-      return EthPrivateKey.fromHex(privateKey!);
-    } else {
-      throw Exception('Invalid private key.');
-    }
-  }
 
   loadGesPrice() async {
 
