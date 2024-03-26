@@ -16,6 +16,7 @@ class SendTokenProvider extends ChangeNotifier {
   bool hideOpen = false;
   String address = '';
   String trxError = '';
+  String trxWaiting = '';
 
   final Web3Client ethClient;
   String trxResult = '';
@@ -27,6 +28,10 @@ class SendTokenProvider extends ChangeNotifier {
     http.Client(),
   );
 
+   tokenSwitcher(bool value, int index) {
+    notifyListeners();
+  }
+
   loadMyAddress()async{
    address = (await LocalDataBase.getData("address"))!;
    notifyListeners();
@@ -35,7 +40,9 @@ class SendTokenProvider extends ChangeNotifier {
   Future<void> sendEth() async {
     trxResult = '';
     trxError = '';
+    trxWaiting = '';
     btnLoading = true;
+    trxWaiting = "sending precess start";
     notifyListeners();
     String? recipientAddress = addressTEC.text;
     print('Enter the amount to send:');
@@ -63,6 +70,7 @@ class SendTokenProvider extends ChangeNotifier {
       EtherAmount txValue) async {
     var chainId = await ethClient.getChainId();
     print('Sending transaction...');
+    trxWaiting = 'Sending transaction...';
     notifyListeners();
     Credentials credentials = await getCredentials();
     EtherAmount gasPrice = await ethClient.getGasPrice();
@@ -83,12 +91,11 @@ class SendTokenProvider extends ChangeNotifier {
 
     if (response != null) {
       print('Transaction sent! Hash: $response');
+      trxWaiting = "Done Your Transaction sent! ";
       trxResult =  response;
       notifyListeners();
       if (response != null) {
         loadGesPrice();
-        addressTEC.text = '';
-        amountTEC.text = '';
         btnLoading = false;
       }
       notifyListeners();

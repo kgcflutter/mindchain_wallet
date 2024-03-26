@@ -1,110 +1,149 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
-import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
+import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_bar_code/code/src/code_generate.dart';
+import 'package:qr_bar_code/code/src/code_type.dart';
 
 class TransActionSuccessScreen extends StatelessWidget {
-  String tokenName;
-  String amount;
+  final String tokenName;
+  final String amount;
+  final String toAddress;
 
-  TransActionSuccessScreen(
-      {super.key, required this.tokenName, required this.amount});
+  const TransActionSuccessScreen({
+    Key? key,
+    required this.tokenName,
+    required this.amount,
+    required this.toAddress,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BackgroundWidget(
-      child: SafeArea(
-        child: Consumer<SendTokenProvider>(
-          builder: (context, value, child) => SizedBox(
-            height: 500,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Card(
-                surfaceTintColor: Colors.transparent,
+      body: WillPopScope(
+        onWillPop: () async {
+          return await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(),
+            ),
+                (route) => false,
+          );
+        },
+        child: BackgroundWidget(
+          child: SafeArea(
+            child: Consumer<SendTokenProvider>(
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(18.0),
                 child: value.trxResult.isNotEmpty
                     ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Transaction Details",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Image.asset(
+                      AssetsPath.donePng,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                    ),
+                    const Text(
+                      "Transaction Success",
+                      style: TextStyle(
+                        color: Color(0xff28BAA7),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text("- $amount $tokenName",style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 15),),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.black38),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            AssetsPath.donePng,
-                            height: 70,
+                          const Text("From"),
+                          const SizedBox(height: 10,),
+                          FittedBox(child: Text(obscureString(value.address))),
+                          const SizedBox(height: 20,),
+                          const Text("To"),
+                          const SizedBox(height: 10,),
+                          FittedBox(child: Text(obscureString(value.addressTEC.text))),
+                          const SizedBox(height: 20,),
+                          const Text("Network Fee"),
+                          const SizedBox(height: 10,),
+                          Text(value.gesPriceTEC.text),
+                          const SizedBox(height: 20,),
+                          const Divider(),
+                          const SizedBox(height: 20,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("Transaction Hash"),
+                                  Text(obscureString(value.trxResult)),
+                                  const SizedBox(height: 10),
+                                  const Text("Time"),
+                                  Text(DateTime.now().toString().split(" ")[1]),
+                                ],
+                              ),
+                              Code(
+                                height: 95,
+                                data: "https://mainnet.mindscan.info/tx/${value.trxResult}",
+                                codeType: CodeType.qrCode(),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 18.0),
-                            child: Row(
-                              children: [
-                                const Text("Amount:"),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  '$amount $tokenName',
-                                  style: const TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          InkWell(
-                            onTap: () =>
-                                mnemonicListCopyText(context, value.trxResult),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 18.0),
-                              child: Text("Transaction ID: ${value.trxResult}"),
-                            ),
-                          ),
-                          TextButton(
-                              onPressed: () => Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DashboardScreen(),
-                                  ),
-                                  (route) => false),
-                              child: const Text("Go To Dashboard"))
                         ],
-                      )
+                      ),
+                    ),
+                  ],
+                )
                     : value.trxError.isEmpty
-                        ? Column(
-                            children: [
-                              Lottie.asset(AssetsPath.transactionJson),
-                              const Text("Please Wait For Transaction"),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              Text(value.trxError),
-                              TextButton(
-                                  onPressed: () => Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DashboardScreen(),
-                                      ),
-                                      (route) => false),
-                                  child: const Text("Back To Dashboard"))
-                            ],
-                          ),
+                    ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(AssetsPath.sendLoading),
+                     Text(value.trxWaiting),
+                  ],
+                )
+                    : Column(
+                  children: [
+                    Text(value.trxError),
+                    TextButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashboardScreen(),
+                        ),
+                            (route) => false,
+                      ),
+                      child: const Text("Back To Dashboard"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

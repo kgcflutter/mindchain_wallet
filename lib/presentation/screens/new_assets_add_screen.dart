@@ -12,8 +12,8 @@ class NewAssetsAddScreen extends StatelessWidget {
     return Scaffold(
       body: BackgroundWidget(
           child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
           decoration: const BoxDecoration(
             color: Color(0x41eaeaea),
             borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -70,14 +70,16 @@ class NewAssetsAddScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(13.0),
-                child: GredientBackgroundBtn(child: Text("SAVE")),
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: const GredientBackgroundBtn(child: Text("SAVE"))),
               )
             ],
           ),
-                  ),
-                )),
+        ),
+      )),
     );
   }
 }

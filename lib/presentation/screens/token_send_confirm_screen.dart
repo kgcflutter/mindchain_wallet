@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/transaction_sucess_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
+import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class TokenSendConfirmScreen extends StatelessWidget {
                                       AssetsPath.mindLogoPng,
                                       height: 30,
                                     ),
-                                    Text(value.address),
+                                    Text(obscureString(value.address)),
                                   ],
                                 ),
                               ),
@@ -79,7 +80,7 @@ class TokenSendConfirmScreen extends StatelessWidget {
                                       height: 30,
                                     ),
                                     const SizedBox(width: 5),
-                                    Text(value.addressTEC.text),
+                                    Text(obscureString(value.addressTEC.text)),
                                   ],
                                 ),
                               ),
@@ -170,7 +171,7 @@ class TokenSendConfirmScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                           TransActionSuccessScreen(tokenName: tokenName, amount: value.amountTEC.text,),
+                                           TransActionSuccessScreen(tokenName: tokenName, amount: value.amountTEC.text, toAddress: value.addressTEC.text,),
                                     ),
                                     (route) => false);
                               },
