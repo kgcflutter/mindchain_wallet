@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
+import 'package:mindchain_wallet/presentation/screens/added_token_send_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,8 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                   TabBar(
                     onTap: (index) {
                       if (index == 1) {
-                        Provider.of<AccountDetailsProvider>(context,listen: false)
+                        Provider.of<AccountDetailsProvider>(context,
+                                listen: false)
                             .fetchUserTransactionData();
                       }
                     },
@@ -44,36 +46,56 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: TabBarView(
                       children: [
-                        Consumer<AccountDetailsProvider>(builder: (context, value, child) => ListView.builder(
-                          itemCount: value.assetsTokenLIst.length,
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: const Color(0XffBABABA),
+                        Consumer<AccountDetailsProvider>(
+                          builder: (context, value, child) => ListView.builder(
+                            itemCount: value.assetsTokenLIst.length,
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: const Color(0XffBABABA),
+                                  ),
                                 ),
-                              ),
-                              child:  ListTile(
-                                trailing: Text(
-                                  publicConvertToEth(BigInt.parse(value.assetsTokenLIst[index].value), value.assetsTokenLIst[index].token.symbol),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                title: Text(
-                                  value.assetsTokenLIst[index].token.name,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                leading: const Icon(
-                                  Icons.token,
-                                  color: Colors.red,
+                                child: ListTile(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddedTokenSendScreen(
+                                          balance: publicConvertToEth(
+                                              BigInt.parse(value
+                                                  .assetsTokenLIst[index]
+                                                  .value),
+                                              value.assetsTokenLIst[index].token
+                                                  .symbol), fullName: value.assetsTokenLIst[index].token.name,
+                                        ),
+                                      )),
+                                  trailing: Text(
+                                    publicConvertToEth(
+                                        BigInt.parse(
+                                            value.assetsTokenLIst[index].value),
+                                        value.assetsTokenLIst[index].token
+                                            .symbol),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  title: Text(
+                                    value.assetsTokenLIst[index].token.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  leading: const Icon(
+                                    Icons.token,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),),
+                        ),
                         const TransactionListView()
                       ],
                     ),

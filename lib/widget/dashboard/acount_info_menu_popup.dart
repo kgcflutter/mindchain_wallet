@@ -33,13 +33,13 @@ myCustomPopUp(BuildContext context) {
               child: const Text("View On Explorer")),
           const Divider(),
           GestureDetector(
-            onTap: () => launchWeb("https://github.com/Mind-chain/MIndscan/issues"),
+            onTap: () => launchWeb("https://t.me/mindchainMIND"),
               child: const Text("Support"),),
           const Divider(),
           GestureDetector(
               onTap: () {
-                Provider.of<CreateWalletProvider>(context).mindBalance = '';
-                Provider.of<CreateWalletProvider>(context).loadBalance();
+                Provider.of<CreateWalletProvider>(context,listen: false).mindBalance = '';
+                Provider.of<CreateWalletProvider>(context,listen: false).loadBalance();
                 LocalDataBase.removeData();
                 Navigator.pushAndRemoveUntil(
                     context,

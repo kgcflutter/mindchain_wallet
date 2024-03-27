@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/transaction_details.dart';
-import 'package:mindchain_wallet/widget/custom_popup.dart';
 import 'package:provider/provider.dart';
 import '../../presentation/utils/convert_to_eth.dart';
 

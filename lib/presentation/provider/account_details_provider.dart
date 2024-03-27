@@ -11,7 +11,6 @@ class AccountDetailsProvider extends ChangeNotifier {
     fetchUserToken();
   }
 
-
   String myPrivateKey = '';
   String myAddress = '';
   bool showKey = false;
@@ -52,7 +51,6 @@ class AccountDetailsProvider extends ChangeNotifier {
         trxLoading = false;
         notifyListeners();
       } else {
-
         List<dynamic> myData = body['items'];
         for (var element in myData) {
           transactionFulldata.add(Transaction.fromJson(element));
@@ -69,25 +67,30 @@ class AccountDetailsProvider extends ChangeNotifier {
 
   fetchUserToken() async {
     String? hexAddress = '';
-    if(hexAddress.isEmpty){hexAddress = await LocalDataBase.getData("address");
+    if (hexAddress.isEmpty) {
+      hexAddress = await LocalDataBase.getData("address");
       notifyListeners();
     }
-  Future.delayed(const Duration(seconds: 1),() async {
+    Future.delayed(
+      const Duration(seconds: 1),
+      () async {
+        String urls =
+            'https://mainnet.mindscan.info/api/v2/addresses/${await LocalDataBase.getData("address")}/tokens?type=ERC-20';
+        try {
+          http.Response response = await http.get(
+            Uri.parse(urls),
+          );
+          var body = jsonDecode(response.body);
+          List responseList = body['items'];
 
-    String urls = 'https://mainnet.mindscan.info/api/v2/addresses/${await LocalDataBase.getData("address")}/tokens?type=ERC-20';
-    try{
-      http.Response response = await http.get(Uri.parse(urls),);
-      var body = jsonDecode(response.body);
-      List responseList = body['items'];
-
-      for (var element in responseList) {
-        assetsTokenLIst.add(AssetsTokenModel.fromJson(element));
-      }
-      notifyListeners();
-    }catch(e){
-      fetchUserToken();
-    }
-  },);
+          for (var element in responseList) {
+            assetsTokenLIst.add(AssetsTokenModel.fromJson(element));
+          }
+          notifyListeners();
+        } catch (e) {
+          fetchUserToken();
+        }
+      },
+    );
   }
-
 }
