@@ -1,4 +1,5 @@
-import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
@@ -8,13 +9,22 @@ import 'package:mindchain_wallet/presentation/provider/splash_Screen_provider.da
 import 'package:mindchain_wallet/presentation/screens/auth/splash_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(
-    DevicePreview(
-      enabled: false,
-      builder: (context) => MyApp(),
-    ),
+import 'firebase_options.dart';
+
+
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {}
+}
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+  runApp(const MyApp(),);
 }
 
 class MyApp extends StatelessWidget {
