@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
@@ -11,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_bar_code/code/src/code_generate.dart';
 import 'package:qr_bar_code/code/src/code_type.dart';
 
-class TransActionSuccessScreen extends StatelessWidget {
+class TransActionSuccessScreen extends StatefulWidget {
   final String tokenName;
   final String amount;
   final String toAddress;
@@ -22,6 +20,22 @@ class TransActionSuccessScreen extends StatelessWidget {
     required this.amount,
     required this.toAddress,
   }) : super(key: key);
+
+  @override
+  State<TransActionSuccessScreen> createState() => _TransActionSuccessScreenState();
+}
+
+class _TransActionSuccessScreenState extends State<TransActionSuccessScreen> {
+  @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  load() async {
+    await Provider.of<SendTokenProvider>(context).loadMyAddress();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +79,7 @@ class TransActionSuccessScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text("- $amount $tokenName",style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 15),),
+                    Text("- ${widget.amount} ${widget.tokenName}",style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 15),),
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
@@ -116,7 +130,7 @@ class TransActionSuccessScreen extends StatelessWidget {
                     ),
                   ],
                 )
-                    : value.trxError.isEmpty
+                    : value.trxError.isEmpty && value.trxResult != null
                     ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

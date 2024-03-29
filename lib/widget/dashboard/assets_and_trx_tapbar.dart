@@ -46,55 +46,70 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: TabBarView(
                       children: [
-                        Consumer<AccountDetailsProvider>(
-                          builder: (context, value, child) => ListView.builder(
-                            itemCount: value.assetsTokenLIst.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: const Color(0XffBABABA),
-                                  ),
-                                ),
-                                child: ListTile(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddedTokenSendScreen(
-                                          balance: publicConvertToEth(
-                                              BigInt.parse(value
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Consumer<AccountDetailsProvider>(
+                              builder: (context, value, child) =>
+                                  ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: value.assetsTokenLIst.length,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: const Color(0XffBABABA),
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddedTokenSendScreen(
+                                              balance: publicConvertToEth(
+                                                  BigInt.parse(value
+                                                      .assetsTokenLIst[index]
+                                                      .value),
+                                                  value.assetsTokenLIst[index]
+                                                      .token.symbol),
+                                              fullName: value
                                                   .assetsTokenLIst[index]
-                                                  .value),
-                                              value.assetsTokenLIst[index].token
-                                                  .symbol), fullName: value.assetsTokenLIst[index].token.name,
-                                        ),
-                                      )),
-                                  trailing: Text(
-                                    publicConvertToEth(
-                                        BigInt.parse(
-                                            value.assetsTokenLIst[index].value),
-                                        value.assetsTokenLIst[index].token
-                                            .symbol),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  title: Text(
-                                    value.assetsTokenLIst[index].token.name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  leading: const Icon(
-                                    Icons.token,
-                                    color: Colors.red,
+                                                  .token
+                                                  .name,
+                                              contractAddress: value
+                                                  .assetsTokenLIst[index]
+                                                  .token
+                                                  .address,
+                                            ),
+                                          )),
+                                      trailing: Text(
+                                        publicConvertToEth(
+                                            BigInt.parse(value
+                                                .assetsTokenLIst[index].value),
+                                            value.assetsTokenLIst[index].token
+                                                .symbol),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      title: Text(
+                                        value.assetsTokenLIst[index].token.name,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      leading: const Icon(
+                                        Icons.token,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                         const TransactionListView()
                       ],

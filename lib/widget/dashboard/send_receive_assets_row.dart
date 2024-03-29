@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/screens/new_assets_add_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';

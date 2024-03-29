@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:web3dart/credentials.dart';
 import '../presentation/utils/local_database.dart';
 
@@ -8,4 +10,9 @@ Future<Credentials> getCredentials() async {
   } else {
     throw Exception('Invalid private key.');
   }
+}
+
+Future<String>loadMyAddress()async{
+  return  (await LocalDataBase.getData("address"))!;
+
 }

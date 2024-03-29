@@ -19,10 +19,7 @@ class CreateWalletProvider extends ChangeNotifier {
   String url = "wss://seednode.mindchain.info/ws";
 
   CreateWalletProvider()
-      : ethClient = Web3Client(
-          'https://seednode.mindchain.info/',
-          http.Client(),
-        );
+      : ethClient = Web3Client('https://seednode.mindchain.info/', http.Client(),);
 
   createWallet() async {
     mnemonicList.clear();
@@ -89,7 +86,6 @@ class CreateWalletProvider extends ChangeNotifier {
           'method': 'eth_getBalance',
           'params': [address, 'latest'],
         });
-
         socket.add(balanceSubscribePayload);
       });
 
@@ -114,20 +110,6 @@ class CreateWalletProvider extends ChangeNotifier {
     }
   }
 
-
-
-  // checkPhraseBottom(BuildContext context) async {
-  //   if (checkPhraseController.text.length > 20) {
-  //     final pKey = await getPrivateKey(checkPhraseController.text.trim());
-  //     final address = await getPublicKey(pKey!);
-  //     final publicKey = address.hex;
-  //     final bal = await checkBalance(pKey!);
-  //     notifyListeners();
-  //   } else {
-  //     errorMessage = "Give Valid Data";
-  //   }
-  //   notifyListeners();
-  // }
 
   loadBalance() async {
     String? myKey = await LocalDataBase.getData("pkey");

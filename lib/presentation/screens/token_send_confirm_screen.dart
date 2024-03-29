@@ -47,7 +47,7 @@ class TokenSendConfirmScreen extends StatelessWidget {
                                 padding: const EdgeInsets.all(5),
                                 decoration: const BoxDecoration(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
+                                      BorderRadius.all(Radius.circular(10),),
                                   border: Border.fromBorderSide(
                                       BorderSide(color: Colors.black45)),
                                 ),
