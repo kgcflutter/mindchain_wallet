@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import '../../authenticator/privatekeyAuth.dart';
 import '../utils/local_database.dart';
 
-
 class Token {
   String name;
   String symbol;
@@ -36,17 +35,17 @@ class SendTokenProvider extends ChangeNotifier {
 
   SendTokenProvider()
       : ethClient = Web3Client(
-    'https://seednode.mindchain.info/',
-    http.Client(),
-  );
+          'https://seednode.mindchain.info/',
+          http.Client(),
+        );
 
-   tokenSwitcher(bool value, int index) {
+  tokenSwitcher(bool value, int index) {
     notifyListeners();
   }
 
-  loadMyAddress()async{
-   address = (await LocalDataBase.getData("address"))!;
-   notifyListeners();
+  loadMyAddress() async {
+    address = (await LocalDataBase.getData("address"))!;
+    notifyListeners();
   }
 
   Future<void> sendEth() async {
@@ -64,7 +63,7 @@ class SendTokenProvider extends ChangeNotifier {
         double parsedAmount = double.parse(amount);
         BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
         EtherAmount ethAmount =
-        EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmount);
+            EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmount);
         await _sendTransaction(ethClient, recipientAddress, ethAmount);
       } catch (e) {
         trxError = "Something Error Please Try again";
@@ -78,8 +77,8 @@ class SendTokenProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _sendTransaction(Web3Client ethClient, String receiver,
-      EtherAmount txValue) async {
+  Future<void> _sendTransaction(
+      Web3Client ethClient, String receiver, EtherAmount txValue) async {
     var chainId = await ethClient.getChainId();
     print('Sending transaction...');
     trxWaiting = 'Sending transaction...';
@@ -104,7 +103,7 @@ class SendTokenProvider extends ChangeNotifier {
     if (response != null) {
       print('Transaction sent! Hash: $response');
       trxWaiting = "Done Your Transaction sent! ";
-      trxResult =  response;
+      trxResult = response;
       notifyListeners();
       if (response != null) {
         loadGesPrice();
@@ -116,16 +115,13 @@ class SendTokenProvider extends ChangeNotifier {
     }
   }
 
-
   loadGesPrice() async {
-
-      EtherAmount gasPrice = await ethClient.getGasPrice();
-      gesPriceTEC.text = '';
-      gesLimitTEC.text = '21000';
-      gesPriceTEC.text = (gasPrice.getInWei / BigInt.from(1000000000)).toString();
-      notifyListeners();
+    EtherAmount gasPrice = await ethClient.getGasPrice();
+    gesPriceTEC.text = '';
+    gesLimitTEC.text = '21000';
+    gesPriceTEC.text = (gasPrice.getInWei / BigInt.from(1000000000)).toString();
+    notifyListeners();
   }
-
 
   void onQRViewCreated(QRViewController controller) {
     this.controller = controller;
@@ -133,7 +129,7 @@ class SendTokenProvider extends ChangeNotifier {
       result = scanData;
       print(result!.format.toString());
       // Update the address text field when a QR code is scanned
-      if(result!.code != null){
+      if (result!.code != null) {
         addressTEC.text = result?.code ?? '';
         notifyListeners();
       }
@@ -141,22 +137,17 @@ class SendTokenProvider extends ChangeNotifier {
     });
   }
 
-  hideOpenInput(String value){
-    if(value != null && value.isNotEmpty){
+  hideOpenInput(String value) {
+    if (value != null && value.isNotEmpty) {
       hideOpen = true;
       print(hideOpen);
       notifyListeners();
-    }else{
+    } else {
       hideOpen = false;
       print(hideOpen);
       notifyListeners();
     }
   }
-
-
-
-
-
 
   Future<void> addNewToken(String contractAddress) async {
     tokens.clear();
@@ -210,12 +201,14 @@ class SendTokenProvider extends ChangeNotifier {
     notifyListeners();
     if (addressTEC.text != null && amountTEC.text != null) {
       try {
-        double parsedAmount = double.parse(amountTEC.text );
+        double parsedAmount = double.parse(amountTEC.text);
         BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
         BigInt newparsedAmount = BigInt.parse(weiAmount.toString());
         // Assuming you have selected a token from your list of added tokens
-        Token selectedToken = tokens.first; // You might want to add logic to select a token from the list
-        await sendTokenTransaction(ethClient, selectedToken, addressTEC.text, newparsedAmount);
+        Token selectedToken = tokens
+            .first; // You might want to add logic to select a token from the list
+        await sendTokenTransaction(
+            ethClient, selectedToken, addressTEC.text, newparsedAmount);
       } catch (e) {
         print('Invalid amount entered. Please enter a valid number.');
         trxError = 'Invalid amount entered. Please enter a valid number.';
