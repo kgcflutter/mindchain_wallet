@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/splash_Screen_provider.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {

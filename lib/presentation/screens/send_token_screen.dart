@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/Qr_screen.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/widget/custom_popup.dart';
-import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/custom_popup.dart';
+import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 
 class SendToken extends StatefulWidget {
@@ -20,7 +19,7 @@ class _SendTokenState extends State<SendToken> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<SendTokenProvider>(context, listen: false).loadGesPrice();
       Provider.of<SendTokenProvider>(context, listen: false).loadMyAddress();
     });
@@ -200,8 +199,8 @@ class _SendTokenState extends State<SendToken> {
                         builder: (context, value, child) => GestureDetector(
                           onTap: () {
                             if (value.addressTEC.text.length > 40 &&
-                                value.amountTEC.text != null &&
-                                value.gesLimitTEC.text != null) {
+                                value.amountTEC.text.isNotEmpty &&
+                                value.gesLimitTEC.text.isNotEmpty) {
                               // value.sendEth();
                               // Navigator.pushAndRemoveUntil(
                               //     context,

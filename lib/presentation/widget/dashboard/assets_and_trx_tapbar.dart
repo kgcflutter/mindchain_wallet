@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/added_token_send_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
-import 'package:mindchain_wallet/widget/dashboard/transaction_listview.dart';
+import 'package:mindchain_wallet/presentation/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {

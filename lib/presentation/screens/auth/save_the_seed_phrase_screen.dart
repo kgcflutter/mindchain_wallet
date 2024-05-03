@@ -3,11 +3,10 @@ import 'package:mindchain_wallet/conts/strings.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/auth/seed_phrase_background.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
-
-import '../../../widget/gredient_background_bottom.dart';
-import '../../../widget/auth/seed_phrase_background.dart';
 import '../../utils/copysystem.dart';
 
 class SaveTheSeedPhraseScreen extends StatelessWidget {
@@ -96,8 +95,8 @@ class SaveTheSeedPhraseScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => const LoginScreen(),
                       )),
-                  child: GredientBackgroundBtn(
-                    child: const Text(
+                  child: const GredientBackgroundBtn(
+                    child: Text(
                       "Check The phrase",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),

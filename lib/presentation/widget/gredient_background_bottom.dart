@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../presentation/utils/assets_path.dart';
+import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 
 class GredientBackgroundBtn extends StatelessWidget {
   final Widget child;

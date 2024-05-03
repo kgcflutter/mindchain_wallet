@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
+import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
+import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:qr_bar_code/code/src/code_generate.dart';
 import 'package:qr_bar_code/code/src/code_type.dart';
-import '../../presentation/provider/account_details_provider.dart';
-import '../../presentation/utils/copysystem.dart';
 import '../gredient_background_bottom.dart';
 
 Widget receivedWidget(AccountDetailsProvider value, BuildContext context) {

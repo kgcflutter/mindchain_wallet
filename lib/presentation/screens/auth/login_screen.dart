@@ -3,7 +3,7 @@ import 'package:mindchain_wallet/conts/strings.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                   // Adjust spacing based on screen size
                   const Text(AllStrings.saveTheParseDes),
                   SizedBox(height: isSmallScreen ? 8 : 10),
-                  if (value.errorMessage != null) Text(value.errorMessage),
+                  if (value.errorMessage.isNotEmpty) Text(value.errorMessage),
                   SizedBox(height: isSmallScreen ? 16 : 20),
                   TextField(
                     controller: value.checkPhraseController,

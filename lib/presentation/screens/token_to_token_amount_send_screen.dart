@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/transaction_sucess_screen.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 class TokenToTokenAmountScreen extends StatefulWidget {

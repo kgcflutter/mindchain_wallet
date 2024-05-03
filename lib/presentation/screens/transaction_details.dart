@@ -4,7 +4,7 @@ import 'package:mindchain_wallet/presentation/provider/account_details_provider.
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/convert_to_eth.dart';

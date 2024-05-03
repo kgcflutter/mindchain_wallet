@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/conts/strings.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/save_the_seed_phrase_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/widget/gredient_background_bottom.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/create_new_wallet_provider.dart';
@@ -45,8 +44,8 @@ class WelcomeScreen extends StatelessWidget {
                   );
                   Provider.of<CreateWalletProvider>(context, listen: false).createWallet();
                 },
-                child: GredientBackgroundBtn(
-                  child: const Text(
+                child: const GredientBackgroundBtn(
+                  child: Text(
                     "Create A New Wallet",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   ),
@@ -61,8 +60,8 @@ class WelcomeScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => const LoginScreen(),
                     ),),
-                child: GredientBackgroundBtn(
-                  child: const Text("Sign In With Seed Phrase",
+                child: const GredientBackgroundBtn(
+                  child: Text("Sign In With Seed Phrase",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
+import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
 import 'package:provider/provider.dart';
-import '../../presentation/utils/local_database.dart';
-import '../../presentation/screens/account_details_screen.dart';
-import '../../presentation/screens/auth/welcome_screen.dart';
 import '../custom_popup.dart';
 
 myCustomPopUp(BuildContext context) {

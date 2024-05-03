@@ -4,7 +4,7 @@ import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart'
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_bar_code/code/src/code_generate.dart';
 import 'package:qr_bar_code/code/src/code_type.dart';

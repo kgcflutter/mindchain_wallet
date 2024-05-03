@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/new_assets_add_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
-import 'package:mindchain_wallet/widget/custom_popup.dart';
-import 'package:mindchain_wallet/widget/dashboard/received_widget.dart';
+import 'package:mindchain_wallet/presentation/widget/custom_popup.dart';
+import 'package:mindchain_wallet/presentation/widget/dashboard/received_widget.dart';
 import 'package:provider/provider.dart';
-import '../../presentation/provider/account_details_provider.dart';
-import '../../presentation/screens/send_token_screen.dart';
 import 'icon_background.dart';
 
 class SendReceiveAssetsRow extends StatelessWidget {

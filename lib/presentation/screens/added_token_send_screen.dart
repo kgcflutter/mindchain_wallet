@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/screens/token_to_token_amount_send_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/transaction_details.dart';
-import 'package:mindchain_wallet/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/widget/dashboard/received_widget.dart';
+import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/dashboard/received_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/account_details_provider.dart';
