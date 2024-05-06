@@ -21,41 +21,59 @@ class CreateWalletProvider extends ChangeNotifier {
   CreateWalletProvider()
       : ethClient = Web3Client('https://seednode.mindchain.info/', http.Client(),);
 
-  createWallet() async {
+  void createWallet() async {
     mnemonicList.clear();
     copyText = '';
     errorMessage = '';
     checkPhraseController.text = '';
+
+    // Generate a new mnemonic
     final mnemonic = bip39.generateMnemonic();
-    //final privateKey = await getPrivateKey(mnemonic);
-    //final address = await getPublicKey(privateKey!);
+
+    // Set the mnemonic to copyText
     copyText = mnemonic;
-    //myPrivateKey = privateKey;
-    //   = address.hex;
-    //mindBalance = await checkBalance(privateKey);
+
+    // Split the mnemonic into words and add to mnemonicList
     mnemonicList.addAll(mnemonic.split(" "));
-    //print('Your new private key: $privateKey');
-    //print('Your new address: ${address.hex}');
+
+    // Print the generated mnemonic
     print('Your mnemonic: $mnemonic');
+
+    // Notify listeners of any changes
     notifyListeners();
   }
 
+// Function to get the private key from a mnemonic
   Future<String?> getPrivateKey(String mnemonic) async {
     try {
+      // Convert mnemonic to seed
       final seed = bip39.mnemonicToSeed(mnemonic);
+
+      // Derive master key from seed
       final master = await ED25519_HD_KEY.getMasterKeyFromSeed(seed);
+
+      // Encode master key to hexadecimal
       final privateKey = HEX.encode(master.key);
+
+      // Print the private key
       print(privateKey);
+
       return privateKey;
     } catch (e) {
+      // Print error if any occurs
       print('Error occurred while deriving private key: $e');
       return null;
     }
   }
 
+// Function to get the public key (address) from a private key
   Future<EthereumAddress> getPublicKey(String privateKey) async {
+    // Convert private key to Ethereum private key object
     final private = EthPrivateKey.fromHex(privateKey);
+
+    // Retrieve the corresponding public address
     final address = private.address;
+
     return address;
   }
 
