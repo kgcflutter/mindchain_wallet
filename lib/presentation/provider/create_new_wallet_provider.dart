@@ -151,3 +151,142 @@ class CreateWalletProvider extends ChangeNotifier {
     LocalDataBase.saveData("address", address);
   }
 }
+
+
+
+
+//
+// import 'dart:io';
+// import 'package:http/http.dart' as http;
+// import 'package:web3dart/crypto.dart';
+// import 'package:web3dart/web3dart.dart';
+// import 'package:bip39/bip39.dart' as bip39;
+// import 'package:bip32/bip32.dart' as bip32;
+//
+// void main(List<String> arguments) {
+//   final ethClient = Web3Client('https://seednode.mindchain.info/', http.Client());
+//   startCli(ethClient);
+// }
+//
+// void startCli(Web3Client ethClient) {
+//   print('Welcome to the Dart Ethereum CLI Wallet');
+//   print('Please select an option:');
+//   print('1. Import wallet using mnemonic');
+//   print('2. Create new wallet');
+//   print('3. Send ETH');
+//   print('4. Check wallet balance');
+//   print('5. Login with private key');
+//   print('6. Mnemonic To PrivateKey');
+//   print('7. Add new token using address');
+//
+//   String? option = stdin.readLineSync();
+//   switch (option) {
+//     case '1':
+//       importWallet(ethClient);
+//       break;
+//     case '2':
+//       createWallet(ethClient);
+//       break;
+//     case '3':
+//       break;
+//     case '4':
+//       checkBalance(ethClient);
+//       break;
+//     case '5':
+//       loginWithPrivateKey(ethClient);
+//       break;
+//     case '6':
+//       mnemonicToPrivateKey();
+//       break;
+//     case '7':
+//       break;
+//     default:
+//       print('Invalid option selected.');
+//       break;
+//   }
+// }
+//
+// void mnemonicToPrivateKey() {
+//   print('Enter your mnemonic phrase:');
+//   String? mnemonic = stdin.readLineSync();
+//
+//   if (mnemonic != null && bip39.validateMnemonic(mnemonic)) {
+//     final seed = bip39.mnemonicToSeed(mnemonic);
+//     final root = bip32.BIP32.fromSeed(seed);
+//     final child = root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
+//     final privateKey = child.privateKey;
+//
+//     print('Your private key derived from mnemonic: $privateKey');
+//     print('Please make sure to securely store your private key, address, and mnemonic.');
+//   } else {
+//     print('Invalid or empty mnemonic phrase.');
+//   }
+// }
+//
+// void importWallet(Web3Client ethClient) {
+//   print('Enter your mnemonic phrase:');
+//   String? mnemonic = stdin.readLineSync();
+//   if (mnemonic != null && bip39.validateMnemonic(mnemonic)) {
+//     final seed = bip39.mnemonicToSeed(mnemonic);
+//     final root = bip32.BIP32.fromSeed(seed);
+//     final child = root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
+//     final privateKey = child.privateKey;
+//     final credentials = EthPrivateKey.fromHex(privateKey.toString());
+//     final address = credentials.address;
+//     print('Wallet imported successfully.');
+//     print('Your address: ${address.hex}');
+//   } else {
+//     print('Invalid mnemonic phrase.');
+//   }
+// }
+//
+// void createWallet(Web3Client ethClient) async {
+//   print('Generating a new mnemonic...');
+//   final mnemonic = bip39.generateMnemonic();
+//   final seed = bip39.mnemonicToSeed(mnemonic);
+//   final root = bip32.BIP32.fromSeed(seed);
+//   final child = root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
+//   final privateKeyBytes = child.privateKey;
+//   final privateKeyHex = bytesToHex(privateKeyBytes as List<int>);
+//   final credentials = EthPrivateKey.fromHex(privateKeyHex);
+//   final address = await credentials.extractAddress();
+//
+//   print('Your new mnemonic: $mnemonic');
+//   print('Your new private key: $privateKeyHex');
+//   print('Your new address: ${address.hex.toString().toUpperCase()}');
+//   print('Please make sure to securely store your private key, address, and mnemonic.');
+// }
+//
+//
+// void checkBalance(Web3Client ethClient) async {
+//   Credentials credentials = await getCredentials();
+//   EtherAmount balance = await ethClient.getBalance(credentials.address);
+//   print('Wallet balance: ${balance.getValueInUnit(EtherUnit.ether)} MIND');
+// }
+//
+// void loginWithPrivateKey(Web3Client ethClient) async {
+//   print('Enter your private key:');
+//   String? privateKey = stdin.readLineSync();
+//   if (privateKey != null) {
+//     Credentials credentials = EthPrivateKey.fromHex(privateKey);
+//     print('Login successful.');
+//   } else {
+//     print('Invalid private key.');
+//   }
+// }
+//
+// Future<Credentials> getCredentials() async {
+//   print('Enter your private key:');
+//   String? privateKey = stdin.readLineSync();
+//   if (privateKey != null) {
+//     return EthPrivateKey.fromHex(privateKey);
+//   } else {
+//     throw Exception('Invalid private key.');
+//   }
+// }
+//
+//
+//
+
+
+
