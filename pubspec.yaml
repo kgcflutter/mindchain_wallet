@@ -49,6 +49,7 @@ dependencies:
   url_launcher: ^6.2.5
   firebase_core:
   firebase_messaging:
+  bip32:
 
 dev_dependencies:
   flutter_test:
