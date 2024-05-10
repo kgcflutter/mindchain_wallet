@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/save_the_seed_phrase_screen.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
@@ -25,25 +27,19 @@ class CreateWalletProvider extends ChangeNotifier {
         );
 
   void createWallet() async {
-    mnemonicList.clear();
-    copyText = '';
-    errorMessage = '';
-    checkPhraseController.text = '';
-
-    // Generate a new mnemonic
-    final mnemonic = bip39.generateMnemonic();
-
-    // Set the mnemonic to copyText
-    copyText = mnemonic;
-
-    // Split the mnemonic into words and add to mnemonicList
-    mnemonicList.addAll(mnemonic.split(" "));
-
-    // Print the generated mnemonic
-    print('Your mnemonic: $mnemonic');
-
-    // Notify listeners of any changes
-    notifyListeners();
+    if (mnemonicList.isEmpty) {
+      mnemonicList.clear();
+      copyText = '';
+      errorMessage = '';
+      checkPhraseController.text = '';
+      // Generate a new mnemonic
+      final mnemonic = bip39.generateMnemonic();
+      // Set the mnemonic to copyText
+      copyText = mnemonic;
+      // Split the mnemonic into words and add to mnemonicList
+      mnemonicList.addAll(mnemonic.split(" "));
+      notifyListeners();
+    }
   }
 
 // Function to get the private key from a mnemonic
@@ -51,13 +47,16 @@ class CreateWalletProvider extends ChangeNotifier {
     try {
       final seed = bip39.mnemonicToSeed(mnemonic);
       final root = bip32.BIP32.fromSeed(seed);
-      final child = root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
+      final child =
+          root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
       final privateKeyBytes = child.privateKey;
       final privateKeyHex = bytesToHex(privateKeyBytes as List<int>);
       return privateKeyHex;
     } catch (e) {
       // Print error if any occurs
-      print('Error occurred while deriving private key: $e');
+      if (kDebugMode) {
+        print('Error occurred while deriving private key: $e');
+      }
       return null;
     }
   }
@@ -69,20 +68,12 @@ class CreateWalletProvider extends ChangeNotifier {
     return address;
   }
 
-  // checkBalance(String privateKey) async {
-  //   mindBalance = '';
-  //   notifyListeners();
-  //   Credentials credentials = await getCredentials(privateKey);
-  //   EtherAmount balance = await ethClient.getBalance(credentials.address);
-  //   mindBalance = convertToEth(balance.getInWei).toString();
-  //   convertToEth(balance.getInWei).toString();
-  //   notifyListeners();
-  // }
-
   Future<void> connectWebSocket(String url, String address) async {
     try {
       final socket = await WebSocket.connect(url);
-      print('Connected to WebSocket server');
+      if (kDebugMode) {
+        print('Connected to WebSocket server');
+      }
 
       socket.done.then((_) async {
         // WebSocket connection is closed, attempt to reconnect after a delay
@@ -121,19 +112,25 @@ class CreateWalletProvider extends ChangeNotifier {
   }
 
   loadBalance() async {
+    mnemonicList.clear();
+    copyText = '';
+    errorMessage = '';
+    checkPhraseController.text = '';
     String? myKey = await LocalDataBase.getData("pkey");
     String? myAddressKey = await LocalDataBase.getData("address");
     if (myKey != null && myKey.isNotEmpty) {
-      print("right");
-      connectWebSocket(url, myAddressKey!);
+      if (kDebugMode) {
+        print("right");
+      }
+      connectWebSocket(url, myAddressKey ?? '');
     } else {
-      final _privateKey = await getPrivateKey(
+      final privateKey = await getPrivateKey(
         checkPhraseController.text.trim(),
       );
-      await getPublicKey(_privateKey!);
-      final address = await getPublicKey(_privateKey!);
-      savePrivateKey(_privateKey, address.hex);
-      connectWebSocket(url, address.hex!);
+      await getPublicKey(privateKey!);
+      final address = await getPublicKey(privateKey!);
+      savePrivateKey(privateKey, address.hex);
+      connectWebSocket(url, address.hex);
     }
   }
 

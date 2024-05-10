@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 
 class GredientBackgroundBtn extends StatelessWidget {
   final Widget child;
+  final VoidCallback onTap;
 
-  const GredientBackgroundBtn({Key? key, required this.child}) : super(key: key);
+  const GredientBackgroundBtn({Key? key, required this.child, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Image.asset(
-          AssetsPath.grediantColorImage,
-          height: 55,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ),
-        SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: child,
-            ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.maxFinite,
+        height: 58,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [Color(0xFFEDE7F6), Color(0xFFFFCC80)],
           ),
         ),
-      ],
+        child: child,
+      ),
     );
   }
 }
-

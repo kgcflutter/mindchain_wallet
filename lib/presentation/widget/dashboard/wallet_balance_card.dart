@@ -7,6 +7,9 @@ Column walletCard(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      const SizedBox(
+        height: 10,
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -43,7 +46,12 @@ Column walletCard(BuildContext context) {
       ),
       Consumer<CreateWalletProvider>(
         builder: (context, value, child) => value.mindBalance.isEmpty
-            ? const CircularProgressIndicator(color: Colors.white)
+            ? const Text("0.000 MIND",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 19,
+                ))
             : Text(
                 value.mindBalance,
                 style: const TextStyle(

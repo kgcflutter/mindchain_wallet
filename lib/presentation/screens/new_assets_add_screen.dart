@@ -72,9 +72,8 @@ class NewAssetsAddScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(13.0),
-                child: InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: const GredientBackgroundBtn(child: Text("SAVE"))),
+                child: GredientBackgroundBtn(onTap: () => Navigator.pop(context),
+                child: const Text("SAVE")),
               )
             ],
           ),

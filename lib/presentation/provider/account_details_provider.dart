@@ -21,7 +21,7 @@ class AccountDetailsProvider extends ChangeNotifier {
 
   loadPrivateKeyAddress() async {
     String? myP = await LocalDataBase.getData("pkey");
-    String myAdrs = (await LocalDataBase.getData("address"))!;
+    String myAdrs = (await LocalDataBase.getData("address")) ?? '';
     if (myP != null) {
       myPrivateKey = myP;
       myAddress = myAdrs;

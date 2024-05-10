@@ -75,7 +75,8 @@ class _SendTokenState extends State<SendToken> {
                               onTap: () {
                                 provider.amountTEC.text = '';
                                 provider.amountTEC.text =
-                                '${double.parse(Provider.of<CreateWalletProvider>(context, listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
+                                '${double.parse(Provider.of<CreateWalletProvider>(context,
+                                    listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
                                 provider.hideOpenInput("00");
                               },
                               child: const Text("max")),
@@ -196,24 +197,16 @@ class _SendTokenState extends State<SendToken> {
                           : const Text(""),
                       const SizedBox(height: 20),
                       Consumer<SendTokenProvider>(
-                        builder: (context, value, child) => GestureDetector(
+                        builder: (context, value, child) => GredientBackgroundBtn(
                           onTap: () {
                             if (value.addressTEC.text.length > 40 &&
                                 value.amountTEC.text.isNotEmpty &&
                                 value.gesLimitTEC.text.isNotEmpty) {
-                              // value.sendEth();
-                              // Navigator.pushAndRemoveUntil(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) =>
-                              //           const DashboardScreen(),
-                              //     ),
-                              //     (route) => false);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                     TokenSendConfirmScreen(tokenName: 'MIND',),
+                                        TokenSendConfirmScreen(tokenName: 'MIND',),
                                   ));
                             } else {
                               customPopUp(
@@ -223,11 +216,9 @@ class _SendTokenState extends State<SendToken> {
                               );
                             }
                           },
-                          child: const GredientBackgroundBtn(
-                            child: Text(
-                              "Next",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                          child: const Text(
+                            "Next",
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),

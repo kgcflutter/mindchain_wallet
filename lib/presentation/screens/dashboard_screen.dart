@@ -26,7 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   loadBal() async {
     Future.delayed(
-      const Duration(milliseconds: 100),
+      const Duration(milliseconds: 500),
       () => Provider.of<CreateWalletProvider>(context, listen: false)
           .loadBalance(),
     );
@@ -37,34 +37,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: BackgroundWidget(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await Provider.of<AccountDetailsProvider>(context, listen: false).fetchUserToken();
-          },
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 40,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                DashboardCard(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: walletCard(context),
                   ),
-                  DashboardCard(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: walletCard(context),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  SendReceiveAssetsRow(screenWidth: screenWidth),
-                  const SizedBox(height: 5,),
-                  const AssetsAndTrxTapbar(),
-                  const SizedBox(height: 30,)
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SendReceiveAssetsRow(screenWidth: screenWidth),
+                const SizedBox(height: 5,),
+                const AssetsAndTrxTapbar(),
+                const SizedBox(height: 30,)
+              ],
             ),
           ),
         ),

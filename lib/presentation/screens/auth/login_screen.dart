@@ -4,6 +4,7 @@ import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provide
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
+import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final bool isSmallScreen =
-        screenSize.width < 600; // Adjust this threshold as needed
+        screenSize.width < 600;
 
     return Scaffold(
       body: Center(
@@ -49,33 +50,14 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: isSmallScreen ? 32 : 40),
-                  SizedBox(
-                    width: double.infinity,
-                    height: isSmallScreen ? 45 : 55,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.transparent,
-                        side: const BorderSide(color: Colors.white),
-                        maximumSize: const Size(double.infinity, 45),
-                        backgroundColor: const Color(0xffF5F5F5),
-                      ),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DashboardScreen(),
-                            ),
-                            (route) => false);
-                      },
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  )
+                  GredientBackgroundBtn(
+                      onTap: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DashboardScreen(),
+                          ),
+                          (route) => false),
+                      child: const Text("Submit"))
                 ],
               ),
             ),

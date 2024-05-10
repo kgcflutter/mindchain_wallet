@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:qr_bar_code/code/src/code_generate.dart';
@@ -36,30 +36,22 @@ Widget receivedWidget(AccountDetailsProvider value, BuildContext context) {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 35),
-          InkWell(
-            onTap: () => mnemonicListCopyText(context, value.myAddress),
-            child: const GredientBackgroundBtn(
-              child: Text(
+             GredientBackgroundBtn(
+              onTap:() => mnemonicListCopyText(context, value.myAddress),
+              child: const Text(
                 "Copy Address",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
           const SizedBox(height: 15),
-          InkWell(
-            onTap: () => Share.text(
-              'This my Mindchain Wallet Address',
-              value.myAddress,
-              '',
-            ),
-            child: const GredientBackgroundBtn(
-              child: Text(
-                "Share",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+           GredientBackgroundBtn(
+            onTap: () => Share.share(value.myAddress),
+            child: const Text(
+              "Share",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
