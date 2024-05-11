@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/added_token_send_screen.dart';
+import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
-  const AssetsAndTrxTapbar({super.key,});
+  const AssetsAndTrxTapbar({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     List myList = NewAssetsTokenAddProvider().allTokenList;
+    List iconList = [
+      AssetsPath.musdPng,
+      AssetsPath.perrymindPng,
+      AssetsPath.mindPng,
+    ];
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -29,6 +37,12 @@ class AssetsAndTrxTapbar extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   TabBar(
+                    labelStyle: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500),
+                    indicator: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color(0xffFF8A00),
+                    ),
                     onTap: (index) {
                       if (index == 1) {
                         Provider.of<AccountDetailsProvider>(context,
@@ -36,6 +50,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                             .fetchUserTransactionData();
                       }
                     },
+                    indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor: const Color(0xffFF8A00),
                     tabs: const [
                       Tab(text: 'Assets'),
@@ -90,9 +105,9 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            leading: const Icon(
-                                              Icons.token,
-                                              color: Colors.red,
+                                            leading: Image.asset(
+                                              iconList[index],
+                                              height: 37,
                                             ),
                                           ),
                                         ),
@@ -120,30 +135,31 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                                               ),
                                             ),
                                             onTap: () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AddedTokenSendScreen(
-                                                    balance: publicConvertToEth(
-                                                        BigInt.parse(value
-                                                            .assetsTokenLIst[
-                                                                index]
-                                                            .value),
-                                                        value
-                                                            .assetsTokenLIst[
-                                                                index]
-                                                            .token
-                                                            .symbol),
-                                                    fullName: value
-                                                        .assetsTokenLIst[index]
-                                                        .token
-                                                        .name,
-                                                    contractAddress: value
-                                                        .assetsTokenLIst[index]
-                                                        .token
-                                                        .address,
-                                                  ),
-                                                )),
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddedTokenSendScreen(
+                                                  balance: publicConvertToEth(
+                                                      BigInt.parse(value
+                                                          .assetsTokenLIst[
+                                                              index]
+                                                          .value),
+                                                      value
+                                                          .assetsTokenLIst[
+                                                              index]
+                                                          .token
+                                                          .symbol),
+                                                  fullName: value
+                                                      .assetsTokenLIst[index]
+                                                      .token
+                                                      .name,
+                                                  contractAddress: value
+                                                      .assetsTokenLIst[index]
+                                                      .token
+                                                      .address,
+                                                ),
+                                              ),
+                                            ),
                                             trailing: Text(
                                               publicConvertToEth(
                                                   BigInt.parse(value
@@ -161,9 +177,9 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            leading: const Icon(
-                                              Icons.token,
-                                              color: Colors.red,
+                                            leading: Image.asset(
+                                              iconList[index] ?? iconList[3],
+                                              height: 37,
                                             ),
                                           ),
                                         ),

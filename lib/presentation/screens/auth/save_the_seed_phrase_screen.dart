@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +100,16 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  var data =  Provider.of<CreateWalletProvider>(context,listen: false);
+                   data.checkPhraseController.text = data.copyText;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardScreen(),
+                    ),
+                  );
+                },
                 child: const Text("Skip, I'll Take The Risk"),
               ),
             ),

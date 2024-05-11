@@ -9,4 +9,12 @@ class AssetsPath {
   static String  mindLogoPng = '$_imageBasePath/mindlogo.png';
   static String  transactionJson = '$_imageBasePath/trxsuccess.json';
   static String  donePng = '$_imageBasePath/trxsuccess.png';
+
+
+  static String  bmindPng = '$_imageBasePath/Bmind.png';
+  static String  mindPng = '$_imageBasePath/Mind.png';
+  static String  musdPng = '$_imageBasePath/Musd.png';
+  static String  perrymindPng = '$_imageBasePath/Perrymind.png';
+
+
 }

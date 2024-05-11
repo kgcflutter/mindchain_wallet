@@ -13,8 +13,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final bool isSmallScreen =
-        screenSize.width < 600;
+    final bool isSmallScreen = screenSize.width < 600;
 
     return Scaffold(
       body: Center(

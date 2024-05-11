@@ -8,20 +8,20 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardHeight = MediaQuery.of(context).size.height * 0.23;
-
+    double cardHeight = MediaQuery.of(context).size.height * 0.24;
     return Container(
       width: double.infinity,
       height: cardHeight,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-            colors: [Color(0xff54337a),Colors.orange]),
+            colors: [Color(0xffFF971D), Color(0xff290059)],
+            begin: AlignmentDirectional(0.7, BorderSide.strokeAlignCenter),
+            end: AlignmentDirectional(BorderSide.strokeAlignInside, 1.6)),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Colors.white,
           width: 2,
         ),
-
       ),
       child: child,
     );

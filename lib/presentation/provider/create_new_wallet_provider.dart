@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/screens/auth/save_the_seed_phrase_screen.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
@@ -32,11 +31,8 @@ class CreateWalletProvider extends ChangeNotifier {
       copyText = '';
       errorMessage = '';
       checkPhraseController.text = '';
-      // Generate a new mnemonic
       final mnemonic = bip39.generateMnemonic();
-      // Set the mnemonic to copyText
       copyText = mnemonic;
-      // Split the mnemonic into words and add to mnemonicList
       mnemonicList.addAll(mnemonic.split(" "));
       notifyListeners();
     }
@@ -112,10 +108,10 @@ class CreateWalletProvider extends ChangeNotifier {
   }
 
   loadBalance() async {
+    mindBalance = '';
     mnemonicList.clear();
     copyText = '';
     errorMessage = '';
-    checkPhraseController.text = '';
     String? myKey = await LocalDataBase.getData("pkey");
     String? myAddressKey = await LocalDataBase.getData("address");
     if (myKey != null && myKey.isNotEmpty) {
@@ -132,6 +128,7 @@ class CreateWalletProvider extends ChangeNotifier {
       savePrivateKey(privateKey, address.hex);
       connectWebSocket(url, address.hex);
     }
+    checkPhraseController.text = '';
   }
 
   savePrivateKey(String privateKey, address) async {
