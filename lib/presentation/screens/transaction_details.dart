@@ -19,6 +19,7 @@ class TransactionDetails extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
         child: Consumer<AccountDetailsProvider>(
           builder: (context, value, child) => Padding(

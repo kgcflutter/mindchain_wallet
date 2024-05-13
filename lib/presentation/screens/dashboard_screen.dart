@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
-import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/assets_and_trx_tapbar.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/dashboard_card.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/send_receive_assets_row.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/wallet_balance_card.dart';
-import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
@@ -21,15 +18,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    loadBal();
-  }
-
-  loadBal() async {
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () => Provider.of<CreateWalletProvider>(context, listen: false)
-          .loadBalance(),
-    );
   }
 
   @override

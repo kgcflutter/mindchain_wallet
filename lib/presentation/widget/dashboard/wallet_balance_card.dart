@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:provider/provider.dart';
 import 'acount_info_menu_popup.dart';
 

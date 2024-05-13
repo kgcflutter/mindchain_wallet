@@ -16,6 +16,7 @@ class TokenSendConfirmScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
         child: Padding(
           padding: EdgeInsets.all(screenWidth * 0.04),

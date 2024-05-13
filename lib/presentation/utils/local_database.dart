@@ -15,4 +15,9 @@ class LocalDataBase {
     final SharedPreferences dataSave = await SharedPreferences.getInstance();
     dataSave.clear();
   }
+
+ static savePrivateKey(String privateKey, address) async {
+    LocalDataBase.saveData("pkey", privateKey);
+    LocalDataBase.saveData("address", address);
+  }
 }

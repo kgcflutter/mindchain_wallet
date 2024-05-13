@@ -37,12 +37,6 @@ class AssetsAndTrxTapbar extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   TabBar(
-                    labelStyle: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                    indicator: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Color(0xffFF8A00),
-                    ),
                     onTap: (index) {
                       if (index == 1) {
                         Provider.of<AccountDetailsProvider>(context,

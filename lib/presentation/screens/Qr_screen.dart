@@ -18,6 +18,7 @@ class QrCodeScanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     load(context);
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Consumer<SendTokenProvider>(
           builder: (context, provider, child) => SizedBox(

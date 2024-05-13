@@ -8,9 +8,18 @@ class MindWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        tabBarTheme: const TabBarTheme(
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorColor: Color(0xffFF8A00),
+            labelStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Color(0xffFF8A00),
+            )),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              elevation: 0,
+                elevation: 0,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 backgroundColor: const Color(0xffF5F5F5),

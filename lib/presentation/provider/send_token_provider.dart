@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
-import '../../authenticator/privatekeyAuth.dart';
 import '../utils/local_database.dart';
+import 'authenticator/privatekeyAuth.dart';
 
 class Token {
   String name;

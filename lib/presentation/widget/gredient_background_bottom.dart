@@ -4,8 +4,7 @@ class GredientBackgroundBtn extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
 
-  const GredientBackgroundBtn({Key? key, required this.child, required this.onTap})
-      : super(key: key);
+  const GredientBackgroundBtn({super.key, required this.child, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

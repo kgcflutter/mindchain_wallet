@@ -30,10 +30,10 @@ class _TokenToTokenAmountScreenState extends State<TokenToTokenAmountScreen> {
         .addNewToken(widget.contractAddress);
     Provider.of<SendTokenProvider>(context, listen: false).loadMyAddress();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
           child: Padding(
               padding: const EdgeInsets.all(20.0),

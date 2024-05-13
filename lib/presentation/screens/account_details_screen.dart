@@ -13,6 +13,7 @@ class AccountDetailsScreen extends StatelessWidget {
     Provider.of<AccountDetailsProvider>(context).loadPrivateKeyAddress();
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
         child: SizedBox(
           height: screenSize.height * 0.65,

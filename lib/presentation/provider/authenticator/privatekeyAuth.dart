@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:web3dart/credentials.dart';
-import '../presentation/utils/local_database.dart';
 
 Future<Credentials> getCredentials() async {
   String? privateKeys = await LocalDataBase.getData("pkey");
@@ -12,7 +11,6 @@ Future<Credentials> getCredentials() async {
   }
 }
 
-Future<String>loadMyAddress()async{
-  return  (await LocalDataBase.getData("address"))!;
-
+Future<String> loadMyAddress() async {
+  return (await LocalDataBase.getData("address"))!;
 }

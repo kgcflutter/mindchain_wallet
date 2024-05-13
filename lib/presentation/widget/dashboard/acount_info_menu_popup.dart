@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
@@ -39,7 +39,6 @@ myCustomPopUp(BuildContext context) {
           GestureDetector(
               onTap: () {
                 Provider.of<CreateWalletProvider>(context,listen: false).mindBalance = '';
-                Provider.of<CreateWalletProvider>(context,listen: false).loadBalance();
                 LocalDataBase.removeData();
                 Navigator.pushAndRemoveUntil(
                     context,

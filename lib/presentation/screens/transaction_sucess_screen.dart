@@ -40,6 +40,7 @@ class _TransActionSuccessScreenState extends State<TransActionSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: WillPopScope(
         onWillPop: () async {
           return await Navigator.pushAndRemoveUntil(

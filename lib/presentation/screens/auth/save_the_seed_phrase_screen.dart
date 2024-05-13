@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
@@ -101,8 +101,6 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: ElevatedButton(
                 onPressed: () {
-                  var data =  Provider.of<CreateWalletProvider>(context,listen: false);
-                   data.checkPhraseController.text = data.copyText;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -122,7 +120,7 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
     );
   }
 
-  GridView seedPhraseListWidget(
+   seedPhraseListWidget(
       CreateWalletProvider value, BuildContext context) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
@@ -156,24 +154,5 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
     int crossAxisCount =
         (screenWidth / 150).floor(); // Adjust 150 according to your item size
     return crossAxisCount > 2 ? crossAxisCount : 2; // Minimum of 2 columns
-  }
-}
-
-class LoadingDialog extends StatelessWidget {
-  const LoadingDialog({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 50,
-      width: 50,
-      child: AlertDialog(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        content: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );
   }
 }

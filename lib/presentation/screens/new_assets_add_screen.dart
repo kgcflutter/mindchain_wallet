@@ -10,6 +10,7 @@ class NewAssetsAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
           child: Padding(
         padding: const EdgeInsets.all(20.0),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/Qr_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
@@ -7,6 +7,8 @@ import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/custom_popup.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
+
+import '../widget/input_design_widget.dart';
 
 class SendToken extends StatefulWidget {
   const SendToken({Key? key}) : super(key: key);
@@ -28,6 +30,7 @@ class _SendTokenState extends State<SendToken> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BackgroundWidget(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -75,8 +78,7 @@ class _SendTokenState extends State<SendToken> {
                               onTap: () {
                                 provider.amountTEC.text = '';
                                 provider.amountTEC.text =
-                                '${double.parse(Provider.of<CreateWalletProvider>(context,
-                                    listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
+                                    '${double.parse(Provider.of<CreateWalletProvider>(context, listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
                                 provider.hideOpenInput("00");
                               },
                               child: const Text("max")),
@@ -128,76 +130,15 @@ class _SendTokenState extends State<SendToken> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      TextField(
-                        controller: provider.addressTEC,
-                        decoration: InputDecoration(
-                          hintText: "Receiver Address...",
-                          hintStyle: const TextStyle(fontSize: 12),
-                          suffixIcon: InkWell(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QrCodeScanScreen(),
-                                  )),
-                              child: const Icon(Icons.qr_code_2)),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(
-                              color: Color(0xff959595),
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.all(14),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff959595)),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
+                      _buildTextField(provider, context),
                       const SizedBox(height: 5),
                       provider.hideOpen == true
-                          ? Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Text("Gas Price (GWEI)"),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.info,
-                                size: 18,
-                              ),
-                            ],
-                          ),
-                          InputDesign(
-                            hintText: "10.9999999999",
-                            inputType: TextInputType.text,
-                            controller: provider.gesPriceTEC,
-                          ),
-                          const SizedBox(height: 5),
-                          const Row(
-                            children: [
-                              Text("Gas Limit"),
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.info,
-                                size: 18,
-                              )
-                            ],
-                          ),
-                          InputDesign(
-                            hintText: "10.9999999999",
-                            inputType: TextInputType.text,
-                            controller: provider.gesLimitTEC,
-                          ),
-                        ],
-                      )
+                          ? buildColumn(provider)
                           : const Text(""),
                       const SizedBox(height: 20),
                       Consumer<SendTokenProvider>(
-                        builder: (context, value, child) => GredientBackgroundBtn(
+                        builder: (context, value, child) =>
+                            GredientBackgroundBtn(
                           onTap: () {
                             if (value.addressTEC.text.length > 40 &&
                                 value.amountTEC.text.isNotEmpty &&
@@ -206,7 +147,9 @@ class _SendTokenState extends State<SendToken> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        TokenSendConfirmScreen(tokenName: 'MIND',),
+                                        TokenSendConfirmScreen(
+                                      tokenName: 'MIND',
+                                    ),
                                   ));
                             } else {
                               customPopUp(
@@ -233,61 +176,73 @@ class _SendTokenState extends State<SendToken> {
       ),
     );
   }
-}
 
-class InputDesign extends StatelessWidget {
-  final TextInputType inputType;
-  final String hintText;
-  final TextEditingController controller;
+  Column buildColumn(SendTokenProvider provider) {
+    return Column(
+      children: [
+        const Row(
+          children: [
+            Text("Gas Price (GWEI)"),
+            SizedBox(width: 5),
+            Icon(
+              Icons.info,
+              size: 18,
+            ),
+          ],
+        ),
+        InputDesign(
+          hintText: "10.9999999999",
+          inputType: TextInputType.text,
+          controller: provider.gesPriceTEC,
+        ),
+        const SizedBox(height: 5),
+        const Row(
+          children: [
+            Text("Gas Limit"),
+            SizedBox(width: 5),
+            Icon(
+              Icons.info,
+              size: 18,
+            )
+          ],
+        ),
+        InputDesign(
+          hintText: "10.9999999999",
+          inputType: TextInputType.text,
+          controller: provider.gesLimitTEC,
+        ),
+      ],
+    );
+  }
 
-  const InputDesign({
-    Key? key,
-    required this.hintText,
-    required this.inputType,
-    required this.controller,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  TextField _buildTextField(SendTokenProvider provider, BuildContext context) {
     return TextField(
-      controller: controller,
-      keyboardType: inputType,
+      controller: provider.addressTEC,
       decoration: InputDecoration(
-        hintStyle: const TextStyle(fontSize: 13),
+        hintText: "Receiver Address...",
+        hintStyle: const TextStyle(fontSize: 12),
+        suffixIcon: InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const QrCodeScanScreen(),
+                )),
+            child: const Icon(Icons.qr_code_2)),
         enabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(
             color: Color(0xff959595),
           ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xff959595),
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
-        ),
-        disabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xff959595),
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
-        ),
-        contentPadding: const EdgeInsets.all(14),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
-          ),
-          borderSide: BorderSide(color: Color(0xff959595)),
-        ),
-        hintText: hintText,
         filled: true,
         fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(14),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xff959595)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
       ),
     );
   }
