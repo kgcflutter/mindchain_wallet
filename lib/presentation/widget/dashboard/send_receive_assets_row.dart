@@ -29,24 +29,6 @@ class SendReceiveAssetsRow extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NewAssetsAddScreen(),
-                  )),
-              child: const IconsBackground(
-                iconData: Icons.add,
-                text: "Add Assets",
-              ),
-            ),
-            InkWell(
-              onTap: () => launchWeb("https://my.mindchainwallet.com/register"),
-              child: const IconsBackground(
-                iconData: Icons.wallet,
-                text: "Buy MIND",
-              ),
-            ),
-            GestureDetector(
-              onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SendToken(),
@@ -74,11 +56,18 @@ class SendReceiveAssetsRow extends StatelessWidget {
               ),
             ),
             InkWell(
+              onTap: () => launchWeb("https://my.mindchainwallet.com/register"),
+              child: const IconsBackground(
+                iconData: Icons.wallet,
+                text: "Buy MIND",
+              ),
+            ),
+            InkWell(
               onTap: () =>
-                  customPopUp(context, "Wait", const Text("Coming Soon")),
+                  launchWeb("https://mainnet.mindscan.info/P2p/index"),
               child: const IconsBackground(
                 iconData: Icons.stacked_bar_chart,
-                text: "Stack",
+                text: "Swap",
               ),
             ),
           ],

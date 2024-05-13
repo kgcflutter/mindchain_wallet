@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/Qr_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/presentation/widget/custom_popup.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
-
 import '../widget/input_design_widget.dart';
 
 class SendToken extends StatefulWidget {
@@ -30,7 +29,7 @@ class _SendTokenState extends State<SendToken> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text("Send Token"),),
       body: BackgroundWidget(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -152,10 +151,14 @@ class _SendTokenState extends State<SendToken> {
                                     ),
                                   ));
                             } else {
-                              customPopUp(
-                                context,
-                                "Error",
-                                const Text("Fill all input"),
+                              Fluttertoast.showToast(
+                                  msg: "Fill All Input",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.deepPurple,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
                               );
                             }
                           },

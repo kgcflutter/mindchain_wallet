@@ -13,7 +13,9 @@ class AccountDetailsScreen extends StatelessWidget {
     Provider.of<AccountDetailsProvider>(context).loadPrivateKeyAddress();
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Account Details'),
+      ),
       body: BackgroundWidget(
         child: SizedBox(
           height: screenSize.height * 0.65,
@@ -52,10 +54,12 @@ class AccountDetailsScreen extends StatelessWidget {
                                 padding: const EdgeInsets.all(10),
                                 alignment: Alignment.center,
                                 width: double.infinity,
-                                decoration:  BoxDecoration(
-                                    color: Colors.green.shade200,
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(20))),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade200,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
                                 height: 0.12 * screenSize.height,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -79,30 +83,34 @@ class AccountDetailsScreen extends StatelessWidget {
                             GestureDetector(
                               onTap: () => mnemonicListCopyText(
                                   context, value.myPrivateKey),
-                              child: value.showKey == false ? const Text("") : Container(
-                                padding: const EdgeInsets.all(10),
-                                alignment: Alignment.center,
-                                width: double.infinity,
-                                decoration:  BoxDecoration(
-                                    color: Colors.red.shade200,
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(20))),
-                                height: 0.15 * screenSize.height,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      value.myPrivateKey,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 3, // Set max lines to 3
-                                      overflow: TextOverflow
-                                          .ellipsis, // Overflow handling
+                              child: value.showKey == false
+                                  ? const Text("")
+                                  : Container(
+                                      padding: const EdgeInsets.all(10),
+                                      alignment: Alignment.center,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          color: Colors.red.shade200,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      height: 0.15 * screenSize.height,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            value.myPrivateKey,
+                                            textAlign: TextAlign.center,
+                                            maxLines: 3, // Set max lines to 3
+                                            overflow: TextOverflow
+                                                .ellipsis, // Overflow handling
+                                          ),
+                                          const Icon(Icons.copy)
+                                        ],
+                                      ),
                                     ),
-                                    const Icon(Icons.copy)
-                                  ],
-                                ),
-                              ),
                             ),
                             SizedBox(
                               height: 0.02 * screenSize.height,
@@ -115,7 +123,7 @@ class AccountDetailsScreen extends StatelessWidget {
                                 backgroundColor: Colors.white,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
+                                      BorderRadius.all(Radius.circular(5)),
                                   side: BorderSide(color: Color(0xffF38403)),
                                 ),
                               ),
@@ -123,7 +131,9 @@ class AccountDetailsScreen extends StatelessWidget {
                                 value.showMyKey();
                               },
                               child: Text(
-                                value.showKey == false ? "Show Private Key" : "Hide Private Key",
+                                value.showKey == false
+                                    ? "Show Private Key"
+                                    : "Hide Private Key",
                                 style: const TextStyle(
                                   color: Color(0xffF38403),
                                 ),

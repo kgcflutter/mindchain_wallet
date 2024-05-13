@@ -12,13 +12,6 @@ class CreateWalletProvider extends ChangeNotifier {
   List<String> mnemonicList = [];
   String copyText = '';
   String mindBalance = '';
-  // final Web3Client ethClient;
-  // CreateWalletProvider()
-  //     : ethClient = Web3Client(
-  //         'https://seednode.mindchain.info/',
-  //         http.Client(),
-  //       );
-
   void createWallet() async {
     if (mnemonicList.isEmpty) {
       final mnemonic = bip39.generateMnemonic();

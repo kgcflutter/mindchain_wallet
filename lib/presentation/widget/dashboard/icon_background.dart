@@ -9,7 +9,7 @@ class IconsBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double containerSize = MediaQuery.of(context).size.width * 0.1;
+    double containerSize = MediaQuery.of(context).size.width * 0.11;
 
     return Column(
       children: [

@@ -16,7 +16,12 @@ class SignInSystem {
         print('Login successful.');
         return true;
       } else {
-        print('Invalid private key.');
+        Fluttertoast.showToast(
+          msg: "Invalid Private Key",
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+        );
         return false;
       }
     } on FormatException catch (_) {

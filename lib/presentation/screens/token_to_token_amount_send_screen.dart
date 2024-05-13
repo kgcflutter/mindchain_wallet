@@ -33,7 +33,7 @@ class _TokenToTokenAmountScreenState extends State<TokenToTokenAmountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("Send Token To Token"),),
       body: BackgroundWidget(
           child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -41,7 +41,7 @@ class _TokenToTokenAmountScreenState extends State<TokenToTokenAmountScreen> {
                 builder: (context, value, child) => value.tokens.isEmpty
                     ? const CircularProgressIndicator()
                     : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextField(
                             controller: value.amountTEC,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
 import 'package:provider/provider.dart';
-import 'acount_info_menu_popup.dart';
 
 Column walletCard(BuildContext context) {
   return Column(
@@ -16,14 +16,19 @@ Column walletCard(BuildContext context) {
           const Text(
             "",
           ),
-          GestureDetector(
-            onTap: () => myCustomPopUp(context),
-            child: const Icon(
-              Icons.more_vert,
-              size: 25,
-              color: Colors.white,
-            ),
-          ),
+          TextButton(onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                  const AccountDetailsScreen(),
+                ));
+          }, child: const Row(
+            children: [
+              Text("Details",style: TextStyle(color: Colors.white,fontSize: 10),),
+              Icon(Icons.arrow_forward,color: Colors.white,size: 15,)
+            ],
+          )),
         ],
       ),
       const Text(
@@ -46,11 +51,11 @@ Column walletCard(BuildContext context) {
       ),
       Consumer<CreateWalletProvider>(
         builder: (context, value, child) => value.mindBalance.isEmpty
-            ? const Text("0.000 MIND",
+            ? const Text("\$0.000",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 19,
+                  fontSize: 24,
                 ))
             : Text(
                 value.mindBalance,

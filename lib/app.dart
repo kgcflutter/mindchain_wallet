@@ -8,6 +8,7 @@ class MindWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        appBarTheme: AppBarTheme(backgroundColor: Colors.white),
         tabBarTheme: const TabBarTheme(
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorColor: Color(0xffFF8A00),
