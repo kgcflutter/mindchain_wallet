@@ -8,7 +8,18 @@ class MindWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+        inputDecorationTheme: InputDecorationTheme(
+          contentPadding: const EdgeInsets.only(left: 10, top: 10),
+          enabledBorder: borderStyle(),
+          filled: true,
+          fillColor: Colors.white,
+          focusedBorder: borderStyle(),
+          hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
+          border: borderStyle(),
+        ),
+        appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+            backgroundColor: Colors.white),
         tabBarTheme: const TabBarTheme(
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorColor: Color(0xffFF8A00),
@@ -22,9 +33,12 @@ class MindWallet extends StatelessWidget {
             style: ElevatedButton.styleFrom(
                 elevation: 0,
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
                 backgroundColor: const Color(0xffF5F5F5),
-                minimumSize: const Size(double.maxFinite, 58),
+                minimumSize: const Size(double.maxFinite, 50),
                 side: const BorderSide(
                   color: Colors.white,
                 ))),
@@ -40,4 +54,9 @@ class MindWallet extends StatelessWidget {
       home: const SplashScreen(),
     );
   }
+
+  borderStyle() => const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        borderSide: BorderSide(color: Colors.transparent),
+      );
 }

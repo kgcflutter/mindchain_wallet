@@ -8,7 +8,7 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardHeight = MediaQuery.of(context).size.height * 0.24;
+    double cardHeight = MediaQuery.of(context).size.height * 0.20;
     return Container(
       width: double.infinity,
       height: cardHeight,

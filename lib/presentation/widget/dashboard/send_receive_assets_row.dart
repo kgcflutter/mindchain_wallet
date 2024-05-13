@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/new_assets_add_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
-import 'package:mindchain_wallet/presentation/widget/custom_popup.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/received_widget.dart';
 import 'package:provider/provider.dart';
 import 'icon_background.dart';
@@ -44,6 +42,12 @@ class SendReceiveAssetsRow extends StatelessWidget {
                 onTap: () {
                   value.loadPrivateKeyAddress();
                   showBottomSheet(
+                    shape: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
                     backgroundColor: Colors.white,
                     context: context,
                     builder: (context) => receivedWidget(value, context),
@@ -63,8 +67,7 @@ class SendReceiveAssetsRow extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () =>
-                  launchWeb("https://mainnet.mindscan.info/P2p/index"),
+              onTap: () => launchWeb("https://mindchain.info/P2p/index"),
               child: const IconsBackground(
                 iconData: Icons.stacked_bar_chart,
                 text: "Swap",

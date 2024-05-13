@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
+import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import '../provider/authenticator/sign_in.dart';
 import 'auth/login_system_widget.dart';
 import 'gredient_background_bottom.dart';
@@ -10,19 +12,42 @@ Widget buildLoginTabBar(
     bool isSmallScreen,
     CreateWalletProvider value,
     TextEditingController checkPhraseController,
+    TextEditingController password1controller,
+    TextEditingController password2controller,
     checkPrivateKeyController,
     BuildContext context) {
   return Column(
     children: <Widget>[
-      const TabBar(
-        indicatorPadding: EdgeInsetsDirectional.all(2),
-        tabs: [
-          Tab(text: 'Seed Phrase'),
-          Tab(text: 'Private Key'),
-        ],
+      const SizedBox(
+        height: 10,
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Container(
+          height: 45,
+          padding: const EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade400.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: const TabBar(
+            indicatorPadding: EdgeInsetsDirectional.all(2),
+            dividerColor: Colors.transparent,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+            tabs: [
+              Tab(text: 'Seed Phrase'),
+              Tab(text: 'Private Key'),
+            ],
+          ),
+        ),
       ),
       SizedBox(
-        height: 400,
+        height: 600,
         child: TabBarView(children: [
           LoginSystemWidget(
             isSmallScreen: isSmallScreen,
@@ -30,6 +55,8 @@ Widget buildLoginTabBar(
             hintText: 'Enter Your Seed Phrase',
             inputController: checkPhraseController,
             button: loginSeedPhraseButton(context, checkPhraseController),
+            password1Controller: password1controller,
+            password2Controller: password2controller,
           ),
           LoginSystemWidget(
             isSmallScreen: isSmallScreen,
@@ -38,23 +65,43 @@ Widget buildLoginTabBar(
             inputController: checkPrivateKeyController,
             button: GredientBackgroundBtn(
               onTap: () async {
-                await SignInSystem.loginWithPrivateKey(
-                        checkPrivateKeyController.text)
-                    .then(
-                  (value) {
-                    if (value == true) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DashboardScreen(),
-                          ),
-                          (route) => false);
-                    }
-                  },
-                );
+                if (password1controller.text.length > 7 &&
+                    password2controller.text.length > 7
+                    && password2controller.text == password1controller.text) {
+                  await LocalDataBase.saveData("pass", password1controller.text);
+                  await LocalDataBase.saveData("pass", password2controller.text);
+                  await SignInSystem.loginWithPrivateKey(
+                          checkPrivateKeyController.text)
+                      .then(
+                    (value) {
+                      if (value == true) {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DashboardScreen(),
+                            ),
+                            (route) => false);
+                      }
+                    },
+                  );
+                }else{
+                  Fluttertoast.showToast(
+                      msg: "Something Wrong",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0
+                  );
+                }
               },
-              child: const Text("Submit"),
+              child: const Text(
+                "Import Wallet",
+              ),
             ),
+            password1Controller: password1controller,
+            password2Controller: password2controller,
           ),
         ]),
       )
@@ -112,6 +159,6 @@ GredientBackgroundBtn loginSeedPhraseButton(
         ),
       );
     },
-    child: const Text("Submit"),
+    child: const Text("Import Wallet"),
   );
 }

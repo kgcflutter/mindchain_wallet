@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                 },
                 child: const Text(
                   "Create A New Wallet",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: TextStyle(fontWeight: FontWeight.w500,),
                 ),
               ),
               const SizedBox(

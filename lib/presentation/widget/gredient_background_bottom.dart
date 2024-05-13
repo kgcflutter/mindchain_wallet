@@ -4,7 +4,8 @@ class GredientBackgroundBtn extends StatelessWidget {
   final Widget child;
   final VoidCallback onTap;
 
-  const GredientBackgroundBtn({super.key, required this.child, required this.onTap});
+  const GredientBackgroundBtn(
+      {super.key, required this.child, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +13,12 @@ class GredientBackgroundBtn extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.maxFinite,
-        height: 58,
+        height: 50,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          ),
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,

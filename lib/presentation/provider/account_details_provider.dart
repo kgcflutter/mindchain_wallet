@@ -14,7 +14,7 @@ class AccountDetailsProvider extends ChangeNotifier {
   String myPrivateKey = '';
   String myAddress = '';
   bool showKey = false;
-  List<Transaction> transactionFulldata = []; // Specifying type for the list
+  List<Transaction> transactionFulldata = [];
   String trxResult = '';
   bool trxLoading = false;
   List<AssetsTokenModel> assetsTokenLIst = [];

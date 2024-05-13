@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/login_tabBar_widget.dart';
@@ -14,23 +13,39 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController checkPhraseController = TextEditingController();
   TextEditingController checkPrivateKeyController = TextEditingController();
+  TextEditingController password1controller = TextEditingController();
+  TextEditingController password2controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final bool isSmallScreen = screenSize.width < 600;
     return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: isSmallScreen ? 12.0 : 24.0,
-        ),
-        child: Consumer<CreateWalletProvider>(
-          builder: (context, value, child) => SingleChildScrollView(
-            child: DefaultTabController(
-              length: 2,
-              child: buildLoginTabBar(isSmallScreen, value,
-                  checkPhraseController, checkPrivateKeyController, context),
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shadowColor: Colors.transparent,
+        title: const Text("Login Wallet"),
+        centerTitle: true,
+        backgroundColor: Colors.grey.shade100,
+      ),
+      body: Consumer<CreateWalletProvider>(
+        builder: (context, value, child) =>
+            SingleChildScrollView(
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                buildLoginTabBar(
+                    isSmallScreen,
+                    value,
+                    checkPhraseController,
+                    checkPrivateKeyController,
+                    password1controller,
+                    password2controller,
+                    context),
+              ],
             ),
           ),
         ),
@@ -43,5 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
     checkPhraseController.dispose();
     checkPrivateKeyController.dispose();
+    password1controller.dispose();
+    password2controller.dispose();
   }
 }

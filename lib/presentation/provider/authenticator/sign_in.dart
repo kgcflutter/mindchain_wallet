@@ -48,11 +48,11 @@ class SignInSystem {
       print(privateKeyHex);
       print(credentials.address.hex);
       await LocalDataBase.savePrivateKey(
-          privateKeyHex, credentials.address.hex);
+          '0x$privateKeyHex', credentials.address.hex);
       return true;
     } else {
       Fluttertoast.showToast(
-        msg: "Invalid mnemonic phrase.",
+        msg: "Invalid mnemonic phrase",
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,

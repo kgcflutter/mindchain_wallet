@@ -90,7 +90,7 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
                 ),
                 child: const Text(
                   "Check The phrase",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                 ),
               ),
             ),

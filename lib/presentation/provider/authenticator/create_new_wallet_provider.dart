@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
-import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:bip32/bip32.dart' as bip32;
 
 class CreateWalletProvider extends ChangeNotifier {
   List<String> mnemonicList = [];
@@ -18,25 +16,6 @@ class CreateWalletProvider extends ChangeNotifier {
       copyText = mnemonic;
       mnemonicList.addAll(mnemonic.split(" "));
       notifyListeners();
-    }
-  }
-
-// Function to get the private key from a mnemonic
-  getPrivateKey(String mnemonic) async {
-    try {
-      final seed = bip39.mnemonicToSeed(mnemonic);
-      final root = bip32.BIP32.fromSeed(seed);
-      final child =
-          root.derivePath("m/44'/60'/0'/0/0"); // Ethereum derivation path
-      final privateKeyBytes = child.privateKey;
-      final privateKeyHex = bytesToHex(privateKeyBytes as List<int>);
-      return privateKeyHex;
-    } catch (e) {
-      // Print error if any occurs
-      if (kDebugMode) {
-        print('Error occurred while deriving private key: $e');
-      }
-      return null;
     }
   }
 

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/conts/strings.dart';
-import 'package:mindchain_wallet/presentation/utils/text_style.dart';
+import 'package:flutter/services.dart';
+import 'package:mindchain_wallet/presentation/utils/uri_luncher.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
-
 
 class LoginSystemWidget extends StatelessWidget {
   LoginSystemWidget({
@@ -11,6 +10,8 @@ class LoginSystemWidget extends StatelessWidget {
     required this.value,
     required this.hintText,
     required this.inputController,
+    required this.password1Controller,
+    required this.password2Controller,
     required this.button,
   });
 
@@ -18,6 +19,8 @@ class LoginSystemWidget extends StatelessWidget {
   String hintText;
   var value;
   TextEditingController inputController;
+  TextEditingController password1Controller;
+  TextEditingController password2Controller;
   GredientBackgroundBtn button;
 
   @override
@@ -25,32 +28,72 @@ class LoginSystemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            hintText,
-            style: TextStyler().textHeadingStyle,
-          ),
-          SizedBox(height: isSmallScreen ? 12 : 20),
-          // Adjust spacing based on screen size
-          const Text(AllStrings.saveTheParseDes),
-          SizedBox(height: isSmallScreen ? 8 : 10),
-          SizedBox(height: isSmallScreen ? 16 : 20),
-          TextField(
-            controller: inputController,
-            maxLines: 3,
-            decoration:  InputDecoration(
-              hintStyle: const TextStyle(fontSize: 13),
-              hintText: hintText,
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                borderSide: BorderSide(color: Colors.deepPurple),
-              ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(6)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: inputController,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                  ),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      minimumSize: const Size(50, 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 12)),
+                  onPressed: () async {
+                    ClipboardData? data =
+                        await Clipboard.getData(Clipboard.kTextPlain);
+                    inputController.text = data!.text.toString();
+                  },
+                  child: const Text(
+                    "Paste",
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: isSmallScreen ? 32 : 40),
+          const SizedBox(
+            height: 15,
+          ),
+          const Text("Set Password"),
+          const SizedBox(
+            height: 15,
+          ),
+          TextField(
+            controller: password1Controller,
+            decoration: const InputDecoration(hintText: 'New Password'),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          TextField(
+            controller: password2Controller,
+            decoration: const InputDecoration(hintText: 'Confirm Password'),
+          ),
+          SizedBox(height: isSmallScreen ? 15 : 30),
+          Row(
+            children: [
+              Checkbox(
+                value: true,
+                onChanged: (value) {},
+              ),
+              const Text("I read and agree with"),
+              TextButton(
+                  onPressed: () {
+                    launchWeb("https://mindchain.info/privacy-policy");
+                  },
+                  child: const Text("User Agreement"))
+            ],
+          ),
           button,
         ],
       ),
