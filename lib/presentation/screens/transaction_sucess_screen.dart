@@ -33,7 +33,7 @@ class _TransActionSuccessScreenState extends State<TransActionSuccessScreen> {
   }
 
   load() async {
-    await Provider.of<SendTokenProvider>(context).loadMyAddress();
+    await Provider.of<SendTokenProvider>(context,listen: false).loadMyAddress();
   }
 
 
