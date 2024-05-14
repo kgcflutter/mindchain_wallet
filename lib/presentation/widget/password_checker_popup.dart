@@ -12,8 +12,11 @@ void passwordCheckerPopUp(BuildContext context) {
     builder: (context) => CupertinoAlertDialog(
       title: const Text("Verify password"),
       content: CupertinoTextField(
+        padding: const EdgeInsets.all(10),
         controller: controller,
         placeholder: 'Please enter your wallet password',
+        placeholderStyle: const TextStyle(fontSize: 12,
+        fontWeight: FontWeight.w300),
       ),
       actions: [
         CupertinoDialogAction(

@@ -37,46 +37,48 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              alertText(),
-              const SizedBox(
-                height: 30,
-              ),
-              Consumer<AccountDetailsProvider>(
-                builder: (context, value, child) => Column(
-                  children: [
-                    SizedBox(
-                      height: 0.01 * screenSize.height,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.width - 200,
-                      width: MediaQuery.of(context).size.width - 170,
-                      child: Code(
-                        data: value.myAddress,
-                        codeType: CodeType.qrCode(),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Text("Private key"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    privateKeyBox(value, screenSize,context),
-                    SizedBox(
-                      height: 0.02 * screenSize.height,
-                    ),
-                    privateKeyCopyButton(screenSize, context, value),
-                  ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
+                alertText(),
+                const SizedBox(
+                  height: 30,
+                ),
+                Consumer<AccountDetailsProvider>(
+                  builder: (context, value, child) => Column(
+                    children: [
+                      SizedBox(
+                        height: 0.01 * screenSize.height,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width - 200,
+                        width: MediaQuery.of(context).size.width - 170,
+                        child: Code(
+                          data: value.myAddress,
+                          codeType: CodeType.qrCode(),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      const Text("Private key"),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      privateKeyBox(value, screenSize,context),
+                      SizedBox(
+                        height: 0.02 * screenSize.height,
+                      ),
+                      privateKeyCopyButton(screenSize, context, value),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

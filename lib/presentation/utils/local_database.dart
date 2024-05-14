@@ -5,7 +5,6 @@ class LocalDataBase {
     final SharedPreferences dataSave = await SharedPreferences.getInstance();
     dataSave.setString(key, value);
   }
-
   static Future<String?> getData(String key) async {
     final SharedPreferences dataSave = await SharedPreferences.getInstance();
     return dataSave.getString(key);
@@ -14,6 +13,11 @@ class LocalDataBase {
   static removeData() async {
     final SharedPreferences dataSave = await SharedPreferences.getInstance();
     dataSave.clear();
+  }
+
+  static removeDataByName(String name) async {
+    final SharedPreferences dataSave = await SharedPreferences.getInstance();
+    dataSave.remove(name);
   }
 
  static savePrivateKey(String privateKey, address) async {

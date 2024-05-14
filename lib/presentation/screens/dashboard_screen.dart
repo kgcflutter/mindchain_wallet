@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/utils/local_database.dart';
+import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/assets_and_trx_tapbar.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/dashboard_card.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/send_receive_assets_row.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/wallet_balance_card.dart';
 import 'package:mindchain_wallet/presentation/widget/popup_menu_widget.dart';
+import 'package:provider/provider.dart';
 import 'new_assets_add_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -18,7 +19,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<NewAssetsTokenAddProvider>(context,listen: false).showAddedTokenAndBalance();
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

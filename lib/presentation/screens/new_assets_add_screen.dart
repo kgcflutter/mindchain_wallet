@@ -21,7 +21,7 @@ class NewAssetsAddScreen extends StatelessWidget {
             Consumer<NewAssetsTokenAddProvider>(
               builder: (context, value, child) => Expanded(
                 child: ListView.builder(
-                  itemCount: value.allTokenList.length,
+                  itemCount: value.allScreenTokenList.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 5.0, vertical: 7),
@@ -36,17 +36,16 @@ class NewAssetsAddScreen extends StatelessWidget {
                         ),
                       ),
                       child: ListTile(
-                        subtitle: Text(value.allTokenList[index]['name']),
-                        leading: const Icon(
-                          Icons.token,
-                          color: Colors.deepOrangeAccent,
-                        ),
+                        subtitle: Text(value.allScreenTokenList[index]['name']),
+                        leading: Image.asset(value.allScreenTokenList[index]['image']),
                         trailing: Switch(
                           activeColor: Colors.blue,
-                          value: true,
-                          onChanged: (value) {},
+                          value: value.allScreenTokenList[index]['show'],
+                          onChanged: (res) {
+                            value.enableDisableMaker(res, index);
+                          },
                         ),
-                        title: Text(value.allTokenList[index]['symbol']),
+                        title: Text(value.allScreenTokenList[index]['name']),
                         shape: Border.all(
                             color: const Color(0xffBABABA),
                             style: BorderStyle.solid),
@@ -56,11 +55,11 @@ class NewAssetsAddScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: GredientBackgroundBtn(onTap: () => Navigator.pop(context),
-              child: const Text("SAVE")),
-            )
+            // Padding(
+            //   padding: const EdgeInsets.all(13.0),
+            //   child: GredientBackgroundBtn(onTap: () => Navigator.pop(context),
+            //   child: const Text("SAVE"),),
+            // )
           ],
         ),
       )),

@@ -19,13 +19,13 @@ class TransactionDetails extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text("Transaction Details"),centerTitle: true,),
       body: BackgroundWidget(
         child: Consumer<AccountDetailsProvider>(
           builder: (context, value, child) => Padding(
             padding: const EdgeInsets.all(15.0),
             child: SizedBox(
-              height: screenSize.height * 0.6, // Adjusted for responsiveness
+              height: screenSize.height * 0.7, // Adjusted for responsiveness
               child: Column(
                 children: [
                   Lottie.asset(AssetsPath.sendLoading),
