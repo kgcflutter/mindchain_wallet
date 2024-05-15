@@ -67,12 +67,12 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                 .showAddedTokenAndBalance(),
         child: ListView.builder(
           shrinkWrap: true,
-          itemCount: value.tokens.length,
+          itemCount: value.allScreenTokenList.length,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: const Color(0xffC1C1C1),
                 ),
@@ -82,22 +82,28 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => AddedTokenSendScreen(
-                        balance: value.tokens[index]['balance'],
-                        fullName: value.tokens[index]['name'],
-                        contractAddress: value.tokens[index]['address'],
+                        balance: value.allScreenTokenList[index]['balance'],
+                        fullName: value.allScreenTokenList[index]['name'],
+                        contractAddress: value.allScreenTokenList[index]['address'],
                       ),
                     )),
-                trailing: Text(
-                  value.tokens[index]['balance'],
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                trailing: Column(
+                  children: [
+                    Text(
+                      value.allScreenTokenList[index]['balance'],
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                     Text(value.balanceMaker(value.allScreenTokenList[index]['balance'], value.allScreenTokenList[index]['value'])
+                     )],
                 ),
                 title: Text(
-                  value.tokens[index]['name'],
+                  value.allScreenTokenList[index]['name'],
                   style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
+                ), 
+                subtitle:  Text(value.allScreenTokenList[index]['value']),
                 leading: Image.asset(
-                  value.tokens[index]['image'],
+                  value.allScreenTokenList[index]['image'],
                   height: 37,
                 ),
               ),

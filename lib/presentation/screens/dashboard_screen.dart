@@ -22,8 +22,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<NewAssetsTokenAddProvider>(context,listen: false).showAddedTokenAndBalance();
+    Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
+        .showAddedTokenAndBalance();
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -39,7 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const NewAssetsAddScreen(),
+                        builder: (context) =>
+                        const NewAssetsAddScreen(),
                       ),
                     ),
                 icon: const Icon(Icons.add)),

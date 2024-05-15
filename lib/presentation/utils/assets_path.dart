@@ -15,6 +15,7 @@ class AssetsPath {
   static String  mindPng = '$_imageBasePath/Mind.png';
   static String  musdPng = '$_imageBasePath/Musd.png';
   static String  perrymindPng = '$_imageBasePath/Perrymind.png';
+  static String  tetherUSDTPNG = '$_imageBasePath/TetherUSDT.png';
 
 
 }
