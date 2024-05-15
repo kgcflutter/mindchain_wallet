@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mindchain_wallet/abiJson.dart';
-import 'package:mindchain_wallet/model/token_model.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/privatekeyAuth.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
@@ -23,7 +22,8 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       "address": "0x32a8a2052b48Da5FD253cC8B386B88B3E0BF50eE",
       "show": true,
       "image": AssetsPath.tetherUSDTPNG,
-      "value":  "\$0.0"
+      "value": "\$0.0",
+      "total-dollar": "\$0.0"
     },
     {
       "id": "24",
@@ -32,7 +32,9 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       "address": "0xaC264f337b2780b9fd277cd9C9B2149B43F87904",
       "show": true,
       "image": AssetsPath.musdPng,
-      "value":  "\$0.0"
+      "value": "\$0.0",
+      "total-dollar": "\$0.0",
+      "change": "0.0"
     },
     {
       "id": "31",
@@ -41,7 +43,9 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       "address": "0x75E218790B76654A5EdA1D0797B46cBC709136b0",
       "show": true,
       "image": AssetsPath.perrymindPng,
-      "value":  "\$0.0"
+      "value": "\$0.0",
+      "total-dollar": "\$0.0",
+      "change": "0.0"
     },
     {
       "id": "21",
@@ -50,18 +54,18 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       "address": "0x94E6F64f9a00bE3a7B353f55b303DC5eb0C9C396",
       "show": true,
       "image": AssetsPath.mindPng,
-      "value":  "\$0.0",
+      "value": "\$0.0",
+      "total-dollar": "\$0.0",
+      "change": "0.0"
     },
   ];
-
-
 
   Future showAddedTokenAndBalance() async {
     Credentials credentials = await getCredentials();
     allScreenTokenList.clear();
     for (var i = 0; i < tokens.length; i++) {
       EthereumAddress tokenContractAddress =
-      EthereumAddress.fromHex(tokens[i]['address']);
+          EthereumAddress.fromHex(tokens[i]['address']);
       DeployedContract contract = DeployedContract(
         ContractAbi.fromJson(abiJson, 'MINDChainUSD'),
         tokenContractAddress,
@@ -73,23 +77,38 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
         params: [credentials.address],
       );
       BigInt tokenBalance = result[0] as BigInt;
-      tokens[i]['balance'] =
-          totalPublicConvertToEth(tokenBalance);
+      tokens[i]['balance'] = totalPublicConvertToEth(tokenBalance);
       allScreenTokenList.add(tokens[i]);
       notifyListeners();
     }
 
-    http.Response res = await http.get(Uri.parse('https://mindchain.info/Api/Index/marketinfo'));
+    http.Response res = await http
+        .get(Uri.parse('https://mindchain.info/Api/Index/marketinfo'));
     var data = jsonDecode(res.body);
-
     allScreenTokenList[0]['value'] =
-    "${double.parse(data['data']['market'][3]['new_price']).toStringAsFixed(2)}";
+        "\$${double.parse(data['data']['market'][3]['new_price']).toStringAsFixed(2)}";
+    allScreenTokenList[0]['change'] =
+        data['data']['market'][3]['change'].toString();
+
     allScreenTokenList[1]['value'] =
-    "${double.parse(data['data']['market'][3]['new_price']).toStringAsFixed(2)}";
+    "\$${double.parse(data['data']['market'][3]['new_price']).toStringAsFixed(2)}";
+    allScreenTokenList[1]['change'] =
+        data['data']['market'][3]['change'].toString();
+
     allScreenTokenList[2]['value'] =
-    "${double.parse(data['data']['market'][4]['new_price']).toStringAsFixed(2)}";
+    "\$${double.parse(data['data']['market'][4]['new_price']).toStringAsFixed(2)}";
+    allScreenTokenList[1]['change'] =
+        data['data']['market'][3]['change'].toString();
+
     allScreenTokenList[3]['value'] =
-    "${double.parse(data['data']['market'][1]['new_price']).toStringAsFixed(2)}";
+    "\$${double.parse(data['data']['market'][1]['new_price']).toStringAsFixed(2)}";
+    allScreenTokenList[3]['change'] =
+        data['data']['market'][3]['change'].toString();
+
+    for (var i = 0; i < tokens.length; i++) {
+      allScreenTokenList[i]['total-dollar'] = balanceMaker(
+          allScreenTokenList[i]['balance'], allScreenTokenList[i]['value']);
+    }
     notifyListeners();
   }
 
@@ -98,10 +117,10 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
- String balanceMaker(String mybal, value){
-    double result = double.parse(value)*double.parse(mybal);
-    return result.toString();
+  String balanceMaker(String myBal, value) {
+    double result = value.toString().contains("\$")
+        ? double.parse(value.toString().split("\$")[1]) * double.parse(myBal)
+        : double.parse(value.toString()) * double.parse(myBal);
+    return "\$${result.toStringAsFixed(2)}";
   }
-
 }
