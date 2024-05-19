@@ -1,8 +1,9 @@
+import 'package:barcode_scan2/model/model.dart';
+import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/Qr_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
@@ -29,7 +30,9 @@ class _SendTokenState extends State<SendToken> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Send Token"),),
+      appBar: AppBar(
+        title: const Text("Send Token"),
+      ),
       body: BackgroundWidget(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -158,8 +161,7 @@ class _SendTokenState extends State<SendToken> {
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.deepPurple,
                                   textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
+                                  fontSize: 16.0);
                             }
                           },
                           child: const Text(
@@ -224,13 +226,11 @@ class _SendTokenState extends State<SendToken> {
       decoration: InputDecoration(
         hintText: "Receiver Address...",
         hintStyle: const TextStyle(fontSize: 12),
-        suffixIcon: InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const QrCodeScanScreen(),
-                )),
-            child: const Icon(Icons.qr_code_2)),
+        suffixIcon: Consumer<SendTokenProvider>(
+          builder: (context, value, child) => InkWell(
+              onTap: () => value.scanQRCode(),
+              child: const Icon(Icons.qr_code_2)),
+        ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(

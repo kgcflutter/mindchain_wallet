@@ -8,6 +8,11 @@ class MindWallet extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        navigationBarTheme: const NavigationBarThemeData(
+          overlayColor: MaterialStatePropertyAll(Colors.white),
+          shadowColor: Colors.white,
+          indicatorColor: Color(0xff290059),
+            surfaceTintColor: Colors.white, backgroundColor: Colors.white),
         inputDecorationTheme: InputDecorationTheme(
           contentPadding: const EdgeInsets.only(left: 10, top: 10),
           enabledBorder: borderStyle(),

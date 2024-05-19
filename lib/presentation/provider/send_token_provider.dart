@@ -1,5 +1,6 @@
+import 'package:barcode_scan2/model/model.dart';
+import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import '../utils/local_database.dart';
@@ -21,8 +22,6 @@ class SendTokenProvider extends ChangeNotifier {
   TextEditingController gesPriceTEC = TextEditingController();
   TextEditingController gesLimitTEC = TextEditingController();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? controller;
   bool hideOpen = false;
   String address = '';
   String trxError = '';
@@ -43,6 +42,16 @@ class SendTokenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  scanQRCode() async {
+    ScanResult result;
+    try {
+      result = await BarcodeScanner.scan();
+      addressTEC.text = result.rawContent;
+      notifyListeners();
+    } catch (_) {
+    }
+  }
+
   loadMyAddress() async {
     address = (await LocalDataBase.getData("address"))!;
     notifyListeners();
@@ -58,7 +67,7 @@ class SendTokenProvider extends ChangeNotifier {
     String? recipientAddress = addressTEC.text;
     print('Enter the amount to send:');
     String? amount = amountTEC.text;
-    if (recipientAddress != null && amount != null) {
+    if (recipientAddress.isNotEmpty && amount.isNotEmpty) {
       try {
         double parsedAmount = double.parse(amount);
         BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
@@ -100,12 +109,12 @@ class SendTokenProvider extends ChangeNotifier {
     final response = await ethClient.sendTransaction(credentials, transaction,
         chainId: int.parse(chainId.toString()));
 
-    if (response != null) {
+    if (response.isNotEmpty) {
       print('Transaction sent! Hash: $response');
       trxWaiting = "Done Your Transaction sent! ";
       trxResult = response;
       notifyListeners();
-      if (response != null) {
+      if (response.isNotEmpty) {
         loadGesPrice();
         btnLoading = false;
       }
@@ -123,22 +132,9 @@ class SendTokenProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      result = scanData;
-      print(result!.format.toString());
-      // Update the address text field when a QR code is scanned
-      if (result!.code != null) {
-        addressTEC.text = result?.code ?? '';
-        notifyListeners();
-      }
-      notifyListeners();
-    });
-  }
 
   hideOpenInput(String value) {
-    if (value != null && value.isNotEmpty) {
+    if (value.isNotEmpty && value.isNotEmpty) {
       hideOpen = true;
       print(hideOpen);
       notifyListeners();
@@ -151,7 +147,7 @@ class SendTokenProvider extends ChangeNotifier {
 
   Future<void> addNewToken(String contractAddress) async {
     tokens.clear();
-    if (contractAddress != null) {
+    if (contractAddress.isNotEmpty) {
       try {
         Token token = await _fetchTokenInfo(ethClient, contractAddress);
         tokens.add(token);
@@ -199,7 +195,7 @@ class SendTokenProvider extends ChangeNotifier {
     btnLoading = true;
     trxWaiting = "sending precess start";
     notifyListeners();
-    if (addressTEC.text != null && amountTEC.text != null) {
+    if (addressTEC.text.isNotEmpty && amountTEC.text.isNotEmpty) {
       try {
         double parsedAmount = double.parse(amountTEC.text);
         BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
@@ -244,7 +240,7 @@ class SendTokenProvider extends ChangeNotifier {
       chainId: int.parse(chainId.toString()),
     );
 
-    if (response != null) {
+    if (response.isNotEmpty) {
       print('Token transaction sent! Hash: $response');
       trxResult = response.toString();
       notifyListeners();

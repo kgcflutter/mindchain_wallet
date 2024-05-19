@@ -39,13 +39,13 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                   indicatorColor: const Color(0xffFF8A00),
                   tabs: const [
                     Tab(text: 'Assets'),
-                    Tab(text: 'Transactions'),
+                    Tab(text: 'NFTs'),
                   ],
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
+                  height: MediaQuery.of(context).size.height * 0.4,
                   child: TabBarView(
-                    children: [buildTokenList(), const TransactionListView()],
+                    children: [buildTokenList(), const Center(child: Text("Coming soon"))],
                   ),
                 ),
               ],
@@ -65,7 +65,10 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                 .showAddedTokenAndBalance(),
         child: Visibility(
           visible: value.allScreenTokenList.isNotEmpty,
-          replacement: const Center(child: CircularProgressIndicator(color: Colors.orange,)),
+          replacement: const Center(
+              child: CircularProgressIndicator(
+            color: Colors.orange,
+          )),
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: value.allScreenTokenList.length,
@@ -103,7 +106,22 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     value.allScreenTokenList[index]['name'],
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text('${value.allScreenTokenList[index]['value']}'),
+                  subtitle: Row(
+                    children: [
+                      Text('${value.allScreenTokenList[index]['value']}'),
+                      const SizedBox(width: 10,),
+                      Text(
+                        '${value.allScreenTokenList[index]['change']}',
+                        style: TextStyle(
+                          fontSize: 11,
+                            color: value.allScreenTokenList[index]['change']
+                                    .toString()
+                                    .contains("-")
+                                ? Colors.red
+                                : Colors.green),
+                      ),
+                    ],
+                  ),
                   leading: Image.asset(
                     value.allScreenTokenList[index]['image'],
                     height: 37,
