@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/presentation/screens/main_bottom_nav_bar_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/welcome_screen.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
 
 class SplashScreenProvider extends ChangeNotifier {
   runApp(BuildContext context) async {
@@ -20,7 +20,7 @@ class SplashScreenProvider extends ChangeNotifier {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const DashboardScreen(),
+              builder: (context) => const MainBottomNavBarScreen(),
             ),
           );
         }
