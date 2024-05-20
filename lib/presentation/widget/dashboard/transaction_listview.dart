@@ -13,9 +13,11 @@ class TransactionListView extends StatefulWidget {
 }
 
 class _TransactionListViewState extends State<TransactionListView> {
+
   @override
   void initState() {
     super.initState();
+    Provider.of<AccountDetailsProvider>(context, listen: false).fetchUserTransactionData();
   }
 
   @override

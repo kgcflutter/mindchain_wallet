@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
 
 class NewAssetsAddScreen extends StatelessWidget {

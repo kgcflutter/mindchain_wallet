@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/main_bottom_nav_bar_controller.dart';
 import 'package:mindchain_wallet/presentation/screens/home_screen.dart';
-import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
-import 'package:mindchain_wallet/presentation/widget/dashboard/assets_and_trx_tapbar.dart';
-import 'package:mindchain_wallet/presentation/widget/dashboard/dashboard_card.dart';
-import 'package:mindchain_wallet/presentation/widget/dashboard/send_receive_assets_row.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/transaction_listview.dart';
-import 'package:mindchain_wallet/presentation/widget/dashboard/wallet_balance_card.dart';
-import 'package:mindchain_wallet/presentation/widget/popup_menu_widget.dart';
 import 'package:provider/provider.dart';
-import 'new_assets_add_screen.dart';
 
 class MainBottomNavBarScreen extends StatefulWidget {
   const MainBottomNavBarScreen({

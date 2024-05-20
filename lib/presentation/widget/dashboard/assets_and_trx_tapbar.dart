@@ -80,7 +80,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     color: const Color(0xffC1C1C1),
                   ),
                 ),
-                child: ListTile(
+                child: value.allScreenTokenList[index]['show'] == true ? ListTile(
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -98,7 +98,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      Text(value.allScreenTokenList[index]['total-dollar'] ?? '\$0')
+                      Text(value.allScreenTokenList[index]['total-dollar'])
                     ],
                   ),
                   title: Text(
@@ -125,7 +125,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                     value.allScreenTokenList[index]['image'],
                     height: 37,
                   ),
-                ),
+                ) : const ColoredBox(color: Colors.white),
               ),
             ),
           ),
