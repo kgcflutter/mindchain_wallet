@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/MainBottomNavBarScreen.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import '../provider/authenticator/sign_in.dart';
 import 'auth/login_system_widget.dart';
@@ -78,7 +78,7 @@ Widget buildLoginTabBar(
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const DashboardScreen(),
+                              builder: (context) => const MainBottomNavBarScreen(),
                             ),
                             (route) => false);
                       }
@@ -149,7 +149,7 @@ GredientBackgroundBtn loginSeedPhraseButton(
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(),
+                    builder: (context) => const MainBottomNavBarScreen(),
                   ),
                   (route) => false);
             } else {

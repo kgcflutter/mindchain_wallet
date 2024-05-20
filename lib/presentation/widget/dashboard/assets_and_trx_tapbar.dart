@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/added_token_send_screen.dart';
-import 'package:mindchain_wallet/presentation/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
@@ -99,7 +98,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      Text(value.allScreenTokenList[index]['total-dollar'])
+                      Text(value.allScreenTokenList[index]['total-dollar'] ?? '\$0')
                     ],
                   ),
                   title: Text(

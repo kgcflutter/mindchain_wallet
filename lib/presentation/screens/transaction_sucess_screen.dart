@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/MainBottomNavBarScreen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
@@ -51,7 +51,7 @@ class _TransActionSuccessScreenState extends State<TransActionSuccessScreen> {
           return await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => const DashboardScreen(),
+              builder: (context) => const MainBottomNavBarScreen(),
             ),
             (route) => false,
           );
@@ -177,7 +177,7 @@ class _TransActionSuccessScreenState extends State<TransActionSuccessScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const DashboardScreen(),
+                                        const MainBottomNavBarScreen(),
                                   ),
                                   (route) => false,
                                 ),

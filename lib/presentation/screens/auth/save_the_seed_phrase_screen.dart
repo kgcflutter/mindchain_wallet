@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
-import 'package:mindchain_wallet/presentation/screens/dashboard_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/MainBottomNavBarScreen.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
 import 'package:provider/provider.dart';
@@ -104,7 +104,7 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DashboardScreen(),
+                      builder: (context) => const MainBottomNavBarScreen(),
                     ),
                   );
                 },
