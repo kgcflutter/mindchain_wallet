@@ -1,146 +1,161 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:web3dart/crypto.dart';
-import 'package:web3dart/web3dart.dart';
-import 'package:bip39/bip39.dart' as bip39;
+import 'dart:convert';
+import 'dart:async';
 
-void main(List<String> arguments) {
-  final ethClient =
-  Web3Client('https://seednode.mindchain.info/', http.Client(),);
-
-  startCli(ethClient);
+void main() {
+  runApp(MyApp());
 }
 
-void startCli(Web3Client ethClient) {
-  print('Welcome to the Dart Ethereum CLI Wallet');
-  print('Please select an option:');
-  print('1. Import wallet using private key');
-  print('2. Create new wallet');
-  print('3. Send ETH');
-  print('4. Check wallet balance');
-  print('5. Login with private key');
-
-  String? option = stdin.readLineSync();
-  switch (option) {
-    case '1':
-      importWallet(ethClient);
-      break;
-    case '2':
-      createWallet(ethClient);
-      break;
-    case '3':
-      sendEth(ethClient);
-      break;
-    case '4':
-      checkBalance(ethClient);
-      break;
-    case '5':
-      loginWithPrivateKey(ethClient);
-      break;
-    default:
-      print('Invalid option selected.');
-      break;
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Token Toggle Interface',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: TokenTogglePage(),
+    );
   }
 }
 
-void importWallet(Web3Client ethClient) {
-  print('Enter your private key:');
-  String? privateKey = stdin.readLineSync();
-  if (privateKey != null) {
-    Credentials credentials = EthPrivateKey.fromHex(privateKey);
-    print('Wallet imported successfully.');
-  } else {
-    print('Invalid private key.');
+class TokenTogglePage extends StatefulWidget {
+  @override
+  _TokenTogglePageState createState() => _TokenTogglePageState();
+}
+
+class _TokenTogglePageState extends State<TokenTogglePage> {
+  final String apiURL = 'https://assets-registry.vercel.app/';
+  Map<String, dynamic> allTokens = {};
+  List<String> enabledTokens = [];
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTokens();
+    startDataRefreshTimer();
   }
-}
 
-void createWallet(Web3Client ethClient) async {
-  final rng = Random.secure();
-  final privateKeyBytes = List.generate(32, (index) => rng.nextInt(256));
-  final privateKeyHex = bytesToHex(privateKeyBytes);
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
-  Credentials credentials = EthPrivateKey.fromHex(privateKeyHex);
-  EthereumAddress address = await credentials.extractAddress();
+  void startDataRefreshTimer() {
+    const refreshInterval = Duration(seconds: 30); // Refresh every 30 seconds
+    timer = Timer.periodic(refreshInterval, (Timer t) {
+      fetchTokens();
+    });
+  }
 
-  String mnemonic = bip39.generateMnemonic();
-
-  print('Your new private key: $privateKeyHex');
-  print('Your new address: ${address.hex}');
-  print('Your mnemonic: $mnemonic');
-  print(
-      'Please make sure to securely store your private key, address, and mnemonic.');
-}
-
-Future<void> sendEth(Web3Client ethClient) async {
-  print('Enter the recipient address:');
-  String? recipientAddress = stdin.readLineSync();
-  print('Enter the amount to send:');
-  String? amount = stdin.readLineSync();
-  if (recipientAddress != null && amount != null) {
-    try {
-      BigInt parsedAmount = BigInt.parse(amount);
-      EtherAmount txValue = EtherAmount.inWei(parsedAmount);
-      await sendTransaction(ethClient, recipientAddress, txValue);
-    } catch (e) {
-      print('Invalid amount entered. Please enter a valid number.');
+  Future<void> fetchTokens() async {
+    final response = await http.get(Uri.parse(apiURL));
+    if (response.statusCode == 200) {
+      setState(() {
+        allTokens = json.decode(response.body)['data'];
+      });
+    } else {
+      throw Exception('Failed to load tokens');
     }
-  } else {
-    print('Invalid recipient address or amount.');
-  }
-}
-
-
-void checkBalance(Web3Client ethClient) async {
-  Credentials credentials = await getCredentials();
-  EtherAmount balance = await ethClient.getBalance(credentials.address);
-  print('Wallet balance: ${balance.getValueInUnit(EtherUnit.ether)} MIND');
-}
-
-void loginWithPrivateKey(Web3Client ethClient) async {
-  print('Enter your private key:');
-  String? privateKey = stdin.readLineSync();
-  if (privateKey != null) {
-    Credentials credentials = EthPrivateKey.fromHex(privateKey);
-    // You may want to check the balance or perform other operations with the credentials
-    print('Login successful.');
-  } else {
-    print('Invalid private key.');
-  }
-}
-
-Future<Credentials> getCredentials() async {
-  print('Enter your private key:');
-  String? privateKey = stdin.readLineSync();
-  if (privateKey != null) {
-    return EthPrivateKey.fromHex(privateKey);
-  } else {
-    throw Exception('Invalid private key.');
   }
 
+  void toggleToken(String tokenKey) {
+    setState(() {
+      if (enabledTokens.contains(tokenKey)) {
+        enabledTokens.remove(tokenKey);
+      } else {
+        enabledTokens.add(tokenKey);
+      }
+    });
+  }
 
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Token Toggle Interface'),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > 600) {
+            return buildWideLayout();
+          } else {
+            return buildNarrowLayout();
+          }
+        },
+      ),
+    );
+  }
 
-Future<void> sendTransaction(Web3Client ethClient, String receiver, EtherAmount txValue) async {
-  var chainId = await ethClient.getChainId();
-  print('Sending transaction...');
-  Credentials credentials = await getCredentials();
-  EtherAmount gasPrice = await ethClient.getGasPrice();
+  Widget buildWideLayout() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: buildTokenList('All Tokens', allTokens.keys.where((key) => !enabledTokens.contains(key)).toList()),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: buildTokenList('Enabled Tokens', enabledTokens),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Transaction transaction = Transaction(
-    to: EthereumAddress.fromHex(receiver),
-    gasPrice: gasPrice,
-    maxGas: 100000, // You can adjust gas limit as needed
-    value: txValue,
-  );
+  Widget buildNarrowLayout() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: buildTokenList('All Tokens', allTokens.keys.where((key) => !enabledTokens.contains(key)).toList()),
+          ),
+          const Divider(),
+          Expanded(
+            child: buildTokenList('Enabled Tokens', enabledTokens),
+          ),
+        ],
+      ),
+    );
+  }
 
-  final response = await ethClient.sendTransaction(credentials, transaction, chainId: int.parse(chainId.toString()) );
+  Widget buildTokenList(String title, List<String> tokens) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Expanded(
+          child: ListView(
+            children: tokens.map((key) => tokenCard(key, allTokens[key])).toList(),
+          ),
+        ),
+      ],
+    );
+  }
 
-  if (response != null) {
-    print('Transaction sent! Hash: ${response}');
-  } else {
-    print('Failed to send transaction.');
+  Widget tokenCard(String key, dynamic token) {
+    return Card(
+      child: ListTile(
+        leading: Image.network(
+          token['LOGO'],
+          width: 30,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.error, size: 30);
+          },
+        ),
+        title: Text('${token['NAME']} (${token['SYMBOL']})'),
+        trailing: Switch(
+          value: enabledTokens.contains(key),
+          onChanged: (bool value) {
+            toggleToken(key);
+          },
+        ),
+      ),
+    );
   }
 }

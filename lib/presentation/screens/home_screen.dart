@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<NewAssetsTokenAddProvider>(context, listen: false).showAddedTokenAndBalance();
+    //Provider.of<NewAssetsTokenAddProvider>(context, listen: false).showAddedTokenAndBalance();
   }
   @override
   Widget build(BuildContext context) {

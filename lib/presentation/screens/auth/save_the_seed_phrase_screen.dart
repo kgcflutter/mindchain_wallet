@@ -135,14 +135,13 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
       itemBuilder: (context, index) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Colors.black12,
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+        decoration:  BoxDecoration(
+          color: Colors.black12.withOpacity(0.08),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
         child: Text(
           '${index + 1}. ${value.mnemonicList[index]}',
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.black.withOpacity(0.8), fontWeight: FontWeight.w500),
         ),
       ),
     );

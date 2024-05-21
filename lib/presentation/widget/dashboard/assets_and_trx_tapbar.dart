@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/added_token_send_screen.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
@@ -15,9 +14,9 @@ class AssetsAndTrxTapbar extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color(0XffBABABA),
-        ),
+        // border: Border.all(
+        //   color: const Color(0XffBABABA),
+        // ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -44,7 +43,10 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: TabBarView(
-                    children: [buildTokenList(), const Center(child: Text("Coming soon"))],
+                    children: [
+                      buildTokenList(),
+                      const Center(child: Text("Coming soon"))
+                    ],
                   ),
                 ),
               ],
@@ -63,72 +65,50 @@ class AssetsAndTrxTapbar extends StatelessWidget {
             Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
                 .showAddedTokenAndBalance(),
         child: Visibility(
-          visible: value.allScreenTokenList.isNotEmpty,
+          visible: value.enabledTokens.isNotEmpty,
           replacement: const Center(
-              child: CircularProgressIndicator(
-            color: Colors.orange,
-          )),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: value.allScreenTokenList.length,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: const Color(0xffC1C1C1),
-                  ),
-                ),
-                child: value.allScreenTokenList[index]['show'] == true ? ListTile(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddedTokenSendScreen(
-                          balance: value.allScreenTokenList[index]['balance'],
-                          fullName: value.allScreenTokenList[index]['name'],
-                          contractAddress: value.allScreenTokenList[index]
-                              ['address'],
-                        ),
-                      )),
-                  trailing: Column(
-                    children: [
-                      Text(
-                        value.allScreenTokenList[index]['balance'],
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(value.allScreenTokenList[index]['total-dollar'])
-                    ],
-                  ),
-                  title: Text(
-                    value.allScreenTokenList[index]['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Text('${value.allScreenTokenList[index]['value']}'),
-                      const SizedBox(width: 10,),
-                      Text(
-                        '${value.allScreenTokenList[index]['change']}',
-                        style: TextStyle(
-                          fontSize: 11,
-                            color: value.allScreenTokenList[index]['change']
-                                    .toString()
-                                    .contains("-")
-                                ? Colors.red
-                                : Colors.green),
-                      ),
-                    ],
-                  ),
-                  leading: Image.asset(
-                    value.allScreenTokenList[index]['image'],
-                    height: 37,
-                  ),
-                ) : const ColoredBox(color: Colors.white),
-              ),
+            child: CircularProgressIndicator(
+              color: Colors.orange,
             ),
           ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 9.0),
+            child: _buildTokenList(value.enabledTokens),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTokenList(List tokens) {
+    return Consumer<NewAssetsTokenAddProvider>(
+      builder: (context, value, child) => ListView(
+        shrinkWrap: true,
+        children:
+            tokens.map((key) => _tokenCard(key, value.allTokens[key])).toList(),
+      ),
+    );
+  }
+
+  Widget _tokenCard(String key, dynamic token) {
+    return Consumer<NewAssetsTokenAddProvider>(
+      builder: (context, value, child) => ListTile(
+        contentPadding: const EdgeInsets.all(0),
+        leading: Image.network(
+          token['LOGO'],
+          width: 30,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.error, size: 30);
+          },
+        ),
+        title: Text('${token['SYMBOL']}'),
+        subtitle: const Text("\$0.0",style: TextStyle(color: Colors.grey),),
+        trailing: const Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text("0",style: TextStyle(fontSize: 15),),
+            Text("\$0.0",style: TextStyle(color: Colors.grey),)
+          ],
         ),
       ),
     );

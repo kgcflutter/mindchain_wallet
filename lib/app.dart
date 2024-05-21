@@ -23,6 +23,7 @@ class MindWallet extends StatelessWidget {
           border: borderStyle(),
         ),
         appBarTheme: const AppBarTheme(
+          centerTitle: true,
             titleTextStyle: TextStyle(fontSize: 16, color: Colors.black),
             backgroundColor: Colors.white),
         tabBarTheme: const TabBarTheme(

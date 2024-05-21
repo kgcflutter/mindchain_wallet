@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/main_bottom_nav_bar_controller.dart';
+import 'package:mindchain_wallet/presentation/screens/dapp_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/earn_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/home_screen.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/transaction_listview.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +16,15 @@ class MainBottomNavBarScreen extends StatefulWidget {
 }
 
 class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
-  final List<Widget> _screens = [const HomeScreen(),const TransactionListView()];
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const TransactionListView(),
+    const EarnScreen(),
+    const DappScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -45,7 +51,6 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
             ],
           ),
         ),
-
         body: Consumer<MainBottomNavBarController>(
           builder: (context, value, child) => _screens[value.selectedIndex],
         ),
