@@ -14,24 +14,28 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   Map<String, dynamic> allTokens = {};
   List<String> enabledTokens = [];
 
-  Future<String> showAddedTokenAndBalance() async {
+  Future showAddedTokenAndBalance() async {
     Credentials credentials = await getCredentials();
 
-    EthereumAddress tokenContractAddress = EthereumAddress.fromHex("address");
-    DeployedContract contract = DeployedContract(
-      ContractAbi.fromJson(abiJson, ""),
-      tokenContractAddress,
-    );
-    final contractFunction = contract.function('balanceOf');
-    List<dynamic> result = await ethClient.call(
-      contract: contract,
-      function: contractFunction,
-      params: [credentials.address],
-    );
-    BigInt tokenBalance = result[0] as BigInt;
-    print(tokenBalance);
-    notifyListeners();
-    return tokenBalance.toString();
+    fetchTokens().then((value) async {
+      List tokenList = allTokens.values.toList();
+
+      for (var element in tokenList) {
+        EthereumAddress tokenContractAddress = EthereumAddress.fromHex(element['CONTRACT_ADDRESS']);
+        DeployedContract contract = DeployedContract(
+          ContractAbi.fromJson(abiJson, ""),
+          tokenContractAddress,
+        );
+        final contractFunction = contract.function('balanceOf');
+        List<dynamic> result = await ethClient.call(
+          contract: contract,
+          function: contractFunction,
+          params: [credentials.address],
+        );
+        BigInt tokenBalance = result[0] as BigInt;
+        print(tokenBalance);
+        notifyListeners();
+      }}, );
   }
 
   String balanceMaker(String myBal, value) {

@@ -21,7 +21,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
   void initState() {
     super.initState();
     Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
-        .fetchTokens();
+        .showAddedTokenAndBalance();
   }
 
   final List<Widget> _screens = [
