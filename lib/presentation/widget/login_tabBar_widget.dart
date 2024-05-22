@@ -54,7 +54,8 @@ Widget buildLoginTabBar(
             value: value,
             hintText: 'Enter Your Seed Phrase',
             inputController: checkPhraseController,
-            button: loginSeedPhraseButton(context, checkPhraseController),
+            button: loginSeedPhraseButton(context, checkPhraseController,
+                password1controller, password2controller),
             password1Controller: password1controller,
             password2Controller: password2controller,
           ),
@@ -66,10 +67,12 @@ Widget buildLoginTabBar(
             button: GredientBackgroundBtn(
               onTap: () async {
                 if (password1controller.text.length > 7 &&
-                    password2controller.text.length > 7
-                    && password2controller.text == password1controller.text) {
-                  await LocalDataBase.saveData("pass", password1controller.text);
-                  await LocalDataBase.saveData("pass", password2controller.text);
+                    password2controller.text.length > 7 &&
+                    password2controller.text == password1controller.text) {
+                  await LocalDataBase.saveData(
+                      "pass", password1controller.text);
+                  await LocalDataBase.saveData(
+                      "pass", password2controller.text);
                   await SignInSystem.loginWithPrivateKey(
                           checkPrivateKeyController.text)
                       .then(
@@ -78,13 +81,14 @@ Widget buildLoginTabBar(
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const MainBottomNavBarScreen(),
+                              builder: (context) =>
+                                  const MainBottomNavBarScreen(),
                             ),
                             (route) => false);
                       }
                     },
                   );
-                }else{
+                } else {
                   Fluttertoast.showToast(
                       msg: "Something Wrong",
                       toastLength: Toast.LENGTH_SHORT,
@@ -92,8 +96,7 @@ Widget buildLoginTabBar(
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
-                      fontSize: 16.0
-                  );
+                      fontSize: 16.0);
                 }
               },
               child: const Text(
@@ -109,56 +112,74 @@ Widget buildLoginTabBar(
   );
 }
 
-GredientBackgroundBtn loginSeedPhraseButton(
-    BuildContext context, TextEditingController checkPhraseController) {
+GredientBackgroundBtn loginSeedPhraseButton(BuildContext context,
+    TextEditingController checkPhraseController, TextEditingController pass1, TextEditingController pass2) {
   return GredientBackgroundBtn(
     onTap: () async {
-      showDialog(
-        useSafeArea: true,
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => const Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
+      if (pass1.text.length > 7 && pass2.text.length > 7 && pass1.text == pass2.text) {
+        await LocalDataBase.saveData("pass", pass1.text);
+        await LocalDataBase.saveData("pass", pass2.text);
+        buildshowDialog(context);
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () async =>
+              await SignInSystem.importWallet(checkPhraseController.text).then(
+            (value) {
+              if (value == true) {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainBottomNavBarScreen(),
+                    ),
+                    (route) => false);
+              } else {
+                Navigator.pop(context);
+              }
+            },
           ),
-          backgroundColor: Colors.white,
-          child: SizedBox(
-              height: 80,
-              width: 70,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: CupertinoActivityIndicator(),
-                  ),
-                  Text("Loading"),
-                ],
-              )),
-        ),
-      );
-      Future.delayed(
-        const Duration(milliseconds: 100),
-        () async =>
-            await SignInSystem.importWallet(checkPhraseController.text).then(
-          (value) {
-            if (value == true) {
-              Navigator.pop(context);
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainBottomNavBarScreen(),
-                  ),
-                  (route) => false);
-            } else {
-              Navigator.pop(context);
-            }
-          },
-        ),
-      );
+        );
+      }else{
+        Fluttertoast.showToast(
+            msg: "Please Check password filled",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
+      }
     },
     child: const Text("Import Wallet"),
+  );
+}
+
+Future<dynamic> buildshowDialog(BuildContext context) {
+  return showDialog(
+    useSafeArea: true,
+    barrierDismissible: false,
+    context: context,
+    builder: (context) => const Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      child: SizedBox(
+          height: 80,
+          width: 70,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(5.0),
+                child: CupertinoActivityIndicator(),
+              ),
+              Text("Loading"),
+            ],
+          )),
+    ),
   );
 }

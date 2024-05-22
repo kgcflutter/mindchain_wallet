@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
-import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/confirm_seed_phrase_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/import_existing_wallet.dart';
 import 'package:mindchain_wallet/presentation/screens/MainBottomNavBarScreen.dart';
 import 'package:mindchain_wallet/presentation/utils/copysystem.dart';
 import 'package:mindchain_wallet/presentation/widget/gredient_background_bottom.dart';
@@ -85,7 +86,7 @@ class _SaveTheSeedPhraseScreenState extends State<SaveTheSeedPhraseScreen> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
+                    builder: (context) => const ImportExistingWallet(),
                   ),
                 ),
                 child: const Text(

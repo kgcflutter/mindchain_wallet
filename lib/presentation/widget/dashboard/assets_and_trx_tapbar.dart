@@ -102,12 +102,37 @@ class AssetsAndTrxTapbar extends StatelessWidget {
           },
         ),
         title: Text('${token['SYMBOL']}'),
-        subtitle: const Text("\$0.0",style: TextStyle(color: Colors.grey),),
+        subtitle: Row(
+          children: [
+            Text(
+              double.parse(token['PRICE_API']['price'].toString())
+                  .toStringAsFixed(3),
+              style: const TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              token['PRICE_API']['change'].toString(),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: token['PRICE_API']['change'].toString().contains("-")
+                      ? Colors.red
+                      : Colors.green),
+            ),
+          ],
+        ),
         trailing: const Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text("0",style: TextStyle(fontSize: 15),),
-            Text("\$0.0",style: TextStyle(color: Colors.grey),)
+            Text(
+              "0",
+              style: TextStyle(fontSize: 15),
+            ),
+            Text(
+              "\$0.0",
+              style: TextStyle(color: Colors.grey),
+            )
           ],
         ),
       ),

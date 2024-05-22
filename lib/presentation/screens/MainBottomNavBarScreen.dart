@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/main_bottom_nav_bar_controller.dart';
+import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/dapp_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/earn_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/home_screen.dart';
@@ -16,6 +17,13 @@ class MainBottomNavBarScreen extends StatefulWidget {
 }
 
 class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
+        .fetchTokens();
+  }
+
   final List<Widget> _screens = [
     const HomeScreen(),
     const TransactionListView(),

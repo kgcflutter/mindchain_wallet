@@ -3,20 +3,8 @@ import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_prov
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
-class NewAssetsAddScreen extends StatefulWidget {
+class NewAssetsAddScreen extends StatelessWidget {
   const NewAssetsAddScreen({super.key});
-
-  @override
-  State<NewAssetsAddScreen> createState() => _NewAssetsAddScreenState();
-}
-
-class _NewAssetsAddScreenState extends State<NewAssetsAddScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
-        .fetchTokens();
-  }
 
   @override
   Widget build(BuildContext context) {

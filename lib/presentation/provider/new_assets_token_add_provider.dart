@@ -11,28 +11,27 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   final ethClient =
       Web3Client('https://seednode.mindchain.info/', http.Client());
 
-
   Map<String, dynamic> allTokens = {};
   List<String> enabledTokens = [];
 
-  Future showAddedTokenAndBalance() async {
+  Future<String> showAddedTokenAndBalance() async {
     Credentials credentials = await getCredentials();
-    for (var a = 0; a < allTokens.length; a++) {
-      EthereumAddress tokenContractAddress = EthereumAddress.fromHex('address');
-      DeployedContract contract = DeployedContract(
-        ContractAbi.fromJson(abiJson, ""),
-        tokenContractAddress,
-      );
-      final contractFunction = contract.function('balanceOf');
-      List<dynamic> result = await ethClient.call(
-        contract: contract,
-        function: contractFunction,
-        params: [credentials.address],
-      );
-      BigInt tokenBalance = result[0] as BigInt;
-    }
 
+    EthereumAddress tokenContractAddress = EthereumAddress.fromHex("address");
+    DeployedContract contract = DeployedContract(
+      ContractAbi.fromJson(abiJson, ""),
+      tokenContractAddress,
+    );
+    final contractFunction = contract.function('balanceOf');
+    List<dynamic> result = await ethClient.call(
+      contract: contract,
+      function: contractFunction,
+      params: [credentials.address],
+    );
+    BigInt tokenBalance = result[0] as BigInt;
+    print(tokenBalance);
     notifyListeners();
+    return tokenBalance.toString();
   }
 
   String balanceMaker(String myBal, value) {
@@ -44,12 +43,12 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     if (allTokens.isEmpty) {
       allTokens.clear();
       final response = await http.get(
-        Uri.parse("https://msc-token-registry.vercel.app"),
+        Uri.parse("https://msc-price-sandy.vercel.app/"),
       );
       if (response.statusCode == 200) {
         allTokens = json.decode(response.body)['data'];
         print(allTokens);
-        if(allTokens.length >3){
+        if (allTokens.length > 3) {
           enabledTokens.add(allTokens.keys.elementAt(0));
           enabledTokens.add(allTokens.keys.elementAt(1));
           enabledTokens.add(allTokens.keys.elementAt(2));

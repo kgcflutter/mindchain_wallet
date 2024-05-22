@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         shadowColor: Colors.transparent,
-        title: const Text("Login Wallet"),
+        title: const Text("Import Existing Wallet"),
         centerTitle: true,
         backgroundColor: Colors.grey.shade100,
       ),

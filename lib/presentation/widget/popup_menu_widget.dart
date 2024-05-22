@@ -51,7 +51,7 @@ PopupMenuButton<dynamic> buildPopupMenuButton() {
             customPopUp(
                 context,
                 "Are You Sure",
-                const Text("Log out Your Account"),
+                const Text("Remove wallet"),
                 TextButton(
                     onPressed: () {
                       LocalDataBase.removeData();
@@ -65,7 +65,7 @@ PopupMenuButton<dynamic> buildPopupMenuButton() {
                     child: const Text("Sure")));
           },
           icon: const Icon(Icons.logout),
-          label: const Text("Log Out"),
+          label: const Text("Remove Wallet"),
         ),
       ),
     ],

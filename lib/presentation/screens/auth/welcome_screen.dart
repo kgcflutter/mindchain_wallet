@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindchain_wallet/conts/strings.dart';
-import 'package:mindchain_wallet/presentation/screens/auth/login_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/auth/import_existing_wallet.dart';
 import 'package:mindchain_wallet/presentation/screens/auth/save_the_seed_phrase_screen.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/text_style.dart';
@@ -58,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  "Sign In With Seed Phrase",
+                  "Import Existing Wallet",
                   style: TextStyle(color: Colors.black),
                 ),
               ),
