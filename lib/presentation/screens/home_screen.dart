@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/assets_and_trx_tapbar.dart';
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    //Provider.of<NewAssetsTokenAddProvider>(context, listen: false).showAddedTokenAndBalance();
+    Provider.of<CreateWalletProvider>(context, listen: false).loadBalance();
   }
   @override
   Widget build(BuildContext context) {

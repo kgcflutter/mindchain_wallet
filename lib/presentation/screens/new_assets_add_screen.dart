@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 class NewAssetsAddScreen extends StatelessWidget {
   const NewAssetsAddScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,55 +39,35 @@ class NewAssetsAddScreen extends StatelessWidget {
                       height: 15,
                     ),
                     Visibility(
-                      visible: value.allTokens.isNotEmpty,
+                      visible: value.allTokens.isNotEmpty, 
                       replacement: const CircularProgressIndicator(),
-                      child: _buildTokenList(
-                        value.allTokens,
-                      ),
+                      child:
+                      ListView.builder(
+                        itemCount: value.allTokens.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) =>
+                          ListTile(
+                            leading: Image.network(
+                              'value.allTokens[index]',
+                              width: 30,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 30);
+                              },
+                            ),
+                            title: Text('${value.allTokens[index]['name']}'),
+                            trailing: Switch(
+                              value:  true,
+                              onChanged: (bool values) {
+                                value.toggleToken("key");
+                              },
+                            ),
+                          ),),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTokenList(List tokens) {
-    return Consumer<NewAssetsTokenAddProvider>(
-      builder: (context, value, child) => ListView(
-        shrinkWrap: true,
-        children:
-             _tokenCard(key, value.allTokens),
-      ),
-    );
-  }
-
-  Widget _tokenCard(String key, dynamic token) {
-    return Consumer<NewAssetsTokenAddProvider>(
-      builder: (context, value, child) => ListTile(
-        contentPadding: const EdgeInsets.all(0),
-        leading: Image.network(
-          token['LOGO'],
-          width: 30,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.error, size: 30);
-          },
-        ),
-        title: Text('${token['SYMBOL']}'),
-        subtitle: Text('${token['NAME']}',style: const TextStyle(fontSize: 11),),
-        trailing: Switch(
-          activeColor: Colors.white,
-          activeTrackColor: Colors.indigoAccent,
-          inactiveTrackColor: Colors.black.withOpacity(0.75),
-          inactiveThumbColor: Colors.white,
-          trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
-          value: value.enabledTokens.contains(key),
-          onChanged: (bool values) {
-            value.toggleToken(key);
-          },
         ),
       ),
     );

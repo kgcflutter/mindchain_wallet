@@ -70,7 +70,7 @@ class SendReceiveAssetsRow extends StatelessWidget {
               onTap: () => launchWeb("https://mindchain.info/P2p/index"),
               child: const IconsBackground(
                 iconData: Icons.stacked_bar_chart,
-                text: "Swap",
+                text: "P2P",
               ),
             ),
           ],
