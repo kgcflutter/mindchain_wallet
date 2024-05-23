@@ -32,7 +32,7 @@ PopupMenuButton<dynamic> buildPopupMenuButton() {
       ),
       PopupMenuItem(
         child: TextButton.icon(
-          onPressed: () => launchWeb("https://mindchain.info/privacy-policy"),
+          onPressed: () => launchWeb("https://mindchainwallet.com/privacy-policy"),
           icon: const Icon(Icons.privacy_tip_outlined),
           label: const Text("Privacy Policy"),
         ),
