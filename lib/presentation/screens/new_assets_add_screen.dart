@@ -43,7 +43,7 @@ class NewAssetsAddScreen extends StatelessWidget {
                       visible: value.allTokens.isNotEmpty,
                       replacement: const CircularProgressIndicator(),
                       child: _buildTokenList(
-                        value.allTokens.keys.toList(),
+                        value.allTokens,
                       ),
                     ),
                   ],
@@ -56,12 +56,12 @@ class NewAssetsAddScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTokenList(List<String> tokens) {
+  Widget _buildTokenList(List tokens) {
     return Consumer<NewAssetsTokenAddProvider>(
       builder: (context, value, child) => ListView(
         shrinkWrap: true,
         children:
-            tokens.map((key) => _tokenCard(key, value.allTokens[key])).toList(),
+             _tokenCard(key, value.allTokens),
       ),
     );
   }

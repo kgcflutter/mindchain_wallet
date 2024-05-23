@@ -11,31 +11,28 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   final ethClient =
       Web3Client('https://seednode.mindchain.info/', http.Client());
 
-  Map<String, dynamic> allTokens = {};
-  List<String> enabledTokens = [];
+  List allTokens = [
+    {"name": "MUSD", "contrct": "0xaC264f337b2780b9fd277cd9C9B2149B43F87904"},
+  ];
+
+  List enabledTokens = [];
 
   Future showAddedTokenAndBalance() async {
     Credentials credentials = await getCredentials();
-
-    fetchTokens().then((value) async {
-      List tokenList = allTokens.values.toList();
-
-      for (var element in tokenList) {
-        EthereumAddress tokenContractAddress = EthereumAddress.fromHex(element['CONTRACT_ADDRESS']);
-        DeployedContract contract = DeployedContract(
-          ContractAbi.fromJson(abiJson, ""),
-          tokenContractAddress,
-        );
-        final contractFunction = contract.function('balanceOf');
-        List<dynamic> result = await ethClient.call(
-          contract: contract,
-          function: contractFunction,
-          params: [credentials.address],
-        );
-        BigInt tokenBalance = result[0] as BigInt;
-        print(tokenBalance);
-        notifyListeners();
-      }}, );
+    EthereumAddress tokenContractAddress = EthereumAddress.fromHex('0xaC264f337b2780b9fd277cd9C9B2149B43F87904');
+    DeployedContract contract = DeployedContract(
+      ContractAbi.fromJson(abiJson, "MINDChainUSD"),
+      tokenContractAddress,
+    );
+    final contractFunction = contract.function('balanceOf');
+    List<dynamic> result = await ethClient.call(
+      contract: contract,
+      function: contractFunction,
+      params: [credentials.address],
+    );
+    BigInt tokenBalance = result[0] as BigInt;
+    print(tokenBalance);
+    notifyListeners();
   }
 
   String balanceMaker(String myBal, value) {
@@ -43,26 +40,6 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     return result.toString();
   }
 
-  Future<void> fetchTokens() async {
-    if (allTokens.isEmpty) {
-      allTokens.clear();
-      final response = await http.get(
-        Uri.parse("https://msc-price-sandy.vercel.app/"),
-      );
-      if (response.statusCode == 200) {
-        allTokens = json.decode(response.body)['data'];
-        print(allTokens);
-        if (allTokens.length > 3) {
-          enabledTokens.add(allTokens.keys.elementAt(0));
-          enabledTokens.add(allTokens.keys.elementAt(1));
-          enabledTokens.add(allTokens.keys.elementAt(2));
-        }
-        notifyListeners();
-      } else {
-        throw Exception('Failed to load tokens');
-      }
-    }
-  }
 
   void toggleToken(String tokenKey) {
     if (enabledTokens.contains(tokenKey)) {
