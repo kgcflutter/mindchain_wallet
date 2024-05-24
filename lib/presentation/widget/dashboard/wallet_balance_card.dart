@@ -16,7 +16,7 @@ Widget walletCard(BuildContext context) {
             ],
           ),
           const Text(
-            "Mind Chain Wallet",
+            "MIND WALLET",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,

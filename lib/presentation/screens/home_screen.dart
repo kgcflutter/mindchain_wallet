@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
-import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/assets_and_trx_tapbar.dart';
 import 'package:mindchain_wallet/presentation/widget/dashboard/dashboard_card.dart';
@@ -9,7 +7,6 @@ import 'package:mindchain_wallet/presentation/widget/dashboard/send_receive_asse
 import 'package:mindchain_wallet/presentation/widget/dashboard/wallet_balance_card.dart';
 import 'package:mindchain_wallet/presentation/widget/popup_menu_widget.dart';
 import 'package:provider/provider.dart';
-
 import 'new_assets_add_screen.dart';
 
 class HomeScreen extends StatefulWidget {

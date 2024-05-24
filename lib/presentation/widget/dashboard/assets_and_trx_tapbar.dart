@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
-import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
@@ -75,18 +75,23 @@ class AssetsAndTrxTapbar extends StatelessWidget {
           child: ListView.builder(
             itemCount: value.enabledTokens.length,
             shrinkWrap: true,
-            itemBuilder: (context, index) =>
-                ListTile(
-                  leading: Image.asset(
-                    value.enabledTokens[index]['image'],
-                    width: 30,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.error, size: 30);
-                    },
-                  ),
-                  title: Text('${value.enabledTokens[index]['name']}'),
-                  trailing: Text(value.enabledTokens[index]['balance']),
-                ),),
+            itemBuilder: (context, index) => ListTile(
+              leading: Image.asset(
+                value.enabledTokens[index]['image'],
+                width: 30,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.error, size: 30);
+                },
+              ),
+              title: Text('${value.enabledTokens[index]['name']}'),
+              trailing: index == 0
+                  ? Consumer<CreateWalletProvider>(
+                      builder: (context, balance, child) =>
+                          Text(balance.mindBalance.split('MIND')[0]),
+                    )
+                  : Text(value.enabledTokens[index]['balance']),
+            ),
+          ),
         ),
       ),
     );

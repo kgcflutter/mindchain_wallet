@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/abiJson.dart';
-import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/privatekeyAuth.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
@@ -24,6 +22,7 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   List enabledTokens = [];
 
   Future showAddedTokenAndBalance() async {
+    enabledTokens.clear();
     enabledTokens.add({"name": "MIND", "image": AssetsPath.mindLogoPng, "contract": "null", "balance": '0.0'},);
     enabledTokens.add(allTokens[0]);
     enabledTokens.add(allTokens[1]);
