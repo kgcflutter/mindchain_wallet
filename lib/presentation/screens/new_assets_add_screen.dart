@@ -56,9 +56,9 @@ class NewAssetsAddScreen extends StatelessWidget {
                             ),
                             title: Text('${value.allTokens[index]['name']}'),
                             trailing: Switch(
-                              value:  true,
+                              value:  value.enabledTokens.contains(value.allTokens[index]),
                               onChanged: (bool values) {
-                                value.toggleToken("key");
+                                value.toggleToken(value.allTokens[index]);
                               },
                             ),
                           ),),

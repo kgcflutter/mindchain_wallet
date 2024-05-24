@@ -66,26 +66,26 @@ class AssetsAndTrxTapbar extends StatelessWidget {
             Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
                 .showAddedTokenAndBalance(),
         child: Visibility(
-          visible: value.allTokens.isNotEmpty,
+          visible: value.enabledTokens.isNotEmpty,
           replacement: const Center(
             child: CircularProgressIndicator(
               color: Colors.orange,
             ),
           ),
           child: ListView.builder(
-            itemCount: value.allTokens.length,
+            itemCount: value.enabledTokens.length,
             shrinkWrap: true,
             itemBuilder: (context, index) =>
                 ListTile(
                   leading: Image.asset(
-                    value.allTokens[index]['image'],
+                    value.enabledTokens[index]['image'],
                     width: 30,
                     errorBuilder: (context, error, stackTrace) {
                       return const Icon(Icons.error, size: 30);
                     },
                   ),
-                  title: Text('${value.allTokens[index]['name']}'),
-                  trailing: Text(double.parse(value.allTokens[index]['balance']).toStringAsFixed(3)),
+                  title: Text('${value.enabledTokens[index]['name']}'),
+                  trailing: Text(value.enabledTokens[index]['balance']),
                 ),),
         ),
       ),
