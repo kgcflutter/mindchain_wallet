@@ -3,6 +3,8 @@ import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_
 import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/new_assets_token_add_provider.dart';
+
 Widget walletCard(BuildContext context) {
   return LayoutBuilder(
     builder: (context, constraints) {
@@ -24,23 +26,13 @@ Widget walletCard(BuildContext context) {
             ),
           ),
           const SizedBox(height: 12),
-          Consumer<CreateWalletProvider>(
-            builder: (context, value, child) => value.mindBalance.isEmpty
-                ? const Text(
-              "\$0.000",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            )
-                : Text(
-              value.mindBalance,
+          Consumer<NewAssetsTokenAddProvider>(
+            builder: (context, value, child) => Text(
+              value.totalDollar,
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 19,
-              ),
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ],

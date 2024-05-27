@@ -15,7 +15,6 @@ class AccountDetailsProvider extends ChangeNotifier {
   bool showKey = false;
   List<Transaction> transactionFulldata = [];
   String trxResult = '';
-  bool trxLoading = false;
 
 
   loadPrivateKeyAddress() async {
@@ -34,9 +33,6 @@ class AccountDetailsProvider extends ChangeNotifier {
   }
 
   Future<void> fetchUserTransactionData() async {
-    trxLoading = true;
-    notifyListeners();
-    transactionFulldata.clear();
     trxResult = '';
     String urls =
         'https://mainnet.mindscan.info/api/v2/addresses/${await LocalDataBase.getData("address")}/transactions';
@@ -47,18 +43,14 @@ class AccountDetailsProvider extends ChangeNotifier {
       Map<String, dynamic> body = jsonDecode(response.body);
       if (body.keys.contains("message")) {
         trxResult = body['message'];
-        trxLoading = false;
-        notifyListeners();
       } else {
         List<dynamic> myData = body['items'];
         for (var element in myData) {
+          transactionFulldata.clear();
           transactionFulldata.add(Transaction.fromJson(element));
         }
-        trxLoading = false;
-        notifyListeners();
       }
     } catch (e) {
-      trxLoading = false;
       trxResult = 'Failed to fetch transactions: $e';
     }
     notifyListeners();

@@ -29,7 +29,7 @@ class _TransactionListViewState extends State<TransactionListView> {
         centerTitle: true,
       ),
       body: Consumer<AccountDetailsProvider>(
-        builder: (context, value, child) => value.trxLoading == true
+        builder: (context, value, child) => value.transactionFulldata.isEmpty
             ? const Center(child: CupertinoActivityIndicator())
             : value.trxResult.contains("Not")
                 ? const Center(child: Text("No Transaction"))

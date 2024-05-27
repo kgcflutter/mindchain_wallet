@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
+import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
+import 'package:mindchain_wallet/presentation/screens/token_to_token_amount_send_screen.dart';
 import 'package:provider/provider.dart';
 
 class AssetsAndTrxTapbar extends StatelessWidget {
@@ -76,6 +78,49 @@ class AssetsAndTrxTapbar extends StatelessWidget {
             itemCount: value.enabledTokens.length,
             shrinkWrap: true,
             itemBuilder: (context, index) => ListTile(
+              onTap: () {
+                if (index == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SendToken(),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TokenToTokenAmountScreen(
+                            contractAddress: value.enabledTokens[index]
+                                ['contract'],
+                            tokenName: value.enabledTokens[index]['name']),
+                      ));
+                }
+              },
+              subtitle: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '\$${value.enabledTokens[index]['dollar']}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    value.enabledTokens[index]['change'] == '0'
+                        ? ''
+                        : value.enabledTokens[index]['change'],
+                    style: TextStyle(
+                        fontSize: 9,
+                        color: value.enabledTokens[index]['change']
+                                .toString()
+                                .contains("-")
+                            ? Colors.red
+                            : Colors.green),
+                  )
+                ],
+              ),
               leading: Image.asset(
                 value.enabledTokens[index]['image'],
                 width: 30,
@@ -89,7 +134,21 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                       builder: (context, balance, child) =>
                           Text(balance.mindBalance.split('MIND')[0]),
                     )
-                  : Text(value.enabledTokens[index]['balance']),
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${value.enabledTokens[index]['balance']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          value.balanceMaker(
+                              value.enabledTokens[index]['balance'],
+                              value.enabledTokens[index]['dollar']),
+                          style: const TextStyle(fontSize: 9),
+                        )
+                      ],
+                    ),
             ),
           ),
         ),
