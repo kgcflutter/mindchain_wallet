@@ -131,8 +131,21 @@ class AssetsAndTrxTapbar extends StatelessWidget {
               title: Text('${value.enabledTokens[index]['name']}'),
               trailing: index == 0
                   ? Consumer<CreateWalletProvider>(
-                      builder: (context, balance, child) =>
-                          Text(balance.mindBalance.split('MIND')[0]),
+                      builder: (context, balance, child) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            balance.mindBalance,
+                            style: const TextStyle(fontSize: 15),
+                          ),
+                          Text(
+                            value.balanceMaker(balance.mindBalance,
+                                value.enabledTokens[index]['dollar']),
+                            style: const TextStyle(fontSize: 9),
+                          )
+                        ],
+                      ),
                     )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -141,12 +154,14 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                           '${value.enabledTokens[index]['balance']}',
                           style: const TextStyle(fontSize: 15),
                         ),
-                        Text(
-                          value.balanceMaker(
-                              value.enabledTokens[index]['balance'],
-                              value.enabledTokens[index]['dollar']),
-                          style: const TextStyle(fontSize: 9),
-                        )
+                        Consumer(
+                          builder: (context, values, child) => Text(
+                            value.balanceMaker(
+                                value.enabledTokens[index]['balance'],
+                                value.enabledTokens[index]['dollar']),
+                            style: const TextStyle(fontSize: 9),
+                          ),
+                        ),
                       ],
                     ),
             ),

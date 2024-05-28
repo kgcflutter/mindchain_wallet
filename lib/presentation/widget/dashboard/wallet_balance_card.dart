@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/account_details_screen.dart';
 import 'package:provider/provider.dart';
-
 import '../../provider/new_assets_token_add_provider.dart';
 
 Widget walletCard(BuildContext context) {

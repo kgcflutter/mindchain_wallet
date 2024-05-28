@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:mindchain_wallet/model/asset_token_model.dart';
 import 'package:mindchain_wallet/model/transaction_model.dart';
 import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:http/http.dart' as http;
