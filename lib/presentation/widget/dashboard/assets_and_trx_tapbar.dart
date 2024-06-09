@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
-import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/send_token_screen.dart';
 import 'package:mindchain_wallet/presentation/screens/token_to_token_amount_send_screen.dart';
@@ -65,8 +64,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
       builder: (context, value, child) => RefreshIndicator(
         color: Colors.orange,
         onRefresh: () =>
-            Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
-                .showAddedTokenAndBalance(),
+                value.showAddedTokenAndBalance(),
         child: Visibility(
           visible: value.enabledTokens.isNotEmpty,
           replacement: const Center(
@@ -129,25 +127,7 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                 },
               ),
               title: Text('${value.enabledTokens[index]['name']}'),
-              trailing: index == 0
-                  ? Consumer<CreateWalletProvider>(
-                      builder: (context, balance, child) => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            balance.mindBalance,
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                          Text(
-                            value.balanceMaker(balance.mindBalance,
-                                value.enabledTokens[index]['dollar']),
-                            style: const TextStyle(fontSize: 9),
-                          )
-                        ],
-                      ),
-                    )
-                  : Column(
+              trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(

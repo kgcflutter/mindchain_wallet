@@ -20,8 +20,14 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<NewAssetsTokenAddProvider>(context, listen: false).showAddedTokenAndBalance();
-    Provider.of<NewAssetsTokenAddProvider>(context, listen: false).loadDollarValue();
+    Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
+        .loadBalances()
+        .then((value) => Provider.of<NewAssetsTokenAddProvider>(context,
+                listen: false)
+            .showAddedTokenAndBalance()
+            .then((value) =>
+                Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
+                    .loadDollarValue()));
   }
 
   final List<Widget> _screens = [

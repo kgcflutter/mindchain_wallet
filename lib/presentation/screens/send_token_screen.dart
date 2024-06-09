@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mindchain_wallet/presentation/provider/authenticator/create_new_wallet_provider.dart';
+import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/screens/token_send_confirm_screen.dart';
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
@@ -78,7 +78,7 @@ class _SendTokenState extends State<SendToken> {
                               onTap: () {
                                 provider.amountTEC.text = '';
                                 provider.amountTEC.text =
-                                    '${double.parse(Provider.of<CreateWalletProvider>(context, listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
+                                    '${double.parse(Provider.of<NewAssetsTokenAddProvider>(context, listen: false).mindBalance.split('MIND')[0].trim()) - 0.03}';
                                 provider.hideOpenInput("00");
                               },
                               child: const Text("max")),
@@ -120,7 +120,7 @@ class _SendTokenState extends State<SendToken> {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Consumer<CreateWalletProvider>(
+                      Consumer<NewAssetsTokenAddProvider>(
                         builder: (context, value, child) => Text(
                           " Your Balance ${value.mindBalance}",
                           style: const TextStyle(

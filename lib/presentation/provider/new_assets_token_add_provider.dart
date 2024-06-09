@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:mindchain_wallet/abiJson.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/privatekeyAuth.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
 import 'package:mindchain_wallet/presentation/utils/convert_to_eth.dart';
+import 'package:mindchain_wallet/presentation/utils/local_database.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,6 +16,8 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   final Uri _mindRegisterURLS = Uri.parse('https://mindchain.info/Api/Index/marketinfo');
 
   String totalDollar = '\$0.0';
+  String mindBalance = '0.0';
+
 
   List allTokens = [
     {
@@ -68,7 +72,7 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
         "name": "MIND",
         "image": AssetsPath.mindLogoPng,
         "contract": "null",
-        "balance": 0.0,
+        "balance": mindBalance,
         "dollar": 0.0,
         "change": '0',
       "total": 0.0
@@ -148,4 +152,57 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  Future<void> connectWebSocketForLoadBalance(String url, String address) async {
+    try {
+      final socket = await WebSocket.connect(url);
+      if (kDebugMode) {
+        print('Connected to WebSocket server');
+      }
+      socket.done.then((_) async {
+        // WebSocket connection is closed, attempt to reconnect after a delay
+        await Future.delayed(const Duration(seconds: 5));
+        await connectWebSocketForLoadBalance(url, address); // Reconnect
+      });
+
+      Stream.periodic(const Duration(seconds: 1)).listen((_) {
+        final balanceSubscribePayload = json.encode({
+          'id': 1,
+          'method': 'eth_getBalance',
+          'params': [address, 'latest'],
+        });
+        socket.add(balanceSubscribePayload);
+      });
+
+      socket.listen(
+            (message) {
+          final data = json.decode(message);
+          if (data['id'] == 1 && data['result'] != null) {
+            mindBalance = '0.00';
+            final balanceHex = data['result'];
+            final balanceInWei =
+            BigInt.parse(balanceHex.substring(2), radix: 16);
+            mindBalance = convertToEth(balanceInWei);
+            enabledTokens[0]['balance'] = convertToEth(balanceInWei);
+            notifyListeners();
+          }
+        },
+        onError: (_) {},
+        cancelOnError: true,
+      );
+    } catch (_) {
+      // Error occurred while connecting, attempt to reconnect after a delay
+      await Future.delayed(const Duration(seconds: 5));
+      await connectWebSocketForLoadBalance(url, address); // Reconnect
+    }
+  }
+
+  Future loadBalances() async {
+    var data = await LocalDataBase.getData("address");
+    final address = EthereumAddress.fromHex(data!);
+    await connectWebSocketForLoadBalance("wss://seednode.mindchain.info/ws", address.hex);
+  }
+
+
 }
