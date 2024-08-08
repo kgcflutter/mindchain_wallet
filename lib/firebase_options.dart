@@ -17,33 +17,27 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -53,10 +47,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDM8HY_esC6h6B8Ceb2fBxaEWDgh2hX3B0',
-    appId: '1:22713297135:android:708dbb073d5e408891531a',
-    messagingSenderId: '22713297135',
-    projectId: 'mindwallet-55680',
-    storageBucket: 'mindwallet-55680.appspot.com',
+    apiKey: 'AIzaSyCeImZ-gZHcL2QUwjXUiHI7jirmZXx5pYY',
+    appId: '1:631304765359:android:3ac66787e990de375f395a',
+    messagingSenderId: '631304765359',
+    projectId: 'biz-global-001',
+    storageBucket: 'biz-global-001.appspot.com',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCeImZ-gZHcL2QUwjXUiHI7jirmZXx5pYY',
+    appId: '1:631304765359:web:3ac66787e990de375f395a',
+    messagingSenderId: '631304765359',
+    projectId: 'biz-global-001',
+    authDomain: 'biz-global-001.firebaseapp.com',
+    storageBucket: 'biz-global-001.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCeImZ-gZHcL2QUwjXUiHI7jirmZXx5pYY',
+    appId: '1:631304765359:ios:3ac66787e990de375f395a',
+    messagingSenderId: '631304765359',
+    projectId: 'biz-global-001',
+    storageBucket: 'biz-global-001.appspot.com',
+    iosBundleId: 'com.bizglobal.app',
   );
 }
