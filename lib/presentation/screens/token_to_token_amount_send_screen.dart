@@ -132,7 +132,7 @@ class _TokenToTokenAmountScreenState extends State<TokenToTokenAmountScreen> {
                           ),
                         ],
                       ),
-              ))),
+              ),),),
     );
   }
 }

@@ -48,8 +48,8 @@ class NewAssetsAddScreen extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context, index) =>
                           ListTile(
-                            leading: Image.network(
-                              'value.allTokens[index]',
+                            leading: Image.asset(
+                              value.allTokens[index]['image'],
                               width: 30,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Icon(Icons.error, size: 30);

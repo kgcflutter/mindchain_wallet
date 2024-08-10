@@ -66,8 +66,8 @@ Widget buildLoginTabBar(
             inputController: checkPrivateKeyController,
             button: GredientBackgroundBtn(
               onTap: () async {
-                if (password1controller.text.length > 7 &&
-                    password2controller.text.length > 7 &&
+                if (password1controller.text.length > 3 &&
+                    password2controller.text.length > 3 &&
                     password2controller.text == password1controller.text) {
                   await LocalDataBase.saveData(
                       "pass", password1controller.text);
@@ -90,7 +90,7 @@ Widget buildLoginTabBar(
                   );
                 } else {
                   Fluttertoast.showToast(
-                      msg: "Something Wrong",
+                      msg: "Please Check Password must be at least 4 characters long",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
@@ -116,7 +116,7 @@ GredientBackgroundBtn loginSeedPhraseButton(BuildContext context,
     TextEditingController checkPhraseController, TextEditingController pass1, TextEditingController pass2) {
   return GredientBackgroundBtn(
     onTap: () async {
-      if (pass1.text.length > 7 && pass2.text.length > 7 && pass1.text == pass2.text) {
+      if (pass1.text.length > 3 && pass2.text.length > 3 && pass1.text == pass2.text) {
         await LocalDataBase.saveData("pass", pass1.text);
         await LocalDataBase.saveData("pass", pass2.text);
         buildshowDialog(context);
@@ -141,7 +141,7 @@ GredientBackgroundBtn loginSeedPhraseButton(BuildContext context,
         );
       }else{
         Fluttertoast.showToast(
-            msg: "Please Check password filled",
+            msg: "Please Check Password must be at least 4 characters long",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,

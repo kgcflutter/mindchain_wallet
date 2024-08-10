@@ -1,5 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mindchain_wallet/app.dart';
 import 'package:mindchain_wallet/presentation/provider/account_details_provider.dart';
@@ -9,19 +7,10 @@ import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_prov
 import 'package:mindchain_wallet/presentation/provider/send_token_provider.dart';
 import 'package:mindchain_wallet/presentation/provider/splash_Screen_provider.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart';
 
-Future _firebaseBackgroundMessage(RemoteMessage message) async {
-  if (message.notification != null) {}
-}
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+void main(){
   runApp(
     const MyApp(),
   );

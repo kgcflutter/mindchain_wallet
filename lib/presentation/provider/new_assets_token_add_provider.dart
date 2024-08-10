@@ -12,12 +12,10 @@ import 'package:http/http.dart' as http;
 
 class NewAssetsTokenAddProvider extends ChangeNotifier {
   final ethClient = Web3Client('https://seednode.mindchain.info/', http.Client());
-
   final Uri _mindRegisterURLS = Uri.parse('https://mindchain.info/Api/Index/marketinfo');
 
   String totalDollar = '\$0.0';
   String mindBalance = '0.0';
-
 
   List allTokens = [
     {
@@ -63,25 +61,141 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   ];
 
   List enabledTokens = [];
+  Timer? _marketDataTimer;
 
   Future showAddedTokenAndBalance() async {
     enabledTokens.clear();
-    enabledTokens.add(
-      {
-        "symbol": "mind_musd",
-        "name": "MIND",
-        "image": AssetsPath.mindLogoPng,
-        "contract": "null",
-        "balance": mindBalance,
-        "dollar": 0.0,
-        "change": '0',
+    enabledTokens.add({
+      "symbol": "mind_musd",
+      "name": "MIND",
+      "image": AssetsPath.mindLogoPng,
+      "contract": "null",
+      "balance": mindBalance,
+      "dollar": 0.0,
+      "change": '0',
       "total": 0.0
-      },
-    );
+    });
     enabledTokens.add(allTokens[0]);
     enabledTokens.add(allTokens[1]);
     enabledTokens.add(allTokens[2]);
     enabledTokens.add(allTokens[3]);
+
+    Credentials credentials = await getCredentials();
+    for (int i = 0; i < allTokens.length; i++) {
+      EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
+      DeployedContract contract = DeployedContract(
+        ContractAbi.fromJson(abiJson, "MINDChainUSD"),
+        tokenContractAddress,
+      );
+      final contractFunction = contract.function('balanceOf');
+      List<dynamic> result = await ethClient.call(
+        contract: contract,
+        function: contractFunction,
+        params: [credentials.address],
+      );
+      BigInt tokenBalance = result[0] as BigInt;
+      allTokens[i]['balance'] = totalPublicConvertToEth(tokenBalance);
+    }
+
+    await loadDollarValue(); // Load initial dollar values
+    startMarketDataTimer(); // Start periodic updates
+    notifyListeners();
+  }
+
+  Future loadDollarValue() async {
+    http.Response response = await http.get(_mindRegisterURLS);
+    if (response.statusCode == 200) {
+      Map responseMap = jsonDecode(response.body);
+      List responseList = responseMap['data']['market'];
+
+      var marketDataMap = {for (var item in responseList) item['ticker']: item};
+
+      for (var token in enabledTokens) {
+        var ticker = token['symbol'];
+        if (marketDataMap.containsKey(ticker)) {
+          token['dollar'] = double.parse(marketDataMap[ticker]['new_price']).toStringAsFixed(2);
+          token['change'] = marketDataMap[ticker]['change'].toString();
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print("Error loading market data");
+      }
+    }
+    calculateTotalDollar();
+    notifyListeners();
+  }
+
+  void startMarketDataTimer() {
+    _marketDataTimer?.cancel(); // Cancel existing timer if any
+    _marketDataTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      loadDollarValue(); // Fetch market data every 10 seconds
+    });
+  }
+
+  String balanceMaker(String myBal, value) {
+    double result = double.parse(value.toString()) * double.parse(myBal);
+    return "\$${result.toStringAsFixed(6)}";
+  }
+
+  void calculateTotalDollar() {
+    double total = 0.0;
+    for (var token in enabledTokens) {
+      total += double.tryParse(token['dollar'].toString()) ?? 0.0;
+    }
+    totalDollar = '\$$total';
+    notifyListeners();
+  }
+
+  void toggleToken(Map tokenKey) {
+    if (enabledTokens.contains(tokenKey)) {
+      enabledTokens.remove(tokenKey);
+    } else {
+      enabledTokens.add(tokenKey);
+    }
+    notifyListeners();
+  }
+
+  Future<void> connectWebSocketForLoadBalance(String url, String address) async {
+    try {
+      final socket = await WebSocket.connect(url);
+      if (kDebugMode) {
+        print('Connected to WebSocket server');
+      }
+      socket.done.then((_) async {
+        await Future.delayed(const Duration(seconds: 5));
+        await connectWebSocketForLoadBalance(url, address); // Reconnect
+      });
+
+      Stream.periodic(const Duration(seconds: 1)).listen((_) {
+        final balanceSubscribePayload = json.encode({
+          'id': 1,
+          'method': 'eth_getBalance',
+          'params': [address, 'latest'],
+        });
+        socket.add(balanceSubscribePayload);
+      });
+
+      socket.listen((message) {
+        final data = json.decode(message);
+        if (data['id'] == 1 && data['result'] != null) {
+          final balanceHex = data['result'];
+          final balanceInWei = BigInt.parse(balanceHex.substring(2), radix: 16);
+          mindBalance = convertToEth(balanceInWei);
+          enabledTokens[0]['balance'] = mindBalance; // Update MIND balance
+          notifyListeners();
+
+          // Update all token balances as needed
+          updateTokenBalances();
+        }
+      }, onError: (_) {}, cancelOnError: true);
+    } catch (_) {
+      await Future.delayed(const Duration(seconds: 5));
+      await connectWebSocketForLoadBalance(url, address); // Reconnect
+    }
+  }
+
+  void updateTokenBalances() async {
     Credentials credentials = await getCredentials();
     for (int i = 0; i < allTokens.length; i++) {
       EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
@@ -101,108 +215,15 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future loadDollarValue() async {
-    http.Response response = await http.get(_mindRegisterURLS);
-    if (response.statusCode == 200) {
-      Map responseMap = jsonDecode(response.body);
-      List responseList = responseMap['data']['market'];
-
-      var marketDataMap = {for (var item in responseList) item['ticker']: item};
-
-      for (var token in enabledTokens) {
-        var ticker = token['symbol'];
-        if (marketDataMap.containsKey(ticker)) {
-          token['dollar'] = double.parse(marketDataMap[ticker]['new_price']).toStringAsFixed(2);
-          token['change'] = marketDataMap[ticker]['change'].toString();
-        }
-      }
-
-      if (kDebugMode) {
-        print(allTokens);
-      }
-    } else {
-      if (kDebugMode) {
-        print("Error loading market data");
-      }
-    }
-    calculateTotalDollar();
-    notifyListeners();
-  }
-
-  String balanceMaker(String myBal, value) {
-    double result = double.parse(value.toString()) * double.parse(myBal);
-    result.toStringAsFixed(6);
-    return "\$$result";
-  }
-
-   calculateTotalDollar() {
-    double total = 0.0;
-    for (var token in enabledTokens) {
-      total += double.tryParse(token['dollar'].toString()) ?? 0.0;
-    }
-    totalDollar = '\$$total';
-    notifyListeners();
-  }
-
-  void toggleToken(Map tokenKey) {
-    if (enabledTokens.contains(tokenKey)) {
-      enabledTokens.remove(tokenKey);
-    } else {
-      enabledTokens.add(tokenKey);
-    }
-    notifyListeners();
-  }
-
-
-  Future<void> connectWebSocketForLoadBalance(String url, String address) async {
-    try {
-      final socket = await WebSocket.connect(url);
-      if (kDebugMode) {
-        print('Connected to WebSocket server');
-      }
-      socket.done.then((_) async {
-        // WebSocket connection is closed, attempt to reconnect after a delay
-        await Future.delayed(const Duration(seconds: 5));
-        await connectWebSocketForLoadBalance(url, address); // Reconnect
-      });
-
-      Stream.periodic(const Duration(seconds: 1)).listen((_) {
-        final balanceSubscribePayload = json.encode({
-          'id': 1,
-          'method': 'eth_getBalance',
-          'params': [address, 'latest'],
-        });
-        socket.add(balanceSubscribePayload);
-      });
-
-      socket.listen(
-            (message) {
-          final data = json.decode(message);
-          if (data['id'] == 1 && data['result'] != null) {
-            mindBalance = '0.00';
-            final balanceHex = data['result'];
-            final balanceInWei =
-            BigInt.parse(balanceHex.substring(2), radix: 16);
-            mindBalance = convertToEth(balanceInWei);
-            enabledTokens[0]['balance'] = convertToEth(balanceInWei);
-            notifyListeners();
-          }
-        },
-        onError: (_) {},
-        cancelOnError: true,
-      );
-    } catch (_) {
-      // Error occurred while connecting, attempt to reconnect after a delay
-      await Future.delayed(const Duration(seconds: 5));
-      await connectWebSocketForLoadBalance(url, address); // Reconnect
-    }
-  }
-
   Future loadBalances() async {
     var data = await LocalDataBase.getData("address");
     final address = EthereumAddress.fromHex(data!);
     await connectWebSocketForLoadBalance("wss://seednode.mindchain.info/ws", address.hex);
   }
 
-
+  @override
+  void dispose() {
+    _marketDataTimer?.cancel();
+    super.dispose();
+  }
 }
