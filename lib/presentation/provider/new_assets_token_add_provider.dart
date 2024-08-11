@@ -133,18 +133,28 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     });
   }
 
-  String balanceMaker(String myBal, value) {
-    double result = double.parse(value.toString()) * double.parse(myBal);
-    return "\$${result.toStringAsFixed(6)}";
-  }
 
   void calculateTotalDollar() {
     double total = 0.0;
     for (var token in enabledTokens) {
-      total += double.tryParse(token['dollar'].toString()) ?? 0.0;
+      var dollarValue = token['dollar'];
+      if (dollarValue != null) {
+        total += double.tryParse(dollarValue.toString()) ?? 0.0;
+      }
     }
-    totalDollar = '\$$total';
+    totalDollar = '\$${total.toStringAsFixed(2)}'; // Format to 2 decimal places
     notifyListeners();
+  }
+
+  String balanceMaker(String myBal, value) {
+    try {
+      double parsedMyBal = double.parse(myBal);
+      double parsedValue = double.parse(value.toString());
+      double result = parsedValue * parsedMyBal;
+      return "\$${result.toStringAsFixed(6)}";
+    } catch (e) {
+      return "\$0.0"; // Return a default value in case of an error
+    }
   }
 
   void toggleToken(Map tokenKey) {
@@ -164,9 +174,9 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       }
       socket.done.then((_) async {
         await Future.delayed(const Duration(seconds: 5));
-        await connectWebSocketForLoadBalance(url, address); // Reconnect
+        await connectWebSocketForLoadBalance(url, address);// Reconnect
       });
-
+      calculateTotalDollar();
       Stream.periodic(const Duration(seconds: 1)).listen((_) {
         final balanceSubscribePayload = json.encode({
           'id': 1,

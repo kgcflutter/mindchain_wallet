@@ -3,7 +3,6 @@ import 'package:mindchain_wallet/presentation/provider/new_assets_token_add_prov
 import 'package:mindchain_wallet/presentation/widget/backgroundwidget.dart';
 import 'package:provider/provider.dart';
 
-
 class NewAssetsAddScreen extends StatelessWidget {
   const NewAssetsAddScreen({super.key});
   @override
