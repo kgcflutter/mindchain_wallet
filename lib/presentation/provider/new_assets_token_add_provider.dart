@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 class NewAssetsTokenAddProvider extends ChangeNotifier {
   final ethClient = Web3Client('https://seednode.mindchain.info/', http.Client());
-  final Uri _mindRegisterURLS = Uri.parse('https://mindchain.info/Api/Index/marketinfo');
+  final Uri _mindRegisterURLS = Uri.parse('https://mscswap-api.vercel.app/price');
 
   String totalDollar = '\$0.0';
   String mindBalance = '0.0';
@@ -65,13 +65,15 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
 
   Future showAddedTokenAndBalance() async {
     enabledTokens.clear();
+    http.Response response = await http.get(_mindRegisterURLS);
+    Map responseMap = jsonDecode(response.body);
     enabledTokens.add({
       "symbol": "mind_musd",
       "name": "MIND",
       "image": AssetsPath.mindLogoPng,
       "contract": "null",
       "balance": mindBalance,
-      "dollar": 0.0,
+      "dollar": double.tryParse(responseMap['price'] ?? 0.0),
       "change": '0',
       "total": 0.0
     });
@@ -97,32 +99,21 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       allTokens[i]['balance'] = totalPublicConvertToEth(tokenBalance);
     }
 
-    await loadDollarValue(); // Load initial dollar values
-    startMarketDataTimer(); // Start periodic updates
+    await loadDollarValue();
+    startMarketDataTimer();
     notifyListeners();
   }
 
   Future loadDollarValue() async {
     http.Response response = await http.get(_mindRegisterURLS);
     if (response.statusCode == 200) {
-      Map responseMap = jsonDecode(response.body);
-      List responseList = responseMap['data']['market'];
+      //Map responseMap = jsonDecode(response.body);
 
-      var marketDataMap = {for (var item in responseList) item['ticker']: item};
-
-      for (var token in enabledTokens) {
-        var ticker = token['symbol'];
-        if (marketDataMap.containsKey(ticker)) {
-          token['dollar'] = double.parse(marketDataMap[ticker]['new_price']).toStringAsFixed(2);
-          token['change'] = marketDataMap[ticker]['change'].toString();
-        }
-      }
     } else {
       if (kDebugMode) {
         print("Error loading market data");
       }
     }
-    calculateTotalDollar();
     notifyListeners();
   }
 
@@ -138,11 +129,9 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     double total = 0.0;
     for (var token in enabledTokens) {
       var dollarValue = token['dollar'];
-      if (dollarValue != null) {
-        total += double.tryParse(dollarValue.toString()) ?? 0.0;
-      }
+       total += double.parse(mindBalance.toString())*double.parse(dollarValue.toString());
     }
-    totalDollar = '\$${total.toStringAsFixed(2)}'; // Format to 2 decimal places
+    totalDollar = '\$${total.toStringAsFixed(2)}';
     notifyListeners();
   }
 
@@ -153,7 +142,7 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       double result = parsedValue * parsedMyBal;
       return "\$${result.toStringAsFixed(6)}";
     } catch (e) {
-      return "\$0.0"; // Return a default value in case of an error
+      return "\$0.0";
     }
   }
 
@@ -194,8 +183,6 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
           mindBalance = convertToEth(balanceInWei);
           enabledTokens[0]['balance'] = mindBalance; // Update MIND balance
           notifyListeners();
-
-          // Update all token balances as needed
           updateTokenBalances();
         }
       }, onError: (_) {}, cancelOnError: true);
