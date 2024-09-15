@@ -24,12 +24,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
         .loadBalances()
         .then((value) => Provider.of<NewAssetsTokenAddProvider>(context,
                 listen: false)
-            .showAddedTokenAndBalance()
-            .then((value) =>
-                Provider.of<NewAssetsTokenAddProvider>(context, listen: false)
-                    .loadDollarValue()).then((value) => Provider.of<NewAssetsTokenAddProvider>(context,
-        listen: false)
-        .calculateTotalDollar(),));
+            .showAddedTokenAndBalance());
   }
 
   final List<Widget> _screens = [

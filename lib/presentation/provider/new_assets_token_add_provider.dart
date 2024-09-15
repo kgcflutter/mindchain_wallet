@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:mindchain_wallet/allTokenList.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mindchain_wallet/abiJson.dart';
 import 'package:mindchain_wallet/presentation/provider/authenticator/privatekeyAuth.dart';
 import 'package:mindchain_wallet/presentation/utils/assets_path.dart';
@@ -12,81 +14,151 @@ import 'package:http/http.dart' as http;
 
 class NewAssetsTokenAddProvider extends ChangeNotifier {
   final ethClient = Web3Client('https://seednode.mindchain.info/', http.Client());
-  final Uri _mindRegisterURLS = Uri.parse('https://mscswap-api.vercel.app/price');
 
   String totalDollar = '\$0.0';
   String mindBalance = '0.0';
 
-  List allTokens = [
-    {
-      "symbol": "musd_usdt",
-      "name": "USDT",
-      "image": AssetsPath.tetherUSDTPNG,
-      "contract": "0x32a8a2052b48Da5FD253cC8B386B88B3E0BF50eE",
-      "balance": "0.0",
-      "dollar": "0.0",
-      "change": '0',
-      "total": 0.0
-    },
-    {
-      "symbol": "musd_usdt",
-      "name": "MUSD",
-      "image": AssetsPath.musdPng,
-      "contract": "0xaC264f337b2780b9fd277cd9C9B2149B43F87904",
-      "balance": "0.0",
-      "dollar": "0.0",
-      "change": '0',
-      "total": 0.0
-    },
-    {
-      "symbol": "pmind_musd",
-      "name": "PMIND",
-      "image": AssetsPath.perrymindPng,
-      "contract": "0x75E218790B76654A5EdA1D0797B46cBC709136b0",
-      "balance": "0.0",
-      "dollar": '0.0',
-      "change": '0',
-      "total": 0.0
-    },
-    {
-      "name": "WMIND",
-      "symbol": "wmind",
-      "image": AssetsPath.mindLogoPng,
-      "contract": "0x94E6F64f9a00bE3a7B353f55b303DC5eb0C9C396",
-      "balance": "0.0",
-      "dollar": "0.0",
-      "change": '0',
-      "total": 0.0
-    },
-  ];
-
-  List enabledTokens = [];
+  List<Map<String, dynamic>> allTokens = myTokens;
+  List<Map<String, dynamic>> enabledTokens = [];
+  List<Map<String, dynamic>> filteredTokens = [];
   Timer? _marketDataTimer;
 
-  Future showAddedTokenAndBalance() async {
+  NewAssetsTokenAddProvider() {
+    filteredTokens = List.from(allTokens);
+    loadAssetsFromSharedPreferences();
+  }
+
+  Future<void> saveAssetsToSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> tokens = allTokens.map((token) => jsonEncode(token)).toList();
+    await prefs.setStringList('savedAssets', tokens);
+  }
+
+  Future<void> loadAssetsFromSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? tokens = prefs.getStringList('savedAssets');
+    if (tokens != null) {
+      allTokens = tokens.map((token) => jsonDecode(token) as Map<String, dynamic>).toList();
+      filteredTokens = List.from(allTokens);
+    }
+    notifyListeners();
+  }
+
+  Future<void> addNewAsset(String contractAddress, BuildContext context) async {
+    final isValid = await validateContractAddress(contractAddress);
+    if (!isValid) {
+      throw Exception('Invalid contract address');
+    }
+
+    final isAlreadyAdded = allTokens.any((token) => token['contract'] == contractAddress);
+    if (isAlreadyAdded) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The token is already added")));
+      return;
+    }
+
+    try {
+      EthereumAddress tokenContractAddress = EthereumAddress.fromHex(contractAddress);
+      DeployedContract contract = DeployedContract(
+        ContractAbi.fromJson(abiJson, "ERC20"),
+        tokenContractAddress,
+      );
+
+      final nameFunction = contract.function('name');
+      final symbolFunction = contract.function('symbol');
+
+      final nameResult = await ethClient.call(
+        contract: contract,
+        function: nameFunction,
+        params: [],
+      );
+
+      final symbolResult = await ethClient.call(
+        contract: contract,
+        function: symbolFunction,
+        params: [],
+      );
+
+      final tokenName = nameResult[0] as String;
+      final tokenSymbol = symbolResult[0] as String;
+
+      allTokens.add({
+        'name': tokenName,
+        'symbol': tokenSymbol,
+        'contract': contractAddress,
+        'image': 'assets/placeholder.png',
+        'balance': '0.0',
+        'dollar': '0.0',
+        'change': '0',
+        'total': 0.0,
+      });
+
+      filteredTokens = List.from(allTokens);
+      await saveAssetsToSharedPreferences();
+      updateTokenBalances();
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error adding new asset: $e');
+      }
+      rethrow;
+    }
+  }
+
+  Future<bool> validateContractAddress(String contractAddress) async {
+    try {
+      EthereumAddress address = EthereumAddress.fromHex(contractAddress);
+      DeployedContract contract = DeployedContract(
+        ContractAbi.fromJson(abiJson, "ERC20"),
+        address,
+      );
+      final nameFunction = contract.function('name');
+      await ethClient.call(
+        contract: contract,
+        function: nameFunction,
+        params: [],
+      );
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Invalid contract address: $e');
+      }
+      return false;
+    }
+  }
+
+  void searchTokens(String query) {
+    if (query.isEmpty) {
+      filteredTokens = List.from(allTokens);
+    } else {
+      filteredTokens = allTokens.where((token) {
+        final nameLower = token['name'].toLowerCase();
+        final symbolLower = token['symbol'].toLowerCase();
+        final searchLower = query.toLowerCase();
+        return nameLower.contains(searchLower) || symbolLower.contains(searchLower);
+      }).toList();
+    }
+    notifyListeners();
+  }
+
+  Future<void> showAddedTokenAndBalance() async {
     enabledTokens.clear();
-    http.Response response = await http.get(_mindRegisterURLS);
-    Map responseMap = jsonDecode(response.body);
     enabledTokens.add({
-      "symbol": "mind_musd",
+      "symbol": "MIND",
       "name": "MIND",
       "image": AssetsPath.mindLogoPng,
       "contract": "null",
       "balance": mindBalance,
-      "dollar": double.tryParse(responseMap['price'] ?? 0.0),
+      "dollar": '0.0',
       "change": '0',
       "total": 0.0
     });
-    enabledTokens.add(allTokens[0]);
-    enabledTokens.add(allTokens[1]);
-    enabledTokens.add(allTokens[2]);
-    enabledTokens.add(allTokens[3]);
+    enabledTokens.addAll(allTokens);
 
     Credentials credentials = await getCredentials();
     for (int i = 0; i < allTokens.length; i++) {
       EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
       DeployedContract contract = DeployedContract(
-        ContractAbi.fromJson(abiJson, "MINDChainUSD"),
+        ContractAbi.fromJson(abiJson, "ERC20"),
         tokenContractAddress,
       );
       final contractFunction = contract.function('balanceOf');
@@ -98,38 +170,22 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       BigInt tokenBalance = result[0] as BigInt;
       allTokens[i]['balance'] = totalPublicConvertToEth(tokenBalance);
     }
-
-    await loadDollarValue();
     startMarketDataTimer();
     notifyListeners();
   }
 
-  Future loadDollarValue() async {
-    http.Response response = await http.get(_mindRegisterURLS);
-    if (response.statusCode == 200) {
-      //Map responseMap = jsonDecode(response.body);
-
-    } else {
-      if (kDebugMode) {
-        print("Error loading market data");
-      }
-    }
-    notifyListeners();
-  }
-
   void startMarketDataTimer() {
-    _marketDataTimer?.cancel(); // Cancel existing timer if any
+    _marketDataTimer?.cancel();
     _marketDataTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-      loadDollarValue(); // Fetch market data every 10 seconds
+      //loadDollarValue();
     });
   }
-
 
   void calculateTotalDollar() {
     double total = 0.0;
     for (var token in enabledTokens) {
       var dollarValue = token['dollar'];
-       total += double.parse(mindBalance.toString())*double.parse(dollarValue.toString());
+      total += double.parse(mindBalance) * double.parse(dollarValue.toString());
     }
     totalDollar = '\$${total.toStringAsFixed(2)}';
     notifyListeners();
@@ -140,13 +196,13 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       double parsedMyBal = double.parse(myBal);
       double parsedValue = double.parse(value.toString());
       double result = parsedValue * parsedMyBal;
-      return "\$${result.toStringAsFixed(6)}";
+      return "\$${result.toStringAsFixed(3)}";
     } catch (e) {
       return "\$0.0";
     }
   }
 
-  void toggleToken(Map tokenKey) {
+  void toggleToken(Map<String, dynamic> tokenKey) {
     if (enabledTokens.contains(tokenKey)) {
       enabledTokens.remove(tokenKey);
     } else {
@@ -155,49 +211,33 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> connectWebSocketForLoadBalance(String url, String address) async {
-    try {
-      final socket = await WebSocket.connect(url);
-      if (kDebugMode) {
-        print('Connected to WebSocket server');
-      }
-      socket.done.then((_) async {
-        await Future.delayed(const Duration(seconds: 5));
-        await connectWebSocketForLoadBalance(url, address);// Reconnect
-      });
-      calculateTotalDollar();
-      Stream.periodic(const Duration(seconds: 1)).listen((_) {
-        final balanceSubscribePayload = json.encode({
-          'id': 1,
-          'method': 'eth_getBalance',
-          'params': [address, 'latest'],
-        });
-        socket.add(balanceSubscribePayload);
-      });
+  Future<void> loadBalances() async {
+    var data = await LocalDataBase.getData("address");
+    final address = EthereumAddress.fromHex(data!);
 
-      socket.listen((message) {
-        final data = json.decode(message);
-        if (data['id'] == 1 && data['result'] != null) {
-          final balanceHex = data['result'];
-          final balanceInWei = BigInt.parse(balanceHex.substring(2), radix: 16);
-          mindBalance = convertToEth(balanceInWei);
-          enabledTokens[0]['balance'] = mindBalance; // Update MIND balance
-          notifyListeners();
-          updateTokenBalances();
-        }
-      }, onError: (_) {}, cancelOnError: true);
-    } catch (_) {
-      await Future.delayed(const Duration(seconds: 5));
-      await connectWebSocketForLoadBalance(url, address); // Reconnect
-    }
+    // Use direct RPC call to get balance
+    await getBalanceFromRPC(address.hex);
   }
+
+  Future<void> getBalanceFromRPC(String address) async {
+    final balanceResult = await ethClient.getBalance(EthereumAddress.fromHex(address));
+    mindBalance = convertToEth(balanceResult.getInWei);
+
+    if (enabledTokens.isNotEmpty) {
+      enabledTokens[0]['balance'] = mindBalance;  // Safely updating balance if list is not empty
+    }
+
+    updateTokenBalances();
+    notifyListeners();
+  }
+
 
   void updateTokenBalances() async {
     Credentials credentials = await getCredentials();
     for (int i = 0; i < allTokens.length; i++) {
       EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
       DeployedContract contract = DeployedContract(
-        ContractAbi.fromJson(abiJson, "MINDChainUSD"),
+        ContractAbi.fromJson(abiJson, "ERC20"),
         tokenContractAddress,
       );
       final contractFunction = contract.function('balanceOf');
@@ -210,12 +250,6 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       allTokens[i]['balance'] = totalPublicConvertToEth(tokenBalance);
     }
     notifyListeners();
-  }
-
-  Future loadBalances() async {
-    var data = await LocalDataBase.getData("address");
-    final address = EthereumAddress.fromHex(data!);
-    await connectWebSocketForLoadBalance("wss://seednode.mindchain.info/ws", address.hex);
   }
 
   @override

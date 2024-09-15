@@ -16,9 +16,9 @@ class AssetsAndTrxTapbar extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        // border: Border.all(
-        //   color: const Color(0XffBABABA),
-        // ),
+        border: Border.all(
+          color: const Color(0XffBABABA),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -123,10 +123,10 @@ class AssetsAndTrxTapbar extends StatelessWidget {
                 value.enabledTokens[index]['image'],
                 width: 30,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.error, size: 30);
+                  return CircleAvatar(child: Text(value.enabledTokens[index]['name'].toString()[0]));
                 },
               ),
-              title: Text('${value.enabledTokens[index]['name']}'),
+              title: Text('${value.enabledTokens[index]['symbol']}'),
               trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

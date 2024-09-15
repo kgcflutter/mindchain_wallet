@@ -72,7 +72,7 @@ class SendTokenProvider extends ChangeNotifier {
         double parsedAmount = double.parse(amount);
         BigInt weiAmount = BigInt.from(parsedAmount * 1e18);
         EtherAmount ethAmount =
-            EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmount);
+            EtherAmount.fromBigInt(EtherUnit.wei, weiAmount);
         await _sendTransaction(ethClient, recipientAddress, ethAmount);
       } catch (e) {
         trxError = "Something Error Please Try again";
