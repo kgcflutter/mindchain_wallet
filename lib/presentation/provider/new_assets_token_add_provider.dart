@@ -13,7 +13,8 @@ import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 
 class NewAssetsTokenAddProvider extends ChangeNotifier {
-  final ethClient = Web3Client('https://seednode.mindchain.info/', http.Client());
+  final ethClient =
+      Web3Client('https://seednode.mindchain.info/', http.Client());
 
   String totalDollar = '\$0.0';
   String mindBalance = '0.0';
@@ -38,7 +39,9 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? tokens = prefs.getStringList('savedAssets');
     if (tokens != null) {
-      allTokens = tokens.map((token) => jsonDecode(token) as Map<String, dynamic>).toList();
+      allTokens = tokens
+          .map((token) => jsonDecode(token) as Map<String, dynamic>)
+          .toList();
       filteredTokens = List.from(allTokens);
     }
     notifyListeners();
@@ -50,14 +53,17 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
       throw Exception('Invalid contract address');
     }
 
-    final isAlreadyAdded = allTokens.any((token) => token['contract'] == contractAddress);
+    final isAlreadyAdded =
+        allTokens.any((token) => token['contract'] == contractAddress);
     if (isAlreadyAdded) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The token is already added")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("The token is already added")));
       return;
     }
 
     try {
-      EthereumAddress tokenContractAddress = EthereumAddress.fromHex(contractAddress);
+      EthereumAddress tokenContractAddress =
+          EthereumAddress.fromHex(contractAddress);
       DeployedContract contract = DeployedContract(
         ContractAbi.fromJson(abiJson, "ERC20"),
         tokenContractAddress,
@@ -134,13 +140,17 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
         final nameLower = token['name'].toLowerCase();
         final symbolLower = token['symbol'].toLowerCase();
         final searchLower = query.toLowerCase();
-        return nameLower.contains(searchLower) || symbolLower.contains(searchLower);
+        return nameLower.contains(searchLower) ||
+            symbolLower.contains(searchLower);
       }).toList();
     }
     notifyListeners();
   }
 
   Future<void> showAddedTokenAndBalance() async {
+    loadBalances().then(
+      (value) => print("load balance done"),
+    );
     enabledTokens.clear();
     enabledTokens.add({
       "symbol": "MIND",
@@ -156,7 +166,8 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
 
     Credentials credentials = await getCredentials();
     for (int i = 0; i < allTokens.length; i++) {
-      EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
+      EthereumAddress tokenContractAddress =
+          EthereumAddress.fromHex(allTokens[i]['contract']);
       DeployedContract contract = DeployedContract(
         ContractAbi.fromJson(abiJson, "ERC20"),
         tokenContractAddress,
@@ -177,7 +188,7 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   void startMarketDataTimer() {
     _marketDataTimer?.cancel();
     _marketDataTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-      //loadDollarValue();
+      showAddedTokenAndBalance();
     });
   }
 
@@ -220,22 +231,24 @@ class NewAssetsTokenAddProvider extends ChangeNotifier {
   }
 
   Future<void> getBalanceFromRPC(String address) async {
-    final balanceResult = await ethClient.getBalance(EthereumAddress.fromHex(address));
+    final balanceResult =
+        await ethClient.getBalance(EthereumAddress.fromHex(address));
     mindBalance = convertToEth(balanceResult.getInWei);
 
     if (enabledTokens.isNotEmpty) {
-      enabledTokens[0]['balance'] = mindBalance;  // Safely updating balance if list is not empty
+      enabledTokens[0]['balance'] =
+          mindBalance; // Safely updating balance if list is not empty
     }
 
     updateTokenBalances();
     notifyListeners();
   }
 
-
   void updateTokenBalances() async {
     Credentials credentials = await getCredentials();
     for (int i = 0; i < allTokens.length; i++) {
-      EthereumAddress tokenContractAddress = EthereumAddress.fromHex(allTokens[i]['contract']);
+      EthereumAddress tokenContractAddress =
+          EthereumAddress.fromHex(allTokens[i]['contract']);
       DeployedContract contract = DeployedContract(
         ContractAbi.fromJson(abiJson, "ERC20"),
         tokenContractAddress,
